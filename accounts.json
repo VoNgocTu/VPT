@@ -1,0 +1,53 @@
+{
+    "accList": [
+        {
+            "index": 1,
+            "link": "mc://http://s3.vuaphapthuat.goplay.vn/s/s45/index.php&vntu512@goid&47a6d8323a96f7f88bded56ce1311688",
+            "owner": "Tú",
+            "char": "DY",
+            "name": "Bong Xu"
+        },
+        {
+            "index": 2,
+            "link": "mc://http://s3.vuaphapthuat.goplay.vn/s/s45/index.php&gg_vkhoa009@goid&74de28b1b50e8830f7db50340c46ce70",
+            "owner": "Khoa",
+            "char": "NC",
+            "name": "Taylor"
+        },
+        {
+            "index": 3,
+            "link": "mc://http://s3.vuaphapthuat.goplay.vn/s/s45/index.php&qrac002@goid&d5f47142d4d6b1082fe8ad303a4a7020",
+            "owner": "Khoa",
+            "char": "HS",
+            "name": "Siu"
+        },
+        {
+            "index": 4,
+            "link": "mc://http://s3.vuaphapthuat.goplay.vn/s/s45/index.php&qrac003@goid&4c76e613506961f969a981ef2a15b18d",
+            "owner": "Khoa",
+            "char": "TS",
+            "name": "Hao"
+        },
+        {
+            "index": 5,
+            "link": "mc://http://s3.vuaphapthuat.goplay.vn/s/s45/index.php&ltcliff04@goid&ea0f47f6a80fa6f5403ee290c71edde2",
+            "owner": "Tân",
+            "char": "TS",
+            "name": "Man"
+        },
+        {
+            "index": 6,
+            "link": "mc://http://s3.vuaphapthuat.goplay.vn/s/s45/index.php&ltcliff02@goid&9b20d5dc47710ddfa0e3cdc4d9a05898",
+            "owner": "Tân",
+            "char": "TS",
+            "name": "Bap"
+        },
+        {
+            "index": 7,
+            "link": "mc://http://s3.vuaphapthuat.goplay.vn/s/s45/index.php&yui313@goid&dc6523ef48242438a482a8158816697b",
+            "owner": "Yui",
+            "char": "TS",
+            "name": "Yui313."
+        }
+    ]
+}
