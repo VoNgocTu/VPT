@@ -70,7 +70,7 @@ function copyLink ($link) {
 }
 
 function getFlashLink ($link) {
-    $link -match '.*\/s\/(.*)\/index.php&(.*)&(.*)' > NUL
+    $link -match '.*\/s\/(.*)\/index.php&(.*)&(.*)' | findstr abc
     $server = $matches[1]
     $user = $matches[2]
     $pass = $matches[3]
