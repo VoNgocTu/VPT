@@ -1,10 +1,11 @@
-<# 
-.NAME
-    Untitled
-#>
-
 Add-Type -AssemblyName System.Windows.Forms
 [System.Windows.Forms.Application]::EnableVisualStyles()
+
+$root = $PSScriptRoot
+if ($root -eq "")
+{
+    $root = ".";
+}
 
 $VPTAccounts                     = New-Object system.Windows.Forms.Form
 $VPTAccounts.ClientSize          = New-Object System.Drawing.Point(250, 500)
@@ -13,7 +14,7 @@ $VPTAccounts.Location = New-Object System.Drawing.Point(30, 20)
 #$VPTAccounts.MaximumSize         = New-Object System.Drawing.Size(900, 476)
 $VPTAccounts.text                = "VPT Accounts"
 $VPTAccounts.TopMost             = $false
-$VPTAccounts.BackgroundImage = [system.drawing.image]::FromFile("$PSScriptRoot\image\Background.jpg")
+$VPTAccounts.BackgroundImage = [system.drawing.image]::FromFile("$root\image\Background.jpg")
 
 $accList = $(Invoke-RestMethod -Uri https://raw.githubusercontent.com/VoNgocTu/VPT/main/accounts.json).accList
 
@@ -24,7 +25,7 @@ $BugOnlineButton.height                  = 30
 $BugOnlineButton.location                = New-Object System.Drawing.Point(30, 20)
 $BugOnlineButton.Font                    = New-Object System.Drawing.Font('Times New Roman',10,[System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
 $BugOnlineButton.BackColor               = [System.Drawing.ColorTranslator]::FromHtml("#a5e6d6")
-$BugOnlineButton.Add_Click({ Start-Process "$PSScriptRoot\script\Auto-Bug-Online.ahk" })
+$BugOnlineButton.Add_Click({ Start-Process "$root\script\Auto-Bug-Online.ahk" })
 
 $ResetAttackButton                         = New-Object system.Windows.Forms.Button
 $ResetAttackButton.text                    = "Reset lượt đánh"
@@ -33,7 +34,7 @@ $ResetAttackButton.height                  = 30
 $ResetAttackButton.location                = New-Object System.Drawing.Point(30, 60)
 $ResetAttackButton.Font                    = New-Object System.Drawing.Font('Times New Roman',10,[System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
 $ResetAttackButton.BackColor               = [System.Drawing.ColorTranslator]::FromHtml("#a5e6d6")
-$ResetAttackButton.Add_Click({ Start-Process "$PSScriptRoot\script\Reset-Auto-Attack-Number.ahk" })
+$ResetAttackButton.Add_Click({ Start-Process "$root\script\Reset-Auto-Attack-Number.ahk" })
 $VPTAccounts.controls.AddRange(@($BugOnlineButton, $ResetAttackButton))
 
 foreach ($acc in $accList) 
@@ -49,7 +50,7 @@ foreach ($acc in $accList)
     $LoginButton.Add_Click({ openAccount $this.Tag })
 
     $CopyLinkButton                       = New-Object system.Windows.Forms.Button
-    $CopyLinkButton.image                 = [system.drawing.image]::FromFile("$PSScriptRoot\image\link-icon.png")
+    $CopyLinkButton.image                 = [system.drawing.image]::FromFile("$root\image\link-icon.png")
     $CopyLinkButton.width                 = 30
     $CopyLinkButton.height                = 30
     $CopyLinkButton.location              = New-Object System.Drawing.Point(180, $($acc.index * 40 + 60))
