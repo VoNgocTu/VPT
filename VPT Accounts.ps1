@@ -8,8 +8,8 @@ if ($root -eq "")
 }
 
 $VPTAccounts                     = New-Object system.Windows.Forms.Form
-$VPTAccounts.ClientSize          = New-Object System.Drawing.Point(250, 500)
-$VPTAccounts.MaximumSize         = New-Object System.Drawing.Size(250, 500)
+$VPTAccounts.ClientSize          = New-Object System.Drawing.Point(250, 700)
+$VPTAccounts.MaximumSize         = New-Object System.Drawing.Size(250, 700)
 $VPTAccounts.Location = New-Object System.Drawing.Point(30, 20)
 #$VPTAccounts.MaximumSize         = New-Object System.Drawing.Size(900, 476)
 $VPTAccounts.text                = "VPT Accounts"
