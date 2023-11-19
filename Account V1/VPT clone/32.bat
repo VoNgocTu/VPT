@@ -1,0 +1,1 @@
+"flashplayer_32.exe" "http://s3.vuaphapthuat.goplay.vn/s/s45/GameLoaders.swf?user=ltcliff32@goid&pass=7048c7e14d9414579c4860de386d8258&isExpand=true"
