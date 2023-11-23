@@ -8,13 +8,45 @@ if ($root -eq "")
 }
 
 $VPTAccounts                     = New-Object system.Windows.Forms.Form
-$VPTAccounts.ClientSize          = New-Object System.Drawing.Point(250, 700)
-$VPTAccounts.MaximumSize         = New-Object System.Drawing.Size(250, 700)
+$VPTAccounts.ClientSize          = New-Object System.Drawing.Point(265, 500)
+$VPTAccounts.MaximumSize         = New-Object System.Drawing.Size(265, 500)
 $VPTAccounts.Location = New-Object System.Drawing.Point(30, 20)
 #$VPTAccounts.MaximumSize         = New-Object System.Drawing.Size(900, 476)
 $VPTAccounts.text                = "VPT Accounts"
 $VPTAccounts.TopMost             = $false
-$VPTAccounts.BackgroundImage = [system.drawing.image]::FromFile("$root\image\Background.jpg")
+
+# Create two tab pages
+$main = New-Object System.Windows.Forms.TabPage
+$main.Text = "Main"
+$main.BackgroundImage = [system.drawing.image]::FromFile("$root\image\Background.jpg")
+
+$tuClone = New-Object System.Windows.Forms.TabPage
+$tuClone.Text = "Tú C"
+$tuClone.BackgroundImage = [system.drawing.image]::FromFile("$root\image\Background.jpg")
+
+$tanClone = New-Object System.Windows.Forms.TabPage
+$tanClone.Text = "Tân C"
+$tanClone.BackgroundImage = [system.drawing.image]::FromFile("$root\image\Background.jpg")
+
+$khoaClone = New-Object System.Windows.Forms.TabPage
+$khoaClone.Text = "Khoa C"
+$khoaClone.BackgroundImage = [system.drawing.image]::FromFile("$root\image\Background.jpg")
+
+$yuiClone = New-Object System.Windows.Forms.TabPage
+$yuiClone.Text = "Yui C"
+$yuiClone.BackgroundImage = [system.drawing.image]::FromFile("$root\image\Background.jpg")
+
+# Add the tab pages to the tab control
+$tabControl = New-Object System.Windows.Forms.TabControl
+$tabControl.Controls.Add($main)
+$tabControl.Controls.Add($tuClone)
+$tabControl.Controls.Add($tanClone)
+$tabControl.Controls.Add($khoaClone)
+$tabControl.Controls.Add($yuiClone)
+$VPTAccounts.Controls.Add($tabControl)
+
+$tabControl.Dock = "Fill"
+
 
 $accList = $(Invoke-RestMethod -Uri https://raw.githubusercontent.com/VoNgocTu/VPT/main/accounts.json).accList
 
@@ -35,7 +67,7 @@ $ResetAttackButton.location                = New-Object System.Drawing.Point(30,
 $ResetAttackButton.Font                    = New-Object System.Drawing.Font('Times New Roman',10,[System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
 $ResetAttackButton.BackColor               = [System.Drawing.ColorTranslator]::FromHtml("#a5e6d6")
 $ResetAttackButton.Add_Click({ Start-Process "$root\script\Reset-Auto-Attack-Number.ahk" })
-$VPTAccounts.controls.AddRange(@($BugOnlineButton, $ResetAttackButton))
+$main.controls.AddRange(@($BugOnlineButton, $ResetAttackButton))
 
 foreach ($acc in $accList) 
 {
@@ -57,7 +89,7 @@ foreach ($acc in $accList)
     $CopyLinkButton.Tag                   = $acc.link
     $CopyLinkButton.Add_Click({ copyLink $this.Tag })
     
-    $VPTAccounts.controls.AddRange(@($LoginButton, $CopyLinkButton))
+    $main.controls.AddRange(@($LoginButton, $CopyLinkButton))
 }
 
 #region Logic 

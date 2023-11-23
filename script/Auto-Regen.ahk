@@ -1,12 +1,14 @@
-F12::{
-    winTitle := "Adobe Flash Player 32"
-    pid := WinActive(winTitle)
-    cycle := 0
-    while (true) {
-        Sleep 5000
-        regen(pid)
-    }
-}
+; F12::{
+;     winTitle := "Adobe Flash Player 32"
+;     pid := WinActive(winTitle)
+;     cycle := 0
+;     while (true) {
+        
+;     }
+; }
+; regen(100)
+ControlClick "x957 y356", "Adobe Flash Player 32" ; auto in combat
+
 
 
 move(pid)
@@ -30,17 +32,23 @@ resetAutoAttack() {
     }
 }
 
-regen(pid, sleepTime := 200) {
-    ControlClick "x124 y23", "ahk_id " pid ; Bơm máu mana nhân vật
-    Sleep sleepTime
-    ControlClick "x93 y81", "ahk_id " pid ; Bơm máu mana pet
-    Sleep sleepTime
-    ControlClick "x103 y81", "ahk_id " pid ; Bơm máu mana pet
-    Sleep sleepTime
-    ControlClick "x113 y81", "ahk_id " pid ; Bơm máu mana pet
-    Sleep sleepTime
-    ControlClick "x133 y81", "ahk_id " pid ; Bơm máu mana pet
-    Sleep sleepTime
-    ControlClick "x133 y81", "ahk_id " pid ; Bơm máu mana pet
-    Sleep sleepTime
+regen(sleepTime := 200) {
+    ids := WinGetList("Adobe Flash Player 32")
+    for id in ids
+    {
+        ahk_id := "ahk_id " id
+        ControlClick "x124 y23", ahk_id ; Bơm máu mana nhân vật
+        Sleep 200
+        Sleep sleepTime
+        ControlClick "x93 y81", ahk_id ; Bơm máu mana pet
+        Sleep sleepTime
+        ControlClick "x103 y81", ahk_id ; Bơm máu mana pet
+        Sleep sleepTime
+        ControlClick "x113 y81", ahk_id ; Bơm máu mana pet
+        Sleep sleepTime
+        ControlClick "x133 y81", ahk_id ; Bơm máu mana pet
+        Sleep sleepTime
+        ControlClick "x133 y81", ahk_id ; Bơm máu mana pet
+        Sleep sleepTime
+    }
 }

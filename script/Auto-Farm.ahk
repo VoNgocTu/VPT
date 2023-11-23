@@ -45,7 +45,12 @@ resetAutoAttack() {
 }
 
 regen(pid, sleepTime := 200) {
-    ControlClick "x124 y23", "ahk_id " pid ; Bơm máu mana nhân vật
+    ids := WinGetList("Adobe Flash Player 32")
+    for id in ids
+    {
+        ControlClick "x124 y23", "ahk_id " pid ; Bơm máu mana nhân vật
+        Sleep 200
+    }
     Sleep sleepTime
     ControlClick "x93 y81", "ahk_id " pid ; Bơm máu mana pet
     Sleep sleepTime
