@@ -1,6 +1,15 @@
+Add-Type -Name Window -Namespace Console -MemberDefinition '
+[DllImport("Kernel32.dll")]
+public static extern IntPtr GetConsoleWindow();
+
+[DllImport("user32.dll")]
+public static extern bool ShowWindow(IntPtr hWnd, Int32 nCmdShow);
+'
+
 Add-Type -AssemblyName UIAutomationClient
 Add-Type -AssemblyName System.Windows.Forms
 [System.Windows.Forms.Application]::EnableVisualStyles()
+chcp 65001
 
 # Correct root when run as exe
 $root = $PSScriptRoot
@@ -111,13 +120,14 @@ foreach($tab in $tabList) {
 
 #region Logic 
 function openAccount ($button) {
+    $link = "$(getFlashLink $button.Tag.link)&nothing=true"
     if ($null -eq $button.Tag.processId) {
-        $button.Tag.processId = $(Start-Process .\flashplayer_32.exe $(getFlashLink $button.Tag.link) -passthru).ID
+        $button.Tag.processId = $(Start-Process -FilePath ".\flashplayer_32.exe" -ArgumentList $link -PassThru).ID
     } else {
         if ($(Get-Process -Id $button.Tag.processId).ProcessName -eq "flashplayer_32") {
             toggleGameWindow $button.Tag.processId
         } else {
-            $button.Tag.processId = $(Start-Process .\flashplayer_32.exe $(getFlashLink $button.Tag.link) -passthru).ID
+            $button.Tag.processId = $(Start-Process -FilePath ".\flashplayer_32.exe" -ArgumentList $link -PassThru).ID
         }
     }
 }
@@ -151,5 +161,7 @@ function toggleGameWindow($processId) {
     }
 }
 
+$consolePtr = [Console.Window]::GetConsoleWindow()
+[Console.Window]::ShowWindow($consolePtr, 0)
 
-[void]$VPTAccounts.ShowDialog() 
+[void]$VPTAccounts.ShowDialog()
