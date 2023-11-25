@@ -200,6 +200,34 @@
                     "processId": ""
                 }
             ]
+        },
+        {
+            "owner": "Khoa",
+            "accList": [
+                {
+                    "link": "mc://http://s3.vuaphapthuat.goplay.vn/s/s45/index.php&qrac002@goid&d5f47142d4d6b1082fe8ad303a4a7020",
+                    "char": "HS",
+                    "name": "Siu",
+                    "processId": ""
+                },
+                {
+                    "link": "mc://http://s3.vuaphapthuat.goplay.vn/s/s45/index.php&qrac003@goid&4c76e613506961f969a981ef2a15b18d",
+                    "char": "TS",
+                    "name": "Taylor",
+                    "processId": ""
+                }
+            ]
+        },
+        {
+            "owner": "Yui",
+            "accList": [
+                {
+                    "link": "mc://http://s3.vuaphapthuat.goplay.vn/s/s45/index.php&nguyenttlazytori@goid&5f2b62188d75c3672469f77cb0c6d904",
+                    "char": "CB",
+                    "name": "Tiny Tori",
+                    "processId": ""
+                }
+            ]
         }
     ]
 }
