@@ -12,10 +12,11 @@ if ($root -eq "")
 $scripts = "$root\scripts"
 $images = "$root\images"
 $tools = "$root\tools"
+$font = New-Object System.Drawing.Font('Times New Roman',10,[System.Drawing.FontStyle]::Bold)
 $buttonHeight = 30
 
 $VPTAccounts                     = New-Object system.Windows.Forms.Form
-$VPTAccounts.ClientSize          = New-Object System.Drawing.Point(265, 500)
+$VPTAccounts.ClientSize          = New-Object System.Drawing.Point(215, 500)
 $VPTAccounts.Location = New-Object System.Drawing.Point(30, 20)
 # $VPTAccounts.MaximumSize         = New-Object System.Drawing.Size(265, 500)
 #$VPTAccounts.MaximumSize         = New-Object System.Drawing.Size(900, 476)
@@ -24,7 +25,7 @@ $VPTAccounts.TopMost             = $false
 
 
 # $accList = $(Invoke-RestMethod -Uri https://raw.githubusercontent.com/VoNgocTu/VPT/main/accounts.json).accList
-$tabList = $(Get-Content ".\accounts.json" | Out-String | ConvertFrom-Json).tabList
+$tabList = $(Get-Content ".\accounts.json" -Encoding UTF8 | Out-String | ConvertFrom-Json).tabList
 
 # Add the tab pages to the tab control
 $tabControl = New-Object System.Windows.Forms.TabControl
@@ -41,7 +42,14 @@ function getButtonY ($index) {
 }
 
 function getButtonWidth ($index) {
-    return 180
+    return 150
+}
+
+function getName ($acc) {
+    if ($acc.char -ne "") {
+        return "$($acc.char)  -  $($acc.name)"
+    }
+    return $acc.name
 }
 
 foreach($tab in $tabList) {
@@ -57,7 +65,7 @@ foreach($tab in $tabList) {
         $BugOnlineButton.width                   = $(getButtonWidth $buttonIndex)
         $BugOnlineButton.height                  = $buttonHeight
         $BugOnlineButton.location                = New-Object System.Drawing.Point($(getButtonX $buttonIndex), $(getButtonY $buttonIndex))
-        $BugOnlineButton.Font                    = New-Object System.Drawing.Font('Times New Roman',10,[System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
+        $BugOnlineButton.Font                    = $font
         $BugOnlineButton.BackColor               = [System.Drawing.ColorTranslator]::FromHtml("#a5e6d6")
         $BugOnlineButton.Add_Click({ Start-Process "$scripts\Auto-Bug-Online.ahk" })
         $buttonIndex++
@@ -67,7 +75,7 @@ foreach($tab in $tabList) {
         $ResetAttackButton.width                   = $(getButtonWidth $buttonIndex)
         $ResetAttackButton.height                  = $buttonHeight
         $ResetAttackButton.location                = New-Object System.Drawing.Point($(getButtonX $buttonIndex), $(getButtonY $buttonIndex))
-        $ResetAttackButton.Font                    = New-Object System.Drawing.Font('Times New Roman',10,[System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
+        $ResetAttackButton.Font                    = $font
         $ResetAttackButton.BackColor               = [System.Drawing.ColorTranslator]::FromHtml("#a5e6d6")
         $ResetAttackButton.Add_Click({ Start-Process "$scripts\Reset-Auto-Attack-Number.ahk" })
         $buttonIndex++
@@ -77,11 +85,11 @@ foreach($tab in $tabList) {
     foreach ($acc in $tab.accList) 
     {
         $LoginButton                         = New-Object system.Windows.Forms.Button
-        $LoginButton.text                    = "$($acc.char)  -  $($acc.name)"
+        $LoginButton.text                    = $(getName $acc)
         $LoginButton.width                   = $(getButtonWidth $buttonIndex)
         $LoginButton.height                  = $buttonHeight
         $LoginButton.location                = New-Object System.Drawing.Point($(getButtonX $buttonIndex), $(getButtonY $buttonIndex))
-        $LoginButton.Font                    = New-Object System.Drawing.Font('Times New Roman',10,[System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
+        $LoginButton.Font                    = $font
         $LoginButton.BackColor               = [System.Drawing.ColorTranslator]::FromHtml("#a5e6d6")
         $LoginButton.Tag                     = $acc
         $LoginButton.Add_Click({ openAccount $this })
