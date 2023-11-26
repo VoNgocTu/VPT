@@ -9,7 +9,6 @@ public static extern bool ShowWindow(IntPtr hWnd, Int32 nCmdShow);
 Add-Type -AssemblyName UIAutomationClient
 Add-Type -AssemblyName System.Windows.Forms
 [System.Windows.Forms.Application]::EnableVisualStyles()
-chcp 65001
 
 # Correct root when run as exe
 $root = $PSScriptRoot
@@ -18,9 +17,10 @@ if ($root -eq "")
     $root = ".";
 }
 
-$scripts = "$root\scripts"
-$images = "$root\images"
+$data = "$root\data"
 $tools = "$root\tools"
+$images = "$root\images"
+$scripts = "$root\scripts"
 $font = New-Object System.Drawing.Font('Times New Roman',10,[System.Drawing.FontStyle]::Bold)
 $buttonHeight = 30
 
@@ -34,7 +34,12 @@ $VPTAccounts.TopMost             = $false
 
 
 # $accList = $(Invoke-RestMethod -Uri https://raw.githubusercontent.com/VoNgocTu/VPT/main/accounts.json).accList
-$tabList = $(Get-Content ".\accounts.json" -Encoding UTF8 | Out-String | ConvertFrom-Json).tabList
+if (Test-Path .\data\Runtime.json) {
+    $tabList = $(Get-Content "$data\Runtime.json" -Encoding UTF8 | Out-String | ConvertFrom-Json).tabList
+}
+else  {
+    $tabList = $(Get-Content "$data\accounts.json" -Encoding UTF8 | Out-String | ConvertFrom-Json).tabList
+}
 
 # Add the tab pages to the tab control
 $tabControl = New-Object System.Windows.Forms.TabControl
@@ -122,14 +127,17 @@ foreach($tab in $tabList) {
 function openAccount ($button) {
     $link = "$(getFlashLink $button.Tag.link)&nothing=true"
     if ($null -eq $button.Tag.processId) {
-        $button.Tag.processId = $(Start-Process -FilePath ".\flashplayer_32.exe" -ArgumentList $link -PassThru).ID
+        $button.Tag.processId = $(Start-Process -FilePath "$tools\flashplayer_32.exe" -ArgumentList $link -PassThru).ID
     } else {
         if ($(Get-Process -Id $button.Tag.processId).ProcessName -eq "flashplayer_32") {
             toggleGameWindow $button.Tag.processId
         } else {
-            $button.Tag.processId = $(Start-Process -FilePath ".\flashplayer_32.exe" -ArgumentList $link -PassThru).ID
+            $button.Tag.processId = $(Start-Process -FilePath "$tools\flashplayer_32.exe" -ArgumentList $link -PassThru).ID
         }
     }
+
+    ConvertTo-Json $tabList -Depth 10 > .\data\Runtime.json
+    Set-Clipboard -Value $button.Tag.processId
 }
 
 function copyLink ($link) {
