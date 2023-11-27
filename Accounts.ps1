@@ -32,10 +32,16 @@ $VPTAccounts.Location = New-Object System.Drawing.Point(30, 20)
 $VPTAccounts.text                = "VPT Accounts"
 $VPTAccounts.TopMost             = $false
 
+$iconBase64      = [Convert]::ToBase64String((Get-Content ".\images\icon.ico" -Encoding Byte))
+$iconBytes       = [Convert]::FromBase64String($iconBase64)
+# initialize a Memory stream holding the bytes
+$stream          = [System.IO.MemoryStream]::new($iconBytes, 0, $iconBytes.Length)
+$VPTAccounts.Icon       = [System.Drawing.Icon]::FromHandle(([System.Drawing.Bitmap]::new($stream).GetHIcon()))
+
 
 # $accList = $(Invoke-RestMethod -Uri https://raw.githubusercontent.com/VoNgocTu/VPT/main/accounts.json).accList
 if (Test-Path .\data\Runtime.json) {
-    $tabList = $(Get-Content "$data\Runtime.json" -Encoding UTF8 | Out-String | ConvertFrom-Json).tabList
+    $tabList = $(Get-Content "$data\accounts.json" -Encoding UTF8 | Out-String | ConvertFrom-Json).tabList
 }
 else  {
     $tabList = $(Get-Content "$data\accounts.json" -Encoding UTF8 | Out-String | ConvertFrom-Json).tabList
