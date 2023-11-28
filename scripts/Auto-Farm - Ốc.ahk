@@ -18,56 +18,10 @@ F12::{
 
         regen(pid)
 
-        ControlClick "x167 y556", "ahk_id " pid ; Chọn ốc 
-        Sleep 2000
-        ControlClick "x167 y556", "ahk_id " pid ; Chọn ốc 
-        Sleep 2000
-        ControlClick "x167 y556", "ahk_id " pid ; Chọn ốc 
-        Sleep 2000
-        ControlClick "x167 y556", "ahk_id " pid ; Chọn ốc 
-        Sleep 2000
-        ControlClick "x167 y556", "ahk_id " pid ; Chọn ốc 
-        Sleep 2000
-        ControlClick "x167 y556", "ahk_id " pid ; Chọn ốc 
-        Sleep 2000
-
-        regen(pid)
-
-        ControlClick "x167 y556", "ahk_id " pid ; Chọn ốc 
-        Sleep 2000
-        ControlClick "x167 y556", "ahk_id " pid ; Chọn ốc 
-        Sleep 2000
-        ControlClick "x167 y556", "ahk_id " pid ; Chọn ốc 
-        Sleep 2000
-        ControlClick "x167 y556", "ahk_id " pid ; Chọn ốc 
-        Sleep 2000
-        ControlClick "x167 y556", "ahk_id " pid ; Chọn ốc 
-        Sleep 2000
-
-        regen(pid)
-
-        ControlClick "x167 y556", "ahk_id " pid ; Chọn ốc 
-        Sleep 2000
-        ControlClick "x167 y556", "ahk_id " pid ; Chọn ốc 
-        Sleep 2000
-        ControlClick "x167 y556", "ahk_id " pid ; Chọn ốc 
-        Sleep 2000
-
-        regen(pid)
-
         ControlClick "x270 y558", "ahk_id " pid ; chọn ngư phu
         Sleep 2000
         ControlClick "x270 y558", "ahk_id " pid ; chọn ngư phu
         Sleep 2000
-        ControlClick "x270 y558", "ahk_id " pid ; chọn ngư phu
-        Sleep 2000
-        ControlClick "x270 y558", "ahk_id " pid ; chọn ngư phu
-        Sleep 2000
-        ControlClick "x270 y558", "ahk_id " pid ; chọn ngư phu
-        Sleep 2000
-
-        regen(pid)
-
         ControlClick "x270 y558", "ahk_id " pid ; chọn ngư phu
         Sleep 2000
         ControlClick "x270 y558", "ahk_id " pid ; chọn ngư phu

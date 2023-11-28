@@ -29,22 +29,16 @@ $VPTAccounts.ClientSize          = New-Object System.Drawing.Point(215, 500)
 $VPTAccounts.Location = New-Object System.Drawing.Point(30, 20)
 # $VPTAccounts.MaximumSize         = New-Object System.Drawing.Size(265, 500)
 #$VPTAccounts.MaximumSize         = New-Object System.Drawing.Size(900, 476)
-$VPTAccounts.text                = "VPT Accounts"
+$VPTAccounts.text                = "Accounts"
 $VPTAccounts.TopMost             = $false
 
-$iconBase64      = [Convert]::ToBase64String((Get-Content ".\images\icon.ico" -Encoding Byte))
-$iconBytes       = [Convert]::FromBase64String($iconBase64)
-# initialize a Memory stream holding the bytes
-$stream          = [System.IO.MemoryStream]::new($iconBytes, 0, $iconBytes.Length)
-$VPTAccounts.Icon       = [System.Drawing.Icon]::FromHandle(([System.Drawing.Bitmap]::new($stream).GetHIcon()))
-
-
 # $accList = $(Invoke-RestMethod -Uri https://raw.githubusercontent.com/VoNgocTu/VPT/main/accounts.json).accList
-if (Test-Path .\data\Runtime.json) {
-    $tabList = $(Get-Content "$data\accounts.json" -Encoding UTF8 | Out-String | ConvertFrom-Json).tabList
+
+if (Test-Path .\data\runtime.json) {
+    $tabList = $(Get-Content "$data\runtime.json" -Encoding UTF8 | Out-String | ConvertFrom-Json)
 }
 else  {
-    $tabList = $(Get-Content "$data\accounts.json" -Encoding UTF8 | Out-String | ConvertFrom-Json).tabList
+    $tabList = $(Get-Content "$data\accounts.json" -Encoding UTF8 | Out-String | ConvertFrom-Json)
 }
 
 # Add the tab pages to the tab control
@@ -131,18 +125,20 @@ foreach($tab in $tabList) {
 
 #region Logic 
 function openAccount ($button) {
-    $link = "$(getFlashLink $button.Tag.link)&nothing=true"
     if ($null -eq $button.Tag.processId) {
-        $button.Tag.processId = $(Start-Process -FilePath "$tools\flashplayer_32.exe" -ArgumentList $link -PassThru).ID
+        $button.Tag.processId = ""
+    }
+    $link = "$(getFlashLink $button.Tag.link)&nothing=true"
+
+    $process = Get-Process -Id $button.Tag.processId
+
+    if (($null -ne $process) -and ($process.ProcessName -eq "flashplayer_32")) {
+        toggleGameWindow $button.Tag.processId
     } else {
-        if ($(Get-Process -Id $button.Tag.processId).ProcessName -eq "flashplayer_32") {
-            toggleGameWindow $button.Tag.processId
-        } else {
-            $button.Tag.processId = $(Start-Process -FilePath "$tools\flashplayer_32.exe" -ArgumentList $link -PassThru).ID
-        }
+        $button.Tag.processId = $(Start-Process -FilePath "$tools\flashplayer_32.exe" -ArgumentList $link -PassThru).ID
     }
 
-    ConvertTo-Json $tabList -Depth 10 > .\data\Runtime.json
+    ConvertTo-Json $tabList -Depth 10 > .\data\runtime.json
     Set-Clipboard -Value $button.Tag.processId
 }
 
