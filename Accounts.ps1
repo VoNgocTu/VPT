@@ -138,7 +138,7 @@ function openAccount ($button) {
         $button.Tag.processId = $(Start-Process -FilePath "$tools\flashplayer_32.exe" -ArgumentList $link -PassThru).ID
     }
 
-    ConvertTo-Json $tabList -Depth 10 > .\data\runtime.json
+    $tabList | ConvertTo-Json -Depth 10 > .\data\runtime.json
     Set-Clipboard -Value $button.Tag.processId
 }
 
