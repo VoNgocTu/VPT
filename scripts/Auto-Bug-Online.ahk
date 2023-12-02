@@ -1,5 +1,13 @@
 ahk_id := "ahk_pid " A_Args.get(1)
 
+; Prevent ControlSend error.
+ControlClick "x521 y351", ahk_id ; Click to center
+Sleep 300
+ControlClick "x521 y351", ahk_id ; Click to center
+Sleep 300
+ControlClick "x521 y351", ahk_id ; Click to center
+Sleep 300
+
 ControlSend "p", , ahk_id
 Sleep 1000
 ControlClick "x564 y176", ahk_id ; Nhân vật

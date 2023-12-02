@@ -22,24 +22,24 @@ F10::{
 
 move(ahk_id, step := 1, sleepTime := 1000)
 {
+    global pidArray
     loop step {
-        ; Group 1
+        ; Move Group 1
         ControlClick "x211 y555", ahk_id
         Sleep sleepTime
         ControlClick "x231 y555", ahk_id
         Sleep sleepTime
         ControlClick "x251 y555", ahk_id
-        autoCombatAll() ; 1s
+        autoCombat(pidArray) ; 1s
+        regenMain(ahk_id)
 
-        ; Group 2
+        ; Move Group 2
         ControlClick "x311 y555", ahk_id
         Sleep sleepTime
         ControlClick "x331 y555", ahk_id
         Sleep sleepTime
         ControlClick "x351 y555", ahk_id
-        autoCombatAll() ; 1s
-
-        ; Đảm bảo pet của acc kéo ko bao giờ hết mana
+        autoCombat(pidArray) ; 1s
         regenMain(ahk_id)
     }
 }
@@ -59,6 +59,7 @@ resetAutoAttack() {
     }
 }
 
+; Đảm bảo pet của acc kéo ko bao giờ hết mana
 regenMain(main_id, sleepTime := 200) {
     ControlClick "x124 y23", main_id
     Sleep sleepTime
@@ -69,10 +70,8 @@ regenMain(main_id, sleepTime := 200) {
 }
 
 
-regenAll(sleepTime := 200) {
-    global pidArray
-    ids := pidArray
-    for id in ids
+regenAll(pidArray, sleepTime := 200) {
+    for id in pidArray
     {
         ahk_id := "ahk_id " id
         ControlClick "x124 y23", ahk_id
@@ -83,11 +82,9 @@ regenAll(sleepTime := 200) {
 }
 
 
-autoCombatAll()
+autoCombat(pidArray)
 {
-    global pidArray
-    ids := pidArray
-    for id in ids
+    for id in pidArray
     {
         ControlClick "x968 y355", "ahk_id " id ; Click auto khi đang trong trận, fix lỗi reset auto không thành công
         Sleep 200
