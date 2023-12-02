@@ -12,7 +12,7 @@ F10::{
     loop {
         loop 8 {
             move(ahk_id, 5)
-            regen(ahk_id) 
+            regenAll() 
         }
         
         resetAutoAttack()
@@ -23,18 +23,23 @@ F10::{
 move(ahk_id, step := 1, sleepTime := 1000)
 {
     loop step {
+        ; Group 1
         ControlClick "x211 y555", ahk_id
         Sleep sleepTime
         ControlClick "x231 y555", ahk_id
         Sleep sleepTime
         ControlClick "x251 y555", ahk_id
-        Sleep sleepTime
+        autoCombatAll() ; 1s
+
+        ; Group 2
         ControlClick "x311 y555", ahk_id
         Sleep sleepTime
         ControlClick "x331 y555", ahk_id
         Sleep sleepTime
         ControlClick "x351 y555", ahk_id
-        Sleep sleepTime
+        autoCombatAll() ; 1s
+
+        ; Đảm bảo pet của acc kéo ko bao giờ hết mana
         regenMain(ahk_id)
     }
 }
@@ -45,8 +50,6 @@ stop(ahk_id)
 }
 
 resetAutoAttack() {
-    ; Sleep 7000
-
     global pidArray
     ids := pidArray
     for id in ids
@@ -56,7 +59,7 @@ resetAutoAttack() {
     }
 }
 
-regenMain() (main_id, sleepTime := 200) {
+regenMain(main_id, sleepTime := 200) {
     ControlClick "x124 y23", main_id
     Sleep sleepTime
     ControlClick "x103 y81", main_id
@@ -66,9 +69,7 @@ regenMain() (main_id, sleepTime := 200) {
 }
 
 
-regen(main_id, sleepTime := 200) {
-    ; Sleep 5000 ; Wait for combat end
-
+regenAll(sleepTime := 200) {
     global pidArray
     ids := pidArray
     for id in ids
@@ -78,9 +79,18 @@ regen(main_id, sleepTime := 200) {
         Sleep sleepTime
         ControlClick "x103 y81", ahk_id
         Sleep sleepTime
-        ControlClick "x133 y81", ahk_id
-        Sleep sleepTime
-        ControlClick "x957 y356", ahk_id ; auto in combat
+    }
+}
+
+
+autoCombatAll()
+{
+    global pidArray
+    ids := pidArray
+    for id in ids
+    {
+        ControlClick "x968 y355", "ahk_id " id ; Click auto khi đang trong trận, fix lỗi reset auto không thành công
+        Sleep 200
     }
 }
 ; ControlClick "x124 y23", ahk_id ; Bơm máu mana nhân vật

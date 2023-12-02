@@ -1,24 +1,13 @@
-title := "Adobe Flash Player 32"
-ControlSend "p", , title
+ahk_id := "ahk_pid " A_Args.get(1)
+
+ControlSend "p", , ahk_id
 Sleep 1000
-ControlClick "x564 y176", title ; Nhân vật
+ControlClick "x564 y176", ahk_id ; Nhân vật
 Sleep 1000
-ControlClick "x400 y450", title ; Chọn nhân vật đầu tiên
+ControlClick "x400 y450", ahk_id ; Chọn nhân vật đầu tiên
 Sleep 1000
-ControlClick "x500 y450", title ; Chọn nhân vật thứ 2
+ControlClick "x500 y450", ahk_id ; Chọn nhân vật thứ 2
 Sleep 1000
-ControlClick "x400 y550", title ; Vào game
+ControlClick "x400 y550", ahk_id ; Vào game
 Sleep 1500
-WinClose title
-
-; a::{
-; }
-; b::{
-;     ControlClick "x500 y450", title ; Select Char 2
-; }
-; c::{
-;     ControlClick "x600 y450", title ; Select Char 3
-; }
-
-
-; Sleep 5000
+WinClose ahk_id

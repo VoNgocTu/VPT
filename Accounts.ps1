@@ -22,15 +22,23 @@ $tools = "$root\tools"
 $images = "$root\images"
 $scripts = "$root\scripts"
 $font = New-Object System.Drawing.Font('Times New Roman',10,[System.Drawing.FontStyle]::Bold)
+$buttonBackgroundColor = [System.Drawing.ColorTranslator]::FromHtml("#a5e6d6")
 $buttonHeight = 30
 
-$VPTAccounts                     = New-Object system.Windows.Forms.Form
-$VPTAccounts.ClientSize          = New-Object System.Drawing.Point(215, 500)
-$VPTAccounts.Location = New-Object System.Drawing.Point(30, 20)
-# $VPTAccounts.MaximumSize         = New-Object System.Drawing.Size(265, 500)
-#$VPTAccounts.MaximumSize         = New-Object System.Drawing.Size(900, 476)
-$VPTAccounts.text                = "Accounts"
-$VPTAccounts.TopMost             = $false
+$Accounts                     = New-Object system.Windows.Forms.Form
+$Accounts.ClientSize          = New-Object System.Drawing.Point(215, 500)
+$Accounts.Location = New-Object System.Drawing.Point(30, 20)
+# $Accounts.MaximumSize         = New-Object System.Drawing.Size(265, 500)
+#$Accounts.MaximumSize         = New-Object System.Drawing.Size(900, 476)
+$Accounts.text                = "Accounts"
+$Accounts.TopMost             = $false
+
+
+$AutoFarmForm                     = New-Object system.Windows.Forms.Form
+$AutoFarmForm.ClientSize          = New-Object System.Drawing.Point(215, 500)
+$AutoFarmForm.Location = New-Object System.Drawing.Point(30, 20)
+$AutoFarmForm.text                = "AutoFarm"
+$AutoFarmForm.TopMost             = $false
 
 # $accList = $(Invoke-RestMethod -Uri https://raw.githubusercontent.com/VoNgocTu/VPT/main/accounts.json).accList
 
@@ -43,7 +51,7 @@ else  {
 
 # Add the tab pages to the tab control
 $tabControl = New-Object System.Windows.Forms.TabControl
-$VPTAccounts.Controls.Add($tabControl)
+$Accounts.Controls.Add($tabControl)
 $tabControl.Dock = "Fill"
 
 
@@ -74,26 +82,16 @@ foreach($tab in $tabList) {
     
     $buttonIndex = 0
     if ($tab.owner -eq "Main") {
-        $BugOnlineButton                         = New-Object system.Windows.Forms.Button
-        $BugOnlineButton.text                    = "Bug online"
-        $BugOnlineButton.width                   = $(getButtonWidth $buttonIndex)
-        $BugOnlineButton.height                  = $buttonHeight
-        $BugOnlineButton.location                = New-Object System.Drawing.Point($(getButtonX $buttonIndex), $(getButtonY $buttonIndex))
-        $BugOnlineButton.Font                    = $font
-        $BugOnlineButton.BackColor               = [System.Drawing.ColorTranslator]::FromHtml("#a5e6d6")
-        $BugOnlineButton.Add_Click({ Start-Process "$scripts\Auto-Bug-Online.ahk" })
+        $AutoFarmButton                         = New-Object system.Windows.Forms.Button
+        $AutoFarmButton.text                    = "Auto Farm"
+        $AutoFarmButton.width                   = $(getButtonWidth $buttonIndex)
+        $AutoFarmButton.height                  = $buttonHeight
+        $AutoFarmButton.location                = New-Object System.Drawing.Point($(getButtonX $buttonIndex), $(getButtonY $buttonIndex))
+        $AutoFarmButton.Font                    = $font
+        $AutoFarmButton.BackColor               = $buttonBackgroundColor
         $buttonIndex++
         
-        $ResetAttackButton                         = New-Object system.Windows.Forms.Button
-        $ResetAttackButton.text                    = "Reset lượt đánh"
-        $ResetAttackButton.width                   = $(getButtonWidth $buttonIndex)
-        $ResetAttackButton.height                  = $buttonHeight
-        $ResetAttackButton.location                = New-Object System.Drawing.Point($(getButtonX $buttonIndex), $(getButtonY $buttonIndex))
-        $ResetAttackButton.Font                    = $font
-        $ResetAttackButton.BackColor               = [System.Drawing.ColorTranslator]::FromHtml("#a5e6d6")
-        $ResetAttackButton.Add_Click({ Start-Process "$scripts\Reset-Auto-Attack-Number.ahk" })
-        $buttonIndex++
-        $tabPage.controls.AddRange(@($BugOnlineButton, $ResetAttackButton))
+        $tabPage.controls.AddRange(@($AutoFarmButton))
     }
     
     foreach ($acc in $tab.accList) 
@@ -104,42 +102,84 @@ foreach($tab in $tabList) {
         $LoginButton.height                  = $buttonHeight
         $LoginButton.location                = New-Object System.Drawing.Point($(getButtonX $buttonIndex), $(getButtonY $buttonIndex))
         $LoginButton.Font                    = $font
-        $LoginButton.BackColor               = [System.Drawing.ColorTranslator]::FromHtml("#a5e6d6")
+        $LoginButton.BackColor               = $buttonBackgroundColor
         $LoginButton.Tag                     = $acc
-        $LoginButton.Add_Click({ openAccount $this })
+        $LoginButton.Add_MouseDown({ LoginButton_ContextMenuUpdate $this })
+        $LoginButton.Add_MouseUp({ LoginButton_Click $this })
         $buttonIndex++
-    
-        # $CopyLinkButton                       = New-Object system.Windows.Forms.Button
-        # $CopyLinkButton.image                 = [system.drawing.image]::FromFile("$images\link-icon.png")
-        # $CopyLinkButton.width                 = 30
-        # $CopyLinkButton.height                = 30
-        # $CopyLinkButton.location              = New-Object System.Drawing.Point(180, $($acc.index * 40 + 60))
-        # $CopyLinkButton.Tag                   = $acc.link
-        # $CopyLinkButton.Add_Click({ copyLink $this.Tag })
-        
+
+        $contextMenu = New-Object System.Windows.Forms.ContextMenuStrip
+        $LoginButton.ContextMenuStrip = $contextMenu
         $tabPage.controls.AddRange(@($LoginButton))
     }
 }
 
+function LoginButton_ContextMenuUpdate($button) {
+    $button.ContextMenuStrip.Items.Clear()
+    $process = getVPTProcess $button
+    if ($null -ne $process) {
+        $BugOnline                         = New-Object System.Windows.Forms.ToolStripMenuItem
+        $BugOnline.text                    = "Bug online"
+        $BugOnline.Font                    = $font
+        $BugOnline.Tag                     = $button.Tag
+        $BugOnline.BackColor               = $buttonBackgroundColor
+        $BugOnline.Add_Click({ Start-Process "$scripts\Auto-Bug-Online.ahk" -ArgumentList $this.Tag.processId })
+    
+        $PlantMaterial                         = New-Object System.Windows.Forms.ToolStripMenuItem
+        $PlantMaterial.text                    = "Trồng Nguyên Liệu"
+        $PlantMaterial.Font                    = $font
+        $PlantMaterial.Tag                     = $button.Tag
+        $PlantMaterial.BackColor               = $buttonBackgroundColor
+        $PlantMaterial.Add_Click({ Start-Process "$scripts\Auto-Plant-Material.ahk" -ArgumentList $this.Tag.processId })
+        
+        $ResetAttack                         = New-Object System.Windows.Forms.ToolStripMenuItem
+        $ResetAttack.text                    = "Reset lượt đánh"
+        $ResetAttack.Font                    = $font
+        $ResetAttack.Tag                     = $button.Tag
+        $ResetAttack.BackColor               = $buttonBackgroundColor
+        $ResetAttack.Add_Click({ Start-Process -FilePath "$scripts\Reset-Auto-Attack-Number.ahk" -ArgumentList $this.Tag.processId })
+    
+        $CopyLink                         = New-Object System.Windows.Forms.ToolStripMenuItem
+        $CopyLink.text                    = "Copy Link"
+        $CopyLink.Font                    = $font
+        $CopyLink.Tag                     = $button.Tag
+        $CopyLink.BackColor               = $buttonBackgroundColor
+        $CopyLink.Add_Click({ copyLink $this.Tag.link })
+        $button.ContextMenuStrip.Items.AddRange(@($BugOnline, $PlantMaterial, $ResetAttack, $CopyLink))
+    } 
+}
 
+function LoginButton_Click($button) {  
+    if ($_.Button -eq [System.Windows.Forms.MouseButtons]::Left ) {
+        openAccount $button
+    }
+}
 
 #region Logic 
 function openAccount ($button) {
-    if ($null -eq $button.Tag.processId) {
-        $button.Tag.processId = ""
-    }
     $link = "$(getFlashLink $button.Tag.link)&nothing=true"
 
-    $process = Get-Process -Id $button.Tag.processId
-
-    if (($null -ne $process) -and ($process.ProcessName -eq "flashplayer_32")) {
+    $process = getVPTProcess $button
+    if ($null -ne $process) {
         toggleGameWindow $button.Tag.processId
     } else {
         $button.Tag.processId = $(Start-Process -FilePath "$tools\flashplayer_32.exe" -ArgumentList $link -PassThru).ID
     }
 
     $tabList | ConvertTo-Json -Depth 10 > .\data\runtime.json
-    Set-Clipboard -Value $button.Tag.processId
+}
+
+function getVPTProcess($button) {
+    if (-not (Get-Member -inputobject $button.Tag -name "processId" -Membertype Properties)) {
+        $button.Tag | Add-Member -MemberType NoteProperty -Name "processId" -Value 9999999
+    }
+    
+    $process = Get-Process -Id $button.Tag.processId
+    if (($null -eq $process) -or ($process.ProcessName -ne "flashplayer_32")) {
+        return $null
+    }
+
+    return $process
 }
 
 function copyLink ($link) {
@@ -156,7 +196,7 @@ function getFlashLink ($link) {
     $server = $matches[1]
     $user = $matches[2]
     $pass = $matches[3]
-    return "http://s3.vuaphapthuat.goplay.vn/s/$server/GameLoaders.swf?user=$user&pass=$pass&isExpand=true" 
+    return "https://s3-vuaphapthuat.goplay.vn/s/$server/GameLoaders.swf?user=$user&pass=$pass&isExpand=true" 
 }
 
 
@@ -174,4 +214,4 @@ function toggleGameWindow($processId) {
 $consolePtr = [Console.Window]::GetConsoleWindow()
 [Console.Window]::ShowWindow($consolePtr, 0)
 
-[void]$VPTAccounts.ShowDialog()
+[void]$Accounts.ShowDialog()
