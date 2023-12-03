@@ -10,12 +10,8 @@ F10::{
     global pidArray
     ahk_id := "ahk_id " pidArray.get(1)
     loop {
-        loop 8 {
-            move(ahk_id, 5)
-            regenAll() 
-        }
-        
-        resetAutoAttack()
+        move(ahk_id, 5)
+        regen(pidArray) 
     }
 }
 
@@ -30,8 +26,8 @@ move(ahk_id, step := 1, sleepTime := 1000)
         ControlClick "x231 y555", ahk_id
         Sleep sleepTime
         ControlClick "x251 y555", ahk_id
-        autoCombat(pidArray) ; 1s
-        regenMain(ahk_id)
+        resetAuto(pidArray) ; 1s
+        regen(Array(ahk_id))
 
         ; Move Group 2
         ControlClick "x311 y555", ahk_id
@@ -39,38 +35,13 @@ move(ahk_id, step := 1, sleepTime := 1000)
         ControlClick "x331 y555", ahk_id
         Sleep sleepTime
         ControlClick "x351 y555", ahk_id
-        autoCombat(pidArray) ; 1s
-        regenMain(ahk_id)
+        resetAuto(pidArray) ; 1s
+        regen(Array(ahk_id))
     }
 }
 
-stop(ahk_id)
-{
-    ControlClick "x521 y351", ahk_id
-}
 
-resetAutoAttack() {
-    global pidArray
-    ids := pidArray
-    for id in ids
-    {
-        ControlClick "x1026 y608", "ahk_id " id ; auto outside combat
-        ControlClick "x1026 y608", "ahk_id " id ; auto outside combat
-    }
-}
-
-; Đảm bảo pet của acc kéo ko bao giờ hết mana
-regenMain(main_id, sleepTime := 200) {
-    ControlClick "x124 y23", main_id
-    Sleep sleepTime
-    ControlClick "x103 y81", main_id
-    Sleep sleepTime
-    ControlClick "x133 y81", main_id
-    Sleep sleepTime
-}
-
-
-regenAll(pidArray, sleepTime := 200) {
+regen(pidArray, sleepTime := 200) {
     for id in pidArray
     {
         ahk_id := "ahk_id " id
@@ -78,21 +49,17 @@ regenAll(pidArray, sleepTime := 200) {
         Sleep sleepTime
         ControlClick "x103 y81", ahk_id
         Sleep sleepTime
+        ControlClick "x133 y81", ahk_id
+        Sleep sleepTime
     }
 }
 
 
-autoCombat(pidArray)
+resetAuto(pidArray)
 {
     for id in pidArray
     {
-        ControlClick "x968 y355", "ahk_id " id ; Click auto khi đang trong trận, fix lỗi reset auto không thành công
+        ControlClick "x968 y355", "ahk_id " id ; Click auto khi đang trong trận
         Sleep 200
     }
 }
-; ControlClick "x124 y23", ahk_id ; Bơm máu mana nhân vật
-; ControlClick "x93 y81", ahk_id ; Bơm máu mana pet
-; ControlClick "x103 y81", ahk_id ; Bơm máu mana pet
-; ControlClick "x113 y81", ahk_id ; Bơm máu mana pet
-; ControlClick "x133 y81", ahk_id ; Bơm máu mana pet
-; ControlClick "x133 y81", ahk_id ; Bơm máu mana pet
