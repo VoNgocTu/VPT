@@ -33,8 +33,6 @@ autoPlant(ahk_pid) {
     Sleep 500
     ControlClick "x398 y278", ahk_pid ; Thu hoạch
     Sleep 5000
-
-    ControlSend "{Escape}", , ahk_pid
 }
 
 plantMaterials(ahk_pid) {

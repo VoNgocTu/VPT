@@ -131,13 +131,13 @@ function LoginButton_ContextMenuUpdate($button) {
         $PlantMaterial.Tag                     = $button.Tag
         $PlantMaterial.BackColor               = $buttonBackgroundColor
         $PlantMaterial.Add_Click({ Start-Process "$scripts\Auto-Plant-Material.ahk" -ArgumentList $this.Tag.processId })
-        
-        $ResetAttack                         = New-Object System.Windows.Forms.ToolStripMenuItem
-        $ResetAttack.text                    = "Reset lượt đánh"
-        $ResetAttack.Font                    = $font
-        $ResetAttack.Tag                     = $button.Tag
-        $ResetAttack.BackColor               = $buttonBackgroundColor
-        $ResetAttack.Add_Click({ Start-Process -FilePath "$scripts\Reset-Auto-Attack-Number.ahk" -ArgumentList $this.Tag.processId })
+
+        $PetBattle                         = New-Object System.Windows.Forms.ToolStripMenuItem
+        $PetBattle.text                    = "Auto Đấu Pet"
+        $PetBattle.Font                    = $font
+        $PetBattle.Tag                     = $button.Tag
+        $PetBattle.BackColor               = $buttonBackgroundColor
+        $PetBattle.Add_Click({ Start-Process "$scripts\Auto-Pet-Battle.ahk" -ArgumentList $this.Tag.processId })
     
         $CopyLink                         = New-Object System.Windows.Forms.ToolStripMenuItem
         $CopyLink.text                    = "Copy Link"
@@ -145,8 +145,19 @@ function LoginButton_ContextMenuUpdate($button) {
         $CopyLink.Tag                     = $button.Tag
         $CopyLink.BackColor               = $buttonBackgroundColor
         $CopyLink.Add_Click({ copyLink $this.Tag.link })
-        $button.ContextMenuStrip.Items.AddRange(@($BugOnline, $PlantMaterial, $ResetAttack, $CopyLink))
-    } 
+        $button.ContextMenuStrip.Items.AddRange(@($BugOnline, $PlantMaterial, $PetBattle, $CopyLink))
+    } else {
+        $autoClone                        = New-Object System.Windows.Forms.ToolStripMenuItem
+        $autoClone.text                    = "Auto Clone"
+        $autoClone.Font                    = $font
+        $autoClone.Tag                     = $button.Tag
+        $autoClone.BackColor               = $buttonBackgroundColor
+        $autoClone.Add_Click({ 
+            openAccount $this
+            Start-Process "$scripts\Auto-Clone.ahk" -ArgumentList $this.Tag.processId 
+        })
+        $button.ContextMenuStrip.Items.AddRange(@($autoClone))
+    }
 }
 
 function LoginButton_Click($button) {  

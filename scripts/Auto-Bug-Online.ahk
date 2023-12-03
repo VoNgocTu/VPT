@@ -1,3 +1,4 @@
+#SingleInstance Off
 ahk_id := "ahk_pid " A_Args.get(1)
 
 ; Prevent ControlSend error.
