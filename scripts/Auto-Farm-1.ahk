@@ -8,17 +8,18 @@ F9::{
 
 F10::{
     global pidArray
-    ahk_id := "ahk_id " pidArray.get(1)
+    key_id := pidArray.get(1)
     loop {
-        move(ahk_id, 5)
+        move(key_id, 4)
         regen(pidArray) 
     }
 }
 
 
-move(ahk_id, step := 1, sleepTime := 1000)
+move(key_id, step := 1, sleepTime := 1000)
 {
     global pidArray
+    ahk_id := "ahk_id " key_id
     loop step {
         ; Move Group 1
         ControlClick "x211 y555", ahk_id
@@ -27,7 +28,7 @@ move(ahk_id, step := 1, sleepTime := 1000)
         Sleep sleepTime
         ControlClick "x251 y555", ahk_id
         resetAuto(pidArray) ; 1s
-        regen(Array(ahk_id))
+        regen([key_id])
 
         ; Move Group 2
         ControlClick "x311 y555", ahk_id
@@ -36,7 +37,7 @@ move(ahk_id, step := 1, sleepTime := 1000)
         Sleep sleepTime
         ControlClick "x351 y555", ahk_id
         resetAuto(pidArray) ; 1s
-        regen(Array(ahk_id))
+        regen([key_id])
     }
 }
 
