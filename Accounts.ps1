@@ -34,11 +34,11 @@ $Accounts.text                = "Accounts"
 $Accounts.TopMost             = $false
 
 
-$AutoFarmForm                     = New-Object system.Windows.Forms.Form
-$AutoFarmForm.ClientSize          = New-Object System.Drawing.Point(215, 500)
-$AutoFarmForm.Location = New-Object System.Drawing.Point(30, 20)
-$AutoFarmForm.text                = "AutoFarm"
-$AutoFarmForm.TopMost             = $false
+$GroupForm                     = New-Object system.Windows.Forms.Form
+$GroupForm.ClientSize          = New-Object System.Drawing.Point(350, 500)
+$GroupForm.Location = New-Object System.Drawing.Point(30, 20)
+$GroupForm.text                = "Group"
+$GroupForm.TopMost             = $false
 
 # $accList = $(Invoke-RestMethod -Uri https://raw.githubusercontent.com/VoNgocTu/VPT/main/accounts.json).accList
 
@@ -48,6 +48,8 @@ if (Test-Path .\data\runtime.json) {
 else  {
     $tabList = $(Get-Content "$data\accounts.json" -Encoding UTF8 | Out-String | ConvertFrom-Json)
 }
+
+
 
 # Add the tab pages to the tab control
 $tabControl = New-Object System.Windows.Forms.TabControl
@@ -82,16 +84,31 @@ foreach($tab in $tabList) {
     
     $buttonIndex = 0
     if ($tab.owner -eq "Main") {
-        $AutoFarmButton                         = New-Object system.Windows.Forms.Button
-        $AutoFarmButton.text                    = "Auto Farm"
-        $AutoFarmButton.width                   = $(getButtonWidth $buttonIndex)
-        $AutoFarmButton.height                  = $buttonHeight
-        $AutoFarmButton.location                = New-Object System.Drawing.Point($(getButtonX $buttonIndex), $(getButtonY $buttonIndex))
-        $AutoFarmButton.Font                    = $font
-        $AutoFarmButton.BackColor               = $buttonBackgroundColor
+        $mouseMirror                         = New-Object system.Windows.Forms.Button
+        $mouseMirror.text                    = "Mouse mirror"
+        $mouseMirror.width                   = $(getButtonWidth $buttonIndex)
+        $mouseMirror.height                  = $buttonHeight
+        $mouseMirror.location                = New-Object System.Drawing.Point($(getButtonX $buttonIndex), $(getButtonY $buttonIndex))
+        $mouseMirror.Font                    = $font
+        $mouseMirror.BackColor               = $buttonBackgroundColor
+        $mouseMirror.Add_Click({ Start-Process "$scripts\MouseMirror-2.ahk" })
         $buttonIndex++
+
+        $AddGroup                         = New-Object system.Windows.Forms.Button
+        $AddGroup.text                    = "Group"
+        $AddGroup.width                   = $(getButtonWidth $buttonIndex)
+        $AddGroup.height                  = $buttonHeight
+        $AddGroup.location                = New-Object System.Drawing.Point($(getButtonX $buttonIndex), $(getButtonY $buttonIndex))
+        $AddGroup.Font                    = $font
+        $AddGroup.BackColor               = $buttonBackgroundColor
+        $AddGroup.Add_Click({ getGroupFormContent })
+        $buttonIndex++
+
+        $tabPage.controls.AddRange(@($mouseMirror, $AddGroup))
+
+       
         
-        $tabPage.controls.AddRange(@($AutoFarmButton))
+
     }
     
     foreach ($acc in $tab.accList) 
@@ -112,6 +129,68 @@ foreach($tab in $tabList) {
         $LoginButton.ContextMenuStrip = $contextMenu
         $tabPage.controls.AddRange(@($LoginButton))
     }
+}
+
+$tabPage = New-Object System.Windows.Forms.TabPage
+$tabPage.Text = "Group"
+$tabPage.BackgroundImage = [system.drawing.image]::FromFile("$images\Background.jpg")
+$tabControl.Controls.Add($tabPage)
+
+$buttonIndex = 0
+foreach ($group in $groupList) 
+{
+    $showGroup                         = New-Object system.Windows.Forms.Button
+    $showGroup.text                    = $group.accList
+    $showGroup.width                   = 300
+    $showGroup.height                  = $buttonHeight
+    $showGroup.location                = New-Object System.Drawing.Point($(getButtonX $buttonIndex), $(getButtonY $buttonIndex))
+    $showGroup.Font                    = $font
+    $showGroup.BackColor               = $buttonBackgroundColor
+    $showGroup.Tag                     = $group
+    $showGroup.Add_Click({ 
+        Start-Process "$scripts\Show.ahk" -ArgumentList """$this.Tag.accList"""
+    })
+    $buttonIndex++
+
+    $mirror                         = New-Object system.Windows.Forms.Button
+    $mirror.text                    = "Mirror"
+    $mirror.width                   = 100
+    $mirror.height                  = $buttonHeight
+    $mirror.location                = New-Object System.Drawing.Point($(getButtonX $buttonIndex), $(getButtonY $buttonIndex))
+    $mirror.Font                    = $font
+    $mirror.BackColor               = $buttonBackgroundColor
+    $mirror.Tag                     = $group
+    $mirror.Add_Click({ 
+        Start-Process "$scripts\MouseMirror.ahk" -ArgumentList $this.Tag.accList
+    })
+
+    $arrange                         = New-Object system.Windows.Forms.Button
+    $arrange.text                    = "Arrange"
+    $arrange.width                   = 100
+    $arrange.height                  = $buttonHeight
+    $arrange.location                = New-Object System.Drawing.Point($($(getButtonX $buttonIndex) + 100), $(getButtonY $buttonIndex))
+    $arrange.Font                    = $font
+    $arrange.BackColor               = $buttonBackgroundColor
+    $arrange.Tag                     = $group
+    $arrange.Add_Click({ 
+        Start-Process "$scripts\Arrange.ahk" -ArgumentList $this.Tag.accList
+    })
+
+    $ResetGUI                         = New-Object system.Windows.Forms.Button
+    $ResetGUI.text                    = "ResetGUI"
+    $ResetGUI.width                   = 100
+    $ResetGUI.height                  = $buttonHeight
+    $ResetGUI.location                = New-Object System.Drawing.Point($($(getButtonX $buttonIndex) + 200), $(getButtonY $buttonIndex))
+    $ResetGUI.Font                    = $font
+    $ResetGUI.BackColor               = $buttonBackgroundColor
+    $ResetGUI.Tag                     = $group
+    $ResetGUI.Add_Click({ 
+        Start-Process "$scripts\Reset-Gui.ahk" -ArgumentList $this.Tag.accList
+    })
+
+    $buttonIndex++
+    
+    $tabPage.controls.AddRange(@($showGroup, $mirror, $arrange, $ResetGui))
 }
 
 function LoginButton_ContextMenuUpdate($button) {
@@ -220,6 +299,86 @@ function toggleGameWindow($processId) {
     } else { 
         $wp.SetWindowVisualState('Minimized') 
     }
+}
+
+function getGroupFormContent($group) {
+    $groupList = @()
+    if (Test-Path .\data\group.json) {
+        $groupList = $(Get-Content "$data\group.json" -Encoding UTF8 | Out-String | ConvertFrom-Json)
+    }
+
+    $buttonIndex = 0
+    foreach ($group in $groupList) 
+    {
+        $showGroup                         = New-Object system.Windows.Forms.Button
+        $showGroup.text                    = $group.accList
+        $showGroup.width                   = 300
+        $showGroup.height                  = $buttonHeight
+        $showGroup.location                = New-Object System.Drawing.Point($(getButtonX $buttonIndex), $(getButtonY $buttonIndex))
+        $showGroup.Font                    = $font
+        $showGroup.BackColor               = $buttonBackgroundColor
+        $showGroup.Tag                     = $group
+        $showGroup.Add_Click({ 
+            Start-Process "$scripts\Show.ahk" -ArgumentList """$this.Tag.accList"""
+        })
+        $buttonIndex++
+
+        $mirror                         = New-Object system.Windows.Forms.Button
+        $mirror.text                    = "Mirror"
+        $mirror.width                   = 100
+        $mirror.height                  = $buttonHeight
+        $mirror.location                = New-Object System.Drawing.Point($(getButtonX $buttonIndex), $(getButtonY $buttonIndex))
+        $mirror.Font                    = $font
+        $mirror.BackColor               = $buttonBackgroundColor
+        $mirror.Tag                     = $group
+        $mirror.Add_Click({ 
+            Start-Process "$scripts\MouseMirror.ahk" -ArgumentList $this.Tag.accList
+        })
+
+        $arrange                         = New-Object system.Windows.Forms.Button
+        $arrange.text                    = "Arrange"
+        $arrange.width                   = 100
+        $arrange.height                  = $buttonHeight
+        $arrange.location                = New-Object System.Drawing.Point($($(getButtonX $buttonIndex) + 100), $(getButtonY $buttonIndex))
+        $arrange.Font                    = $font
+        $arrange.BackColor               = $buttonBackgroundColor
+        $arrange.Tag                     = $group
+        $arrange.Add_Click({ 
+            Start-Process "$scripts\Arrange.ahk" -ArgumentList $this.Tag.accList
+        })
+
+        $ResetGUI                         = New-Object system.Windows.Forms.Button
+        $ResetGUI.text                    = "ResetGUI"
+        $ResetGUI.width                   = 100
+        $ResetGUI.height                  = $buttonHeight
+        $ResetGUI.location                = New-Object System.Drawing.Point($($(getButtonX $buttonIndex) + 200), $(getButtonY $buttonIndex))
+        $ResetGUI.Font                    = $font
+        $ResetGUI.BackColor               = $buttonBackgroundColor
+        $ResetGUI.Tag                     = $group
+        $ResetGUI.Add_Click({ 
+            Start-Process "$scripts\Reset-Gui.ahk" -ArgumentList $this.Tag.accList
+        })
+
+        $buttonIndex++
+        
+        $GroupForm.controls.AddRange(@($showGroup, $mirror, $arrange, $ResetGui))
+    }
+
+    [void]$GroupForm.ShowDialog() 
+}
+
+function addGroup($groupList) {
+    $groupList += $(createGroup @($groupList).Length)
+    return $groupList
+}
+
+function createGroup($groupSize) {
+    $group = New-Object PSObject -Property @{
+        name     = "Group $($groupSize + 1)"
+        accountList = @()
+    }
+
+    return $group;
 }
 
 $consolePtr = [Console.Window]::GetConsoleWindow()

@@ -157,3 +157,12 @@ resetAuto(pidArray)
         Sleep 200
     }
 }
+
+
+refreshUi(pidArray) {
+    for id in pidArray
+    {
+        ControlClick "x968 y355", "ahk_pid " id ; Click gửi tin nhắn
+        Sleep 200
+    }
+}
