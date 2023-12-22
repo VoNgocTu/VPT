@@ -5,7 +5,7 @@
             {
                 "link": "mc://https://s3-vuaphapthuat.goplay.vn/s/s45/index.php&vntu512@goid&51edf09c232c0795a2ab873d5c77cc20",
                 "char": "DY",
-                "name": "Bông Xù"
+                "name": "Bông"
             },
             {
                 "link": "mc://http://s3-vuaphapthuat.goplay.vn/s/s45/index.php&gg_vkhoa009@goid&74de28b1b50e8830f7db50340c46ce70",
@@ -25,12 +25,12 @@
             {
                 "link": "mc://https://s3-vuaphapthuat.goplay.vn/s/s45/index.php&yui313@goid&f03b401600e05236ab55dcc9525816ed",
                 "char": "TS",
-                "name": "Yui313"
+                "name": "Yui"
             }
         ]
     },
     {
-        "owner": "Main's Clones",
+        "owner": "Clones",
         "accList": [
             {
                 "link": "mc://http://s3-vuaphapthuat.goplay.vn/s/s45/index.php&vntu_c_1@goid&d36c6a61e47527c3366308cefe456021",
@@ -65,7 +65,7 @@
             {
                 "link": "mc://http://s3-vuaphapthuat.goplay.vn/s/s45/index.php&nguyenttlazytori@goid&5f2b62188d75c3672469f77cb0c6d904",
                 "char": "CB",
-                "name": "Lazy Tori"
+                "name": "Lazy"
             },
             {
                 "link": "http://s3-vuaphapthuat.goplay.vn/s/s45/index.php&vntu_c_5@goid&7d48eea0bb089091a27881579ce85cf5",
@@ -107,6 +107,26 @@
     {
         "owner": "Tân",
         "accList": [
+            {
+                "link": "mc://https://s3-vuaphapthuat.goplay.vn/s/s45/index.php&vntu_c_8@goid&a6a9fad42496bcd100a7e7b40a798f47",
+                "char": "TS",
+                "name": "Long"
+            },
+            {
+                "link": "mc://https://s3-vuaphapthuat.goplay.vn/s/s45/index.php&vntu_c_9@goid&bd0da1f150d139571c0307c29eeaea79",
+                "char": "TS",
+                "name": "Lân"
+            },
+            {
+                "link": "mc://https://s3-vuaphapthuat.goplay.vn/s/s45/index.php&vntu_c_10@goid&3b9872a885d65ecec0b0454ea8abe30a",
+                "char": "TS",
+                "name": "Quy"
+            },
+            {
+                "link": "mc://https://s3-vuaphapthuat.goplay.vn/s/s45/index.php&vntu_c_11@goid&0efcc18b6d9b48d3e9fc6e9a439ca3a6",
+                "char": "TS",
+                "name": "Phụng"
+            },
             {
                 "link": "http://s3-vuaphapthuat.goplay.vn/s/s45/GameLoaders.swf?user=ltcliff06@goid&pass=b5d32509061bf264bfa5b219eca7d718&isExpand=true",
                 "char": "",

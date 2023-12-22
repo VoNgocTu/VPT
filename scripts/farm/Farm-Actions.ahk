@@ -1,6 +1,14 @@
 #Requires AutoHotkey v2.0
 SetControlDelay -1 
 
+farm(pidArray, coordinatesArray) {
+    loop {
+        move(pidArray, coordinatesArray, 1, 1500)
+        resetAuto(pidArray)
+        regen(pidArray, A_Index) 
+    }
+}
+
 move(pidArray, coordinatesArray, step := 1, sleepTime := 1000)
 {
     ahk_id := "ahk_pid " pidArray.get(1)
@@ -24,30 +32,6 @@ regen(pidArray, index := 0) {
         } else {
             ControlClick "x124 y23", ahk_id,,,2, "NA"   ; Regen char
         }
-    
-        
-        
-        ; ControlClick "x93 y81", ahk_id,,,1, "D"
-        ; Sleep 200
-        ; ControlClick "x93 y81", ahk_id,,,1, "U"
-        ; Sleep 200
-        ; Sleep 100
-        ; ControlClick "x103 y81", ahk_id,,,1, "D"
-        ; Sleep 200
-        ; ControlClick "x103 y81", ahk_id,,,1, "U"
-        ; Sleep 100
-        ; ControlClick "x113 y81", ahk_id,,,1, "D"
-        ; Sleep 100
-        ; ControlClick "x113 y81", ahk_id,,,1, "U"
-        ; Sleep 100
-        ; ControlClick "x123 y81", ahk_id,,,1, "D"
-        ; Sleep 100
-        ; ControlClick "x123 y81", ahk_id,,,1, "U"
-        ; Sleep 100
-        ; ControlClick "x133 y81", ahk_id,,,1, "NA"
-        ; if (index == 0) {
-        ;     ControlClick "x103 y81", ahk_id,,,4, "NA"
-        ; }
     }
 }
 

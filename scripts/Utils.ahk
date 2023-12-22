@@ -1,6 +1,7 @@
 #Requires AutoHotkey v2.0
 #Include libs\JSON.ahk
 
+
 ; ids := getProcessIds("Thiên,Địa,Nhân")
 ; RunWait "powershell .\ps1\Get-Process-IDs.ps1 -runtimePath ..\data\runtime.json -names " "Thiên,Địa,Nhân"
 ; ClipWait
@@ -11,6 +12,7 @@
 
 
 ; MsgBox(arrayToString(getProcessIds("Mai,Lan,Cúc,Trúc")))
+; x431 y355
 
 isContains(strArray, stringInput) {
     for str in strArray {
@@ -48,7 +50,7 @@ show(names, sleepTime := 1000) {
     }
 }
 
-arrange(names, x := 0, y := 0, w := 1066, h := 724, xOffset := 100, yOffset := 150) {
+arrange(names, x := 0, y := 0, w := 1066, h := 724, xOffset := 100, yOffset := 200) {
     index := 0
     for id in getProcessIds(names) {
         if (index == 4) {

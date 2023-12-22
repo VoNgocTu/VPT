@@ -3,8 +3,8 @@
 #include ../Utils.ahk
 
 
-pidArray := getProcessIds("Hạo,Mận,Bắp,00,01", "..\..\data\runtime.json")
-coordinatesArray := ["x210 y465", "x393 y466", "x291 y285"]
+pidArray := getProcessIds("Lazy,Mận", "..\..\data\runtime.json")
+coordinatesArray := ["x353 y140", "x798 y109", "x529 y342"]
 
 
 key_id := pidArray.get(1)
@@ -12,5 +12,5 @@ loop {
     move(pidArray, coordinatesArray, 1, 1500)
     resetAuto(pidArray)
     Sleep 500
-    regen(pidArray) 
+    regen(pidArray, A_Index) 
 }

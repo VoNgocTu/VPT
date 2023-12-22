@@ -1,5 +1,5 @@
 #Requires AutoHotkey v2.0
-#include ../Utils.ahk
+#include Utils.ahk
 
 
 ~RButton Up:: {
@@ -10,7 +10,7 @@
         return
     }
 
-    resetGui([pid])
+    ; resetGui([pid])
     coordinates := getCoordinates()
     
     result := MsgBox("Copy toạ độ: " coordinates " ?",, "YesNo")

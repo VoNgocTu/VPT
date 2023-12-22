@@ -1,22 +1,21 @@
 #SingleInstance Off
-ahk_id := "ahk_pid " A_Args.get(1)
+#include Utils.ahk
 
-; Prevent ControlSend error.
-ControlClick "x521 y351", ahk_id ; Click to center
-Sleep 300
-ControlClick "x521 y351", ahk_id ; Click to center
-Sleep 300
-ControlClick "x521 y351", ahk_id ; Click to center
-Sleep 300
+ahkIds := getAhkIds(A_Args.get(1))
 
-ControlSend "p", , ahk_id
+resetGui(ahkIds);
+
+ControlSendAll(ahkIds, "p")
 Sleep 1000
-ControlClick "x564 y176", ahk_id ; Nhân vật
+ControlClickAll(ahkIds, "x564 y176") ; Nhân vật
 Sleep 1000
-ControlClick "x400 y450", ahk_id ; Chọn nhân vật đầu tiên
+ControlClickAll(ahkIds, "x400 y450") ; Chọn nhân vật đầu tiên
 Sleep 1000
-ControlClick "x500 y450", ahk_id ; Chọn nhân vật thứ 2
+ControlClickAll(ahkIds, "x500 y450") ; Chọn nhân vật thứ 2
 Sleep 1000
-ControlClick "x400 y550", ahk_id ; Vào game
+ControlClickAll(ahkIds, "x400 y550", ahk_id ; Vào game
 Sleep 1500
-WinClose ahk_id
+
+for id in ahkIds {
+    WinClose "ahk_id " id
+}
