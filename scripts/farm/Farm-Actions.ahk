@@ -27,7 +27,7 @@ regen(pidArray, index := 0) {
     
     for id in pidArray {
         ahk_id := "ahk_pid " id
-        if (Mod(index, 2)) {
+        if (Mod(index, 2) == 0) {
             ControlClick "x93 y81", ahk_id,,,1, "NA"    ; Regen pet
         } else {
             ControlClick "x124 y23", ahk_id,,,2, "NA"   ; Regen char

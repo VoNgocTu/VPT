@@ -3,8 +3,7 @@
 #include ../Utils.ahk
 
 
-pidArray := getProcessIds("Hạo", "..\..\data\runtime.json")
-; pidArray := getProcessIds("Lazy,Hạo", "..\..\data\runtime.json")
+pidArray := getProcessIds("Bắp", "..\..\data\runtime.json")
 coordinatesArray := ["x695 y299", "x542 y459"]
 ; coordinatesArray := ["x338 y244", "x695 y299", "x542 y459"]
 

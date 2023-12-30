@@ -3,8 +3,10 @@
 #include ../Utils.ahk
 
 
-pidArray := getProcessIds("Địa,Yui", "..\..\data\runtime.json")
-coordinatesArray := ["x353 y140", "x798 y109", "x529 y342"]
+; pidArray := getProcessIds("Địa,Yui", "..\..\data\runtime.json")
+pidArray := getProcessIds("Yui", "..\..\data\runtime.json")
+coordinatesArray := ["x695 y299", "x542 y459"]
+; coordinatesArray := ["x338 y244", "x695 y299", "x542 y459"]
 
 
 key_id := pidArray.get(1)

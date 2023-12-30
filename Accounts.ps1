@@ -11,15 +11,12 @@ $images = "$root\images"
 $scripts = "$root\scripts"
 $font = New-Object System.Drawing.Font('Times New Roman',10,[System.Drawing.FontStyle]::Bold)
 $buttonBackgroundColor = [System.Drawing.ColorTranslator]::FromHtml("#a5e6d6")
-$buttonHeight = 30
 
 $Accounts                     = New-Object system.Windows.Forms.Form
-$Accounts.ClientSize          = New-Object System.Drawing.Point(185, 500)
+$Accounts.ClientSize          = New-Object System.Drawing.Point(185, 335)
 $Accounts.Location = New-Object System.Drawing.Point(30, 20)
-# $Accounts.MaximumSize         = New-Object System.Drawing.Size(265, 500)
-#$Accounts.MaximumSize         = New-Object System.Drawing.Size(900, 476)
 $Accounts.text                = "Accounts"
-$Accounts.TopMost             = $false
+$Accounts.TopMost             = $true
 
 
 $GroupForm                     = New-Object system.Windows.Forms.Form
@@ -27,8 +24,6 @@ $GroupForm.ClientSize          = New-Object System.Drawing.Point(185, 500)
 $GroupForm.Location = New-Object System.Drawing.Point(30, 20)
 $GroupForm.text                = "Group"
 $GroupForm.TopMost             = $false
-
-# $accList = $(Invoke-RestMethod -Uri https://raw.githubusercontent.com/VoNgocTu/VPT/main/accounts.json).accList
 
 $tabList = @()
 if (Test-Path .\data\runtime.json) {
@@ -41,6 +36,11 @@ else  {
 $groupList = @()
 if (Test-Path .\data\group.json) {
     $groupList = $(Get-Content "$data\group.json" -Encoding UTF8 | Out-String | ConvertFrom-Json)
+}
+
+$vddList = @()
+if (Test-Path .\data\group.json) {
+    $vddList = $(Get-Content "$data\vdd.json" -Encoding UTF8 | Out-String | ConvertFrom-Json)
 }
 
 
@@ -195,7 +195,8 @@ function createToolStripMenuItem($name, $tag, $action) {
 foreach($tab in $tabList) {
     $tabPage = New-Object System.Windows.Forms.TabPage
     $tabPage.Text = $tab.owner
-    $tabPage.BackgroundImage = [system.drawing.image]::FromFile("$images\Background.jpg")
+    $tabPage.BackgroundImage = [system.drawing.image]::FromFile("$images\background-3.png")
+    $tabPage.BackgroundImageLayout = 'Stretch'
     $tabControl.Controls.Add($tabPage)
     
     $xIndex = 0
@@ -215,8 +216,6 @@ foreach($tab in $tabList) {
 
             $yIndex++
         }
-
-        $tabPage.controls.AddRange(@($mouseMirror, $AddGroup))
     }
     
     foreach ($acc in $tab.accList) 
@@ -231,6 +230,33 @@ foreach($tab in $tabList) {
             $yIndex++
             $xIndex = 0
         }
+    }
+}
+
+$tabPage = New-Object System.Windows.Forms.TabPage
+$tabPage.Text = "VDD"
+$tabPage.BackgroundImage = [system.drawing.image]::FromFile("$images\background-3.png")
+$tabPage.BackgroundImageLayout = 'Stretch'
+$tabControl.Controls.Add($tabPage)
+
+$xIndex = 0
+$yIndex = 0
+
+foreach ($vdd in $vddList) 
+{
+    $vddButton = createButton $vdd.accList $vdd $($(getButtonX $xIndex) - 6) $(getButtonY $yIndex) 90
+    $LoginButton = createButton $(getName $acc) $acc $(getButtonX $xIndex) $(getButtonY $yIndex)
+    $mirror = createToolStripMenuItem "Mirror" $vdd { Start-Process "$scripts\MouseMirror.ahk" -ArgumentList $this.Tag.accList }
+    $arrange = createToolStripMenuItem "Sắp xếp" $vdd { Start-Process "$scripts\Arrange2.ahk" -ArgumentList $this.Tag.accList }
+    $resetGUI = createToolStripMenuItem "Reset màn hình" $vdd { Start-Process "$scripts\Reset-Gui.ahk" -ArgumentList $this.Tag.accList }
+    $vddButton.ContextMenuStrip.Items.AddRange(@($mirror, $arrange, $ResetGui))
+    $vddButton.Add_Click({ groupButton_Click $this })
+    $tabPage.controls.AddRange(@($vddButton))
+
+    $xIndex++
+    if ($xIndex % 2 -eq 0) {
+        $yIndex++
+        $xIndex = 0
     }
 }
 

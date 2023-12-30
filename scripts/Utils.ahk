@@ -14,6 +14,21 @@
 ; MsgBox(arrayToString(getProcessIds("Mai,Lan,Cúc,Trúc")))
 ; x431 y355
 
+; Run "notepad.exe"
+; WinWait "Untitled - Notepad"
+; Sleep 1000
+; WinShow ; Use the window found by WinWait.
+; Sleep 2000
+; WinHide ; Use the window found by WinWait.
+; Sleep 1000
+; WinShow ; Use the window found by WinWait.
+
+; WinActivate "AutoHotkey v2 Help"
+; Sleep 1000
+; WinMinimize "AutoHotkey v2 Help"
+
+; toggleWindow(29684)
+
 isContains(strArray, stringInput) {
     for str in strArray {
         if (str == stringInput) {
@@ -50,6 +65,16 @@ show(names, sleepTime := 1000) {
     }
 }
 
+toggleWindow(id) {
+    ; ahk_id := WinExist("ahk_pid" id)
+    ahk_id := WinActive("ahk_pid " id)
+    if (ahk_id == 0) {
+        WinActivate "ahk_id " id
+    } else {
+        WinMinimize "ahk_id " id
+    }
+}
+
 arrange(names, x := 0, y := 0, w := 1066, h := 724, xOffset := 100, yOffset := 200) {
     index := 0
     for id in getProcessIds(names) {
@@ -61,6 +86,26 @@ arrange(names, x := 0, y := 0, w := 1066, h := 724, xOffset := 100, yOffset := 2
         index++
     }
 }
+
+arrange2(names, x := 0, y := 0, w := 1066, h := 724, xOffset := 0, yOffset := -30) {
+    index := 0
+    for id in getProcessIds(names) {
+        if (index == 2) {
+            index := 0
+            x := x + 500
+            y := 0
+        } else {
+            y := index * h
+        }
+        WinMove x + index * xOffset, y + index * yOffset, w, h, "ahk_pid " id
+        index++
+    }
+}
+
+; move(name, x := 0, y := 0, w := 1066, h := 724) {
+;     WinMove x, y, w, h, "ahk_pid " getProcessIds(name).get(1)
+; }
+
 
 getAhkIds(names) {
     ahkIds := []
