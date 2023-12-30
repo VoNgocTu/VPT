@@ -45,6 +45,75 @@ ahkIds := getAhkIds(A_Args.get(1))
     mirrorClick(ahkIds, "x" OutputVarX " y" OutputVarY, ahkId)
 }
 
+~Escape::
+~Enter::
+~Ctrl::
+~Ctrl Up::
+~1::
+~2::
+~3::
+~4::
+~5::
+~6::
+~7::
+~8::
+~9::
+~a::
+~b::
+~c::
+~d::
+~e::
+~f::
+~g::
+~h::
+~i::
+~j::
+~k::
+~l::
+~m::
+~n::
+~o::
+~p::
+~q::
+~r::
+~s::
+~t::
+~u::
+~v::
+~w::
+~x::
+~y::
+~z::
+{
+    if (A_IsPaused) {
+        return
+    }
+
+    global title
+    try {
+        WinGetTitle("A")
+        ahkId := WinActive(title)
+	}
+	catch {
+        Sleep 300
+        ahkId := WinActive(title)
+    }
+
+    global ahkIds
+    if (!isContains(ahkIds, ahkId)) {
+        return
+    }
+
+    ControlSendAll(ahkIds, getOriginKey(A_ThisHotkey)) 
+}
+
+getOriginKey(thisKey) {
+    key := SubStr(thisKey, 2, 999)
+    if (StrLen(key) > 1) {
+        key := "{" key "}"
+    }
+}
+ 
 
 ; ~RButton Up:: {
 ;     if (A_IsPaused) {
