@@ -18,12 +18,10 @@ $Accounts.Location = New-Object System.Drawing.Point(30, 20)
 $Accounts.text                = "Accounts"
 $Accounts.TopMost             = $true
 
-
-$GroupForm                     = New-Object system.Windows.Forms.Form
-$GroupForm.ClientSize          = New-Object System.Drawing.Point(185, 500)
-$GroupForm.Location = New-Object System.Drawing.Point(30, 20)
-$GroupForm.text                = "Group"
-$GroupForm.TopMost             = $false
+$actions                     = New-Object system.Windows.Forms.Form
+$actions.ClientSize          = New-Object System.Drawing.Point(140, 350)
+$actions.Location = New-Object System.Drawing.Point(30, 20)
+$actions.TopMost             = $true
 
 $tabList = @()
 if (Test-Path .\data\runtime.json) {
@@ -94,6 +92,14 @@ function LoginButton_ContextMenuUpdate($button) {
         $button.ContextMenuStrip.Items.AddRange(@($BugOnline, $PlantMaterial, $PetBattle, $CopyLink))
     } else {
         $autoClone = createToolStripMenuItem "Auto Clone" $button.Tag { Start-Process "$scripts\MouseMirror.ahk" -ArgumentList $this.Tag.processId }
+        $autoClone = createToolStripMenuItem "Test Input" $button.Tag { 
+            [void][Reflection.Assembly]::LoadWithPartialName('Microsoft.VisualBasic')
+
+            $title = 'Chọn Kênh'
+
+            $text = [Microsoft.VisualBasic.Interaction]::InputBox($msg, $title)
+            Write-Host $text
+         }
         $button.ContextMenuStrip.Items.AddRange(@($autoClone))
     }
 }
@@ -122,11 +128,25 @@ function groupButton_Click($button) {
 
 function LoginButton_Click($button) {  
     if ($_.Button -eq [System.Windows.Forms.MouseButtons]::Left ) {
-        openAccount $button
+        $actions.text                = "Chọn Kênh"a
+        $actions.ClientSize          = New-Object System.Drawing.Point(140, 350)
+        $xIndex = 0
+        $yIndex = 0
+        foreach ($channel in (1..8)) 
+        {
+            $channelButton = createButton "Kênh $channel" $button.Tag $(getButtonX $xIndex) $(getButtonY $yIndex) 120
+            $channelButton.Add_Click({ 
+                openAccount $button
+                Start-Process "$scripts\Login.ahk" -ArgumentList $this.Tag.name,$channel
+                [void]$actions.Hide()
+            })
+            $actions.controls.AddRange(@($channelButton))
+            $yIndex++
+        }
+        [void]$actions.ShowDialog()
     }
 }
 
-#region Logic 
 function openAccount ($button) {
     $link = "$(getFlashLink $button.Tag.link)&nothing=true"
 
