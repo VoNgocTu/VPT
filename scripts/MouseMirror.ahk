@@ -11,44 +11,10 @@ title := "Adobe Flash Player 32"
 ahkIds := getAhkIds(A_Args.get(1))
 ; ahkIds := WingetList(title)
 
-~LButton Up::{
-    if (A_IsPaused) {
-        return
-    }
-}
-
-~LButton:: {
-    if (A_IsPaused) {
-        return
-    }
-
-    global title
-    try {
-        WinGetTitle("A")
-        ahkId := WinActive(title)
-	}
-	catch {
-        Sleep 300
-        ahkId := WinActive(title)
-    }
-    
-    global ahkIds
-    if (!isContains(ahkIds, ahkId)) {
-        return
-    }
-
-    OutputVarX := 0
-    OutputVarY := 0
-    OutputVarWin := 0
-    MouseGetPos &OutputVarX, &OutputVarY, &OutputVarWin
-
-    mirrorClick(ahkIds, "x" OutputVarX " y" OutputVarY, ahkId)
-}
 
 ~Escape::
 ~Enter::
 ~Ctrl::
-~Ctrl Up::
 ~1::
 ~2::
 ~3::
@@ -83,8 +49,7 @@ ahkIds := getAhkIds(A_Args.get(1))
 ~w::
 ~x::
 ~y::
-~z::
-{
+~z:: {
     if (A_IsPaused) {
         return
     }
@@ -104,14 +69,45 @@ ahkIds := getAhkIds(A_Args.get(1))
         return
     }
 
-    ControlSendAll(ahkIds, getOriginKey(A_ThisHotkey)) 
+    mirrorSend(ahkIds, getOriginKey(A_ThisHotkey), ahkId) 
 }
+
+~LButton:: {
+    if (A_IsPaused) {
+        return
+    }
+
+    global title
+    try {
+        WinGetTitle("A")
+        ahkId := WinActive(title)
+	}
+	catch {
+        Sleep 300
+        ahkId := WinActive(title)
+    }
+    
+    global ahkIds
+    if (!isContains(ahkIds, ahkId)) {
+        return
+    }
+
+    OutputVarX := 0
+    OutputVarY := 0
+    OutputVarWin := 0
+    MouseGetPos &OutputVarX, &OutputVarY, &OutputVarWin
+
+    mirrorClick(ahkIds, "x" OutputVarX " y" OutputVarY, ahkId)
+}
+
+
 
 getOriginKey(thisKey) {
     key := SubStr(thisKey, 2, 999)
-    if (StrLen(key) > 1) {
+    if (StrLen(key) > 2) {
         key := "{" key "}"
     }
+    return key
 }
  
 

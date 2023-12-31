@@ -153,6 +153,15 @@ ControlClickAll(ahkIds, coordinates)
     }
 }
 
+; exclude current screen when currentWindowId is set.
+mirrorSend(ahkIds, key, currentWindowId := 0) {
+    for id in ahkIds {
+        if (id != currentWindowId) { ; exclude current screen
+            ControlSend key, , "ahk_id " id
+        }
+    }
+}
+
 ControlSendAll(ahkIds, key) 
 {
     for id in ahkIds {

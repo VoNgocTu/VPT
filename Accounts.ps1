@@ -85,9 +85,9 @@ function createButton($name, $tag, $x, $y, $w = 80, $h = 30) {
 
 function LoginButton_ContextMenuUpdate($button) {
     $button.ContextMenuStrip.Items.Clear()
-    $process = getVPTProcess $button
+    $process = getVPTProcess $button.Tag
     if ($null -ne $process) {
-        $BugOnline = createToolStripMenuItem "Bug online" $button.Tag { Start-Process "$scripts\Bug-Online.ahk" -ArgumentList $this.Tag.processId }
+        $BugOnline = createToolStripMenuItem "Bug online" $button.Tag { Start-Process "$scripts\Bug-Online.ahk" -ArgumentList $this.Tag.name }
         $PlantMaterial = createToolStripMenuItem "Trồng Nguyên Liệu" $button.Tag { Start-Process "$scripts\Plant-Material.ahk" -ArgumentList $this.Tag.processId }
         $PetBattle = createToolStripMenuItem "Đấu Pet" $button.Tag { Start-Process "$scripts\Pet-Battle.ahk" -ArgumentList $this.Tag.processId }
         $CopyLink = createToolStripMenuItem "Copy Link" $button.Tag { copyLink $this.Tag.link }
@@ -249,6 +249,7 @@ foreach ($vdd in $vddList)
     $mirror = createToolStripMenuItem "Mirror" $vdd { Start-Process "$scripts\MouseMirror.ahk" -ArgumentList $this.Tag.accList }
     $arrange = createToolStripMenuItem "Sắp xếp" $vdd { Start-Process "$scripts\Arrange2.ahk" -ArgumentList $this.Tag.accList }
     $resetGUI = createToolStripMenuItem "Reset màn hình" $vdd { Start-Process "$scripts\Reset-Gui.ahk" -ArgumentList $this.Tag.accList }
+    $resetGUI = createToolStripMenuItem "Bug Online" $vdd { Start-Process "$scripts\Bug-Online.ahk" -ArgumentList $this.Tag.accList }
     $vddButton.ContextMenuStrip.Items.AddRange(@($mirror, $arrange, $ResetGui))
     $vddButton.Add_Click({ groupButton_Click $this })
     $tabPage.controls.AddRange(@($vddButton))
