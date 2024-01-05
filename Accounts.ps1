@@ -85,11 +85,12 @@ function LoginButton_ContextMenuUpdate($button) {
     $button.ContextMenuStrip.Items.Clear()
     $process = getVPTProcess $button.Tag
     if ($null -ne $process) {
+        $FarmVDD = createToolStripMenuItem "Farm VDD" $button.Tag { Start-Process "$scripts\farm\VDD.ahk" -ArgumentList $this.Tag.name }
         $BugOnline = createToolStripMenuItem "Bug online" $button.Tag { Start-Process "$scripts\Bug-Online.ahk" -ArgumentList $this.Tag.name }
         $PlantMaterial = createToolStripMenuItem "Trồng Nguyên Liệu" $button.Tag { Start-Process "$scripts\Plant-Material.ahk" -ArgumentList $this.Tag.processId }
         $PetBattle = createToolStripMenuItem "Đấu Pet" $button.Tag { Start-Process "$scripts\Pet-Battle.ahk" -ArgumentList $this.Tag.processId }
         $CopyLink = createToolStripMenuItem "Copy Link" $button.Tag { copyLink $this.Tag.link }
-        $button.ContextMenuStrip.Items.AddRange(@($BugOnline, $PlantMaterial, $PetBattle, $CopyLink))
+        $button.ContextMenuStrip.Items.AddRange(@($FarmVDD, $BugOnline, $PlantMaterial, $PetBattle, $CopyLink))
     } else {
         $autoClone = createToolStripMenuItem "Auto Clone" $button.Tag { Start-Process "$scripts\MouseMirror.ahk" -ArgumentList $this.Tag.processId }
         $autoClone = createToolStripMenuItem "Test Input" $button.Tag { 
@@ -128,22 +129,24 @@ function groupButton_Click($button) {
 
 function LoginButton_Click($button) {  
     if ($_.Button -eq [System.Windows.Forms.MouseButtons]::Left ) {
-        $actions.text                = "Chọn Kênh"a
-        $actions.ClientSize          = New-Object System.Drawing.Point(140, 350)
-        $xIndex = 0
-        $yIndex = 0
-        foreach ($channel in (1..8)) 
-        {
-            $channelButton = createButton "Kênh $channel" $button.Tag $(getButtonX $xIndex) $(getButtonY $yIndex) 120
-            $channelButton.Add_Click({ 
-                openAccount $button
-                Start-Process "$scripts\Login.ahk" -ArgumentList $this.Tag.name,$channel
-                [void]$actions.Hide()
-            })
-            $actions.controls.AddRange(@($channelButton))
-            $yIndex++
-        }
-        [void]$actions.ShowDialog()
+        # $actions.text                = "Chọn Kênh"
+        # $actions.ClientSize          = New-Object System.Drawing.Point(140, 350)
+        # $xIndex = 0
+        # $yIndex = 0
+        # foreach ($channel in (1..8)) 
+        # {
+        #     $channelButton = createButton "Kênh $channel" $button.Tag $(getButtonX $xIndex) $(getButtonY $yIndex) 120
+        #     $channelButton.Add_Click({ 
+        #         openAccount $button
+        #         Start-Process "$scripts\Login.ahk" -ArgumentList $this.Tag.name,$channel
+        #         [void]$actions.Hide()
+        #     })
+        #     $actions.controls.AddRange(@($channelButton))
+        #     $yIndex++
+        # }
+        # [void]$actions.ShowDialog()
+
+        openAccount $button
     }
 }
 

@@ -2,7 +2,9 @@
 #include Utils.ahk
 
 ; ahkIds := getAhkIds("Mai,Lan,Cúc,Trúc")
-ahkIds := getAhkIds("Bông")
+; ahkIds := getAhkIds("Bông")
+names := A_Args.get(1)
+ahkIds := getAhkIds(names)
 F2::{
     ControlClickAll(ahkIds, "x19 y216")
     Sleep 500

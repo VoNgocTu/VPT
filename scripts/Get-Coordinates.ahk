@@ -1,10 +1,9 @@
 #Requires AutoHotkey v2.0
-#include Utils.ahk
 
 
 ~RButton Up:: {
-    title := "Adobe Flash Player 32"
-    ; title := "AutoHotkey v2 Help"
+    ; title := "Adobe Flash Player 32"
+    title := "AutoHotkey v2 Help"
     pid := WinActive(title)
     if (pid == 0) {
         return
@@ -19,4 +18,12 @@
     } else {
         A_Clipboard := coordinates
     }
+}
+
+getCoordinates() {
+    OutputVarX := 0
+    OutputVarY := 0
+    OutputVarWin := 0
+    MouseGetPos &OutputVarX, &OutputVarY, &OutputVarWin
+    return "x" OutputVarX " y" OutputVarY
 }

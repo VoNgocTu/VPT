@@ -78,7 +78,7 @@ toggleWindow(id) {
 arrange(names, x := 0, y := 0, w := 1066, h := 724, xOffset := 100, yOffset := 200) {
     index := 0
     for id in getProcessIds(names) {
-        if (index == 4) {
+        if (index == 5) {
             index := 0
             x := x + 600
         }
