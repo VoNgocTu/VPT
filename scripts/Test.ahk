@@ -10,15 +10,17 @@ F1::Pause -1
 
     try
 	{
-		title := WinGetTitle("A")
+        WinGetTitle("A")
+		id := WinGetPID("A")
 	}
 	catch
     {
+        Sleep 150
+        id := WinGetPID("A")
     }
-    Sleep 150
-    title := WinGetTitle("A")
+    ; id := WinGetPID("ahk_id 526260")
 
-    MsgBox("Window is active - " title)
+    MsgBox("Window is active - " id)
 }
 
 ; if (WinActive("AutoHotkey v2 Help") != 0) {

@@ -9,14 +9,18 @@
     },
     {
         "number": 1,
+        "accList": "Long,Lân,Quy,Phụng"
+    },
+    {
+        "number": 1,
         "accList": "Đào,Bơ,Bưởi,Dừa"
     },
     {
         "number": 1,
-        "accList": "Bông,Mận,Yui,Hạo,Bắp"
+        "accList": "Yui,Hạo,Siu,Lazy"
     },
     {
         "number": 1,
-        "accList": "Bông,Yui,Hạo,Mận,Siu"
+        "accList": "Mai,Lan,Cúc,Trúc,Lazy,Thiên,Địa,Nhân,Bông,Yui,Hạo"
     }
 ]

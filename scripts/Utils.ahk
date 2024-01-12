@@ -65,6 +65,13 @@ show(names, sleepTime := 1000) {
     }
 }
 
+hide(names, sleepTime := 1000) {
+    for id in getProcessIds(names) {
+        WinMinimize "ahk_pid " id
+        Sleep sleepTime
+    }
+}
+
 toggleWindow(id) {
     ; ahk_id := WinExist("ahk_pid" id)
     ahk_id := WinActive("ahk_pid " id)
@@ -80,7 +87,7 @@ arrange(names, x := 0, y := 0, w := 1066, h := 724, xOffset := 100, yOffset := 2
     for id in getProcessIds(names) {
         if (index == 5) {
             index := 0
-            x := x + 600
+            x := x + 750
         }
         WinMove x + index * xOffset, y + index * yOffset, w, h, "ahk_pid " id
         index++
@@ -136,6 +143,37 @@ getProcessIds(names, filePath := "..\data\runtime.json") {
     
     return result
 }
+
+
+getNameFromAhkIds(ahkIds, filePath := "..\data\runtime.json") {
+    result := []
+
+    pidArray := getProcessIdsFromAhkIds(ahkIds)
+    text := FileRead(filePath, "UTF-8")
+    tabArray := jxon_load(&text)
+    for pid in pidArray {
+        for tab in tabArray {
+            for acc in tab["accList"] {
+                if (acc["processId"] == pid) {
+                    result.Push(acc["name"])
+                }
+            }
+        }
+    }
+
+    return result
+}
+
+
+getProcessIdsFromAhkIds(ahkIds) {
+    result := []
+    for id in ahkIds {
+        result.Push(WinGetPID("ahk_id " id))
+    }
+
+    return result
+}
+
 
 ; exclude current screen when currentWindowId is set.
 mirrorClick(ahkIds, coordinates, currentWindowId := 0) {

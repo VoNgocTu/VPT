@@ -8,9 +8,19 @@
                 "name": "Bông"
             },
             {
+                "link": "mc://https://s3-vuaphapthuat.goplay.vn/s/s45/index.php&yui313@goid&f03b401600e05236ab55dcc9525816ed",
+                "char": "TS",
+                "name": "Yui"
+            },
+            {
                 "link": "mc://http://s3-vuaphapthuat.goplay.vn/s/s45/index.php&gg_vkhoa009@goid&74de28b1b50e8830f7db50340c46ce70",
                 "char": "NC",
                 "name": "Hạo"
+            },
+            {
+                "link": "mc://http://s3-vuaphapthuat.goplay.vn/s/s45/index.php&qrac002@goid&d5f47142d4d6b1082fe8ad303a4a7020",
+                "char": "HS",
+                "name": "Siu"
             },
             {
                 "link": "mc://http://s3-vuaphapthuat.goplay.vn/s/s45/index.php&ltcliff04@goid&ea0f47f6a80fa6f5403ee290c71edde2",
@@ -21,11 +31,6 @@
                 "link": "mc://http://s3-vuaphapthuat.goplay.vn/s/s45/index.php&ltcliff02@goid&9b20d5dc47710ddfa0e3cdc4d9a05898",
                 "char": "TS",
                 "name": "Bắp"
-            },
-            {
-                "link": "mc://https://s3-vuaphapthuat.goplay.vn/s/s45/index.php&yui313@goid&f03b401600e05236ab55dcc9525816ed",
-                "char": "TS",
-                "name": "Yui"
             }
         ]
     },
@@ -53,14 +58,24 @@
                 "name": "Trúc"
             },
             {
-                "link": "mc://http://s3-vuaphapthuat.goplay.vn/s/s45/index.php&qrac002@goid&d5f47142d4d6b1082fe8ad303a4a7020",
-                "char": "HS",
-                "name": "Siu"
+                "link": "mc://https://s3-vuaphapthuat.goplay.vn/s/s45/index.php&vntu_c_8@goid&a6a9fad42496bcd100a7e7b40a798f47",
+                "char": "TS",
+                "name": "Long"
             },
             {
-                "link": "mc://http://s3-vuaphapthuat.goplay.vn/s/s45/index.php&qrac003@goid&4c76e613506961f969a981ef2a15b18d",
+                "link": "mc://https://s3-vuaphapthuat.goplay.vn/s/s45/index.php&vntu_c_9@goid&bd0da1f150d139571c0307c29eeaea79",
                 "char": "TS",
-                "name": "Taylor"
+                "name": "Lân"
+            },
+            {
+                "link": "mc://https://s3-vuaphapthuat.goplay.vn/s/s45/index.php&vntu_c_10@goid&3b9872a885d65ecec0b0454ea8abe30a",
+                "char": "TS",
+                "name": "Quy"
+            },
+            {
+                "link": "mc://https://s3-vuaphapthuat.goplay.vn/s/s45/index.php&vntu_c_11@goid&0efcc18b6d9b48d3e9fc6e9a439ca3a6",
+                "char": "TS",
+                "name": "Phụng"
             },
             {
                 "link": "mc://http://s3-vuaphapthuat.goplay.vn/s/s45/index.php&nguyenttlazytori@goid&5f2b62188d75c3672469f77cb0c6d904",
@@ -101,32 +116,17 @@
                 "link": "http://s3-vuaphapthuat.goplay.vn/s/s45/GameLoaders.swf?user=ltcliff05@goid&pass=47df4330d4fef649327f5b66bd402aad&isExpand=true",
                 "char": "TS",
                 "name": "Dừa"
+            },
+            {
+                "link": "mc://http://s3-vuaphapthuat.goplay.vn/s/s45/index.php&qrac003@goid&4c76e613506961f969a981ef2a15b18d",
+                "char": "TS",
+                "name": "Taylor"
             }
         ]
     },
     {
         "owner": "Tân",
         "accList": [
-            {
-                "link": "mc://https://s3-vuaphapthuat.goplay.vn/s/s45/index.php&vntu_c_8@goid&a6a9fad42496bcd100a7e7b40a798f47",
-                "char": "TS",
-                "name": "Long"
-            },
-            {
-                "link": "mc://https://s3-vuaphapthuat.goplay.vn/s/s45/index.php&vntu_c_9@goid&bd0da1f150d139571c0307c29eeaea79",
-                "char": "TS",
-                "name": "Lân"
-            },
-            {
-                "link": "mc://https://s3-vuaphapthuat.goplay.vn/s/s45/index.php&vntu_c_10@goid&3b9872a885d65ecec0b0454ea8abe30a",
-                "char": "TS",
-                "name": "Quy"
-            },
-            {
-                "link": "mc://https://s3-vuaphapthuat.goplay.vn/s/s45/index.php&vntu_c_11@goid&0efcc18b6d9b48d3e9fc6e9a439ca3a6",
-                "char": "TS",
-                "name": "Phụng"
-            },
             {
                 "link": "http://s3-vuaphapthuat.goplay.vn/s/s45/GameLoaders.swf?user=ltcliff06@goid&pass=b5d32509061bf264bfa5b219eca7d718&isExpand=true",
                 "char": "",

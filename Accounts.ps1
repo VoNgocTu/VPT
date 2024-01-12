@@ -87,8 +87,7 @@ function LoginButton_ContextMenuUpdate($button) {
     if ($null -ne $process) {
         $FarmVDD = createToolStripMenuItem "Farm VDD" $button.Tag { Start-Process "$scripts\farm\VDD.ahk" -ArgumentList $this.Tag.name }
         $BugOnline = createToolStripMenuItem "Bug online" $button.Tag { Start-Process "$scripts\Bug-Online.ahk" -ArgumentList $this.Tag.name }
-        $PlantMaterial = createToolStripMenuItem "Trồng Nguyên Liệu" $button.Tag { Start-Process "$scripts\Plant-Material.ahk" -ArgumentList $this.Tag.processId }
-        $PetBattle = createToolStripMenuItem "Đấu Pet" $button.Tag { Start-Process "$scripts\Pet-Battle.ahk" -ArgumentList $this.Tag.processId }
+        $PlantMaterial = createToolStripMenuItem "Trồng Nguyên Liệu" $button.Tag { Start-Process "$scripts\Plant-Material.ahk" -ArgumentList $this.Tag.name }
         $CopyLink = createToolStripMenuItem "Copy Link" $button.Tag { copyLink $this.Tag.link }
         $button.ContextMenuStrip.Items.AddRange(@($FarmVDD, $BugOnline, $PlantMaterial, $PetBattle, $CopyLink))
     } else {
@@ -155,7 +154,8 @@ function openAccount ($button) {
 
     $process = getVPTProcess $button.Tag
     if ($null -ne $process) {
-        toggleGameWindow $button.Tag.processId
+        # toggleGameWindow $button.Tag.processId
+        Start-Process "$scripts\Show.ahk" -ArgumentList $button.Tag.name
     } else {
         $button.Tag.processId = $(Start-Process -FilePath "$tools\flashplayer_32.exe" -ArgumentList $link -PassThru).ID
     }
@@ -224,22 +224,6 @@ foreach($tab in $tabList) {
     
     $xIndex = 0
     $yIndex = 0
-
-    if ($tab.owner -eq "Main") {
-        foreach ($group in $groupList) 
-        {
-            $groupButton = createButton $group.accList $group $(getButtonX $xIndex) $(getButtonY $yIndex) 160
-            $mirror = createToolStripMenuItem "Mirror" $group { Start-Process "$scripts\MouseMirror.ahk" -ArgumentList $this.Tag.accList }
-            $arrange = createToolStripMenuItem "Sắp xếp" $group { Start-Process "$scripts\Arrange.ahk" -ArgumentList $this.Tag.accList }
-            $resetGUI = createToolStripMenuItem "Reset màn hình" $group { Start-Process "$scripts\Reset-Gui.ahk" -ArgumentList $this.Tag.accList }
-            $groupButton.ContextMenuStrip.Items.AddRange(@($mirror, $arrange, $ResetGui))
-
-            $groupButton.Add_Click({ groupButton_Click $this })
-            $tabPage.controls.AddRange(@($groupButton))
-
-            $yIndex++
-        }
-    }
     
     foreach ($acc in $tab.accList) 
     {
@@ -252,6 +236,24 @@ foreach($tab in $tabList) {
         if ($xIndex % 2 -eq 0) {
             $yIndex++
             $xIndex = 0
+        }
+    }
+
+    if ($tab.owner -eq "Main") {
+        foreach ($group in $groupList) 
+        {
+            $groupButton = createButton $group.accList $group $(getButtonX $xIndex) $(getButtonY $yIndex) 160
+            $hide = createToolStripMenuItem "Ẩn" $group { Start-Process "$scripts\Hide.ahk" -ArgumentList $this.Tag.accList }
+            $mirror = createToolStripMenuItem "Mirror" $group { Start-Process "$scripts\MouseMirror.ahk" -ArgumentList $this.Tag.accList }
+            $arrange = createToolStripMenuItem "Sắp xếp" $group { Start-Process "$scripts\Arrange.ahk" -ArgumentList $this.Tag.accList }
+            $bugOnline = createToolStripMenuItem "Trồng Nguyên Liệu" $group { Start-Process "$scripts\Plant-Material.ahk" -ArgumentList $this.Tag.accList }
+            $bugOnline = createToolStripMenuItem "Bug Online" $group { Start-Process "$scripts\Bug-Online.ahk" -ArgumentList $this.Tag.accList }
+            $groupButton.ContextMenuStrip.Items.AddRange(@($mirror, $hide, $arrange, $bugOnline))
+
+            $groupButton.Add_Click({ groupButton_Click $this })
+            $tabPage.controls.AddRange(@($groupButton))
+
+            $yIndex++
         }
     }
 }

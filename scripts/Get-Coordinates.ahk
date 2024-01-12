@@ -2,8 +2,8 @@
 
 
 ~RButton Up:: {
-    ; title := "Adobe Flash Player 32"
-    title := "AutoHotkey v2 Help"
+    title := "Adobe Flash Player 32"
+    ; title := "AutoHotkey v2 Help"
     pid := WinActive(title)
     if (pid == 0) {
         return

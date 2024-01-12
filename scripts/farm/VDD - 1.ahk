@@ -4,13 +4,14 @@
 
 
 ; pidArray := getProcessIds("Thiên,Bông", "..\..\data\runtime.json")
-pidArray := getProcessIds("Bông", "..\..\data\runtime.json")
+pidArray := getProcessIds("Mai,Lan,Cúc,Trúc", "..\..\data\runtime.json")
+; pidArray := getProcessIds("Long,Lân,Quy,Phụng,Mai", "..\..\data\runtime.json")
 coordinatesArray := ["x695 y299", "x542 y459"]
 ; coordinatesArray := ["x338 y244", "x695 y299", "x542 y459"]
 
 loop {
-    move(pidArray, coordinatesArray, 1, 1500)
+    ; move(pidArray, coordinatesArray, 1, 1500)
     resetAuto(pidArray)
-    Sleep 500
     regen(pidArray, A_Index) 
+    Sleep 5000
 }

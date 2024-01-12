@@ -1,27 +1,17 @@
 #Requires AutoHotkey v2.0
 #include Farm-Actions.ahk
 #include ../Utils.ahk
-#SingleInstance Off
+#SingleInstance Force
 
-names := A_Args.get(1)
-; names := "Trúc,Mai,Bắp,Lan,Cúc"
-
-A_IconTip := "Auto Farm - " names
+names := "Trúc,Long,Lân,Quy,Phụng"
 pidArray := getProcessIds(names, "..\..\data\runtime.json")
-; coordinatesArray := ["x425 y254", "x444 y378", "x574 y358", "x600 y267"]
 coordinatesArray := []
-
 
 F11::Pause -1
 
+
 ~RButton Up:: {
     global pidArray
-    title := "Adobe Flash Player 32"
-    pid := WinActive(title)
-    if (pid == 0) {
-        return
-    }
-
     pid := pidArray.get(1)
     if (pid == 0) {
         return
@@ -62,6 +52,42 @@ F12::{
             Sleep 5000
             return
         }    
-        farm(pidArray, coordinatesArray)
+
+        getQuest(pid)
+        
+        loop 5 {
+            ControlClick coordinatesArray.Get(1), "ahk_pid " pid ; Chọn ốc 
+            Sleep 2000
+        }
+
+        regen(pidArray, A_Index) 
+
+        loop 5 {
+            ControlClick coordinatesArray.Get(2), "ahk_pid " pid ; chọn ngư phu
+            Sleep 2000
+        }
+        
+        removeQuest(pid)
+
+        resetAuto(pidArray)
+        regen(pidArray, A_Index) 
     }
+}
+
+getQuest(pid) {
+    ControlClick coordinatesArray.Get(2), "ahk_pid " pid ; chọn ngư phu
+    Sleep 2000
+    ControlClick "x333 y333", "ahk_pid " pid ; chọn nhiệm vụ
+    Sleep 1000
+    ControlClick "x304 y421", "ahk_pid " pid ; Nhận
+    Sleep 1000
+}
+
+removeQuest(pid) {
+    ControlClick "x333 y333", "ahk_pid " pid ; chọn nhiệm vụ
+    Sleep 1000
+    ControlClick "x328 y418", "ahk_pid " pid ; bỏ
+    Sleep 1000
+    ControlClick "x508 y372", "ahk_pid " pid ; xác nhận
+    Sleep 1000
 }
