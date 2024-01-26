@@ -4,35 +4,39 @@
 SetControlDelay -1 
 
 
-~F1::
-~RButton::{
-    global title
-    try {
-        WinGetTitle("A")
-        ahkId := WinActive(title)
-	}
-	catch {
-        Sleep 300
-        ahkId := WinActive(title)
-    }
+; ~F1::
+; ~RButton::{
+;     global title
+;     try {
+;         WinGetTitle("A")
+;         ahkId := WinActive(title)
+; 	}
+; 	catch {
+;         Sleep 300
+;         ahkId := WinActive(title)
+;     }
 
-    global ahkIds
-    if (!isContains(ahkIds, ahkId)) {
-        return
-    }
+;     global ahkIds
+;     if (!isContains(ahkIds, ahkId)) {
+;         return
+;     }
 
-    Pause -1
-    if (A_IsPaused) {
-        ; tooltipMessage("Pause Mirror.")
-    } else {
-        tooltipMessage("Run Mirror.")
-    }
-}
+;     Pause -1
+;     if (A_IsPaused) {
+;         ; tooltipMessage("Pause Mirror.")
+;     } else {
+;         tooltipMessage("Run Mirror.")
+;     }
+; }
 
 title := "Adobe Flash Player 32"
 ; title := "AutoHotkey v2 Help"
 
 groups := StrSplit(A_Args.get(1), "|")
+if (groups.Length < 2) {
+    groups.Push("Pause Mirror.")
+}
+
 lastGroupIndex := 0
 names := groups.get(1)
 lastNameIndex := 0
@@ -56,7 +60,7 @@ ahkIds := getAhkIds(names)
     Pause 0
     changeGroup(4)
 }
-~MButton::{
+~RButton & LButton::{
     Pause 0
     global groups
     global lastGroupIndex
@@ -94,38 +98,31 @@ tooltipMessage(message) {
     ToolTip ".`n.   " message "   .`n.", OutputVarX + 10, OutputVarY - 60 , 1
     SetTimer () => ToolTip(), -1000
 }
-
+yUI
 
 ~!`::{
     global names
     show names, 100
 }
-
 ~!1::{
     showAccount(1)
 }
-
 ~!2::{
     showAccount(2)
 }
-
 ~!3::{
     showAccount(3)
 }
-
 ~!4::{
     showAccount(4)
 }
-
 ~!5::{
     showAccount(5)
 }
-
 ~!6::{
     showAccount(6)
 }
-
-~XButton1:: {
+~MButton:: {
     global names
     global lastNameIndex
     nameArray := StrSplit(names, ",")
@@ -190,7 +187,7 @@ showAccount(index) {
 ~x::
 ~y::
 ~z:: {
-    log("INFO", "Key received - " A_ThisHotkey)
+    ; log("INFO", "Key received - " A_ThisHotkey)
     if (A_IsPaused) {
         return
     }
@@ -251,14 +248,17 @@ getOriginKey(thisKey) {
     mirrorClick(ahkIds, "x" OutputVarX " y" OutputVarY, ahkId)
 }
 
-XButton2:: {
+XButton1:: 
+~LButton & MButton:: {
     mirrorSend(ahkIds, "{Escape}")
 }
 
-~!z::{
+~!z:: {
     global names
     arrange names, -10 , -28 , , , , 230
 }
-~!x::{
-    return
+
+~LButton & RButton:: {
+    global names
+    hide names, 50
 }

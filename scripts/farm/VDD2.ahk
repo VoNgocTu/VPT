@@ -11,8 +11,8 @@ A_IconTip := "Auto VDD - " names
 coordinatesArray := ["x695 y299", "x542 y459"]
 
 loop {
-    moveAll(pidArray, coordinatesArray, 1, 1500)
-    resetAuto(pidArray)
+    moveAll(pidArray, coordinatesArray, 1, 1300)
+    resetAuto(pidArray, A_Index)
     Sleep 500
     regen(pidArray, A_Index) 
 }
