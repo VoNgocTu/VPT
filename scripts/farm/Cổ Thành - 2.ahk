@@ -1,9 +1,12 @@
 #Requires AutoHotkey v2.0
+#SingleInstance Force
+
 #include Farm-Actions.ahk
 #include ../Utils.ahk
 
 
-pidArray := getProcessIds("Thiên,Lazy,Địa,Nhân,Bông", "..\..\data\runtime.json")
-coordinatesArray := ["x129 y457", "x129 y512"]
+pidArray := getProcessIds("Yui,Nhân,Thiên,Lazy,Địa", "..\..\data\runtime.json")
+coordinatesArray := ["x210 y465", "x393 y466", "x291 y285"]
+; coordinatesArray := ["x129 y457", "x129 y512"]
 
 farm(pidArray, coordinatesArray)

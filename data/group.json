@@ -13,14 +13,18 @@
     },
     {
         "number": 1,
-        "accList": "Đào,Bơ,Bưởi,Dừa"
+        "accList": "Mai,Lan,Long,Phụng,Địa|Cúc,Trúc,Quy,Lân,Nhân"
     },
     {
         "number": 1,
-        "accList": "Yui,Hạo,Siu,Lazy"
+        "accList": "Cúc,Trúc,Quy,Lân,Nhân"
     },
     {
         "number": 1,
-        "accList": "Mai,Lan,Cúc,Trúc,Lazy,Thiên,Địa,Nhân,Bông,Yui,Hạo"
+        "accList": "Yui,Hạo,Bông,Siu"
+    },
+    {
+        "number": 1,
+        "accList": "Mai,Lan,Cúc,Trúc|Lazy,Thiên,Địa,Nhân|Long,Lân,Quy,Phụng"
     }
 ]

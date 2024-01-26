@@ -72,6 +72,13 @@ hide(names, sleepTime := 1000) {
     }
 }
 
+close(names, sleepTime := 1000) {
+    for id in getProcessIds(names) {
+        WinClose "ahk_pid " id
+        Sleep sleepTime
+    }
+}
+
 toggleWindow(id) {
     ; ahk_id := WinExist("ahk_pid" id)
     ahk_id := WinActive("ahk_pid " id)
@@ -85,7 +92,7 @@ toggleWindow(id) {
 arrange(names, x := 0, y := 0, w := 1066, h := 724, xOffset := 100, yOffset := 200) {
     index := 0
     for id in getProcessIds(names) {
-        if (index == 5) {
+        if (index == 4) {
             index := 0
             x := x + 750
         }
@@ -218,3 +225,12 @@ RunWaitOne(command) {
     return exec.StdOut.ReadAll()
 }
 
+
+
+log(level, message, filePath := "") {
+    if (filePath == "") {
+        filePath := "..\logs\AutoHotkey-" FormatTime(, "yyyy-MM-dd") ".log"
+    }
+    ts := FormatTime(, "yyyy-MM-dd HH:mm:ss.") substr(A_TickCount,-3)
+    FileAppend ts " - " level " - " message "`n", filePath
+}
