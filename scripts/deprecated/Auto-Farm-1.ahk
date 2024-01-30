@@ -2,7 +2,7 @@ pidArray := []
 
 F9::{
     global pidArray
-    pid := WinActive("Adobe Flash Player 32")
+    pid := WinActive("Adobe Flash Player 10")
     pidArray.Push(pid)
 }
 

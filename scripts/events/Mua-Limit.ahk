@@ -11,7 +11,7 @@ ahkIds := []
         return
     }
 
-    title := "Adobe Flash Player 32"
+    title := "Adobe Flash Player 10"
     ahkId := WinActive(title)
     if (ahkId == 0) {
         return

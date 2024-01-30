@@ -4,7 +4,7 @@
 
 
 names := stringToArray(A_Args.get(1))
-; ids := WinGetList("Adobe Flash Player 32")
+; ids := WinGetList("Adobe Flash Player 10")
 ; ids := WinGetList("AutoHotkey v2 Help")
 
 index := 0

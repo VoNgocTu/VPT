@@ -1,55 +1,80 @@
 ﻿#Requires AutoHotkey v2.0
+#include Utils.ahk
 #SingleInstance Off
 
-ids := StrSplit(A_Args.get(1), ",")
+KL  := "x335 y169"
+KLH := "x606 y235"
+G   := "x480 y165"
+GT  := "x341 y270"
+N   := "x607 y168"
+PL  := "x481 y262"
+V   := "x332 y218"
+GV  := "x604 y264"
+LT  := "x476 y228"
+DT  := "x350 y326"
 
-for id in ids {
-    ahk_pid := "ahk_pid " id
-    autoPlant(ahk_pid)
+names := A_Args.get(1)
+ahkIds := getAhkIds(names)
+
+resetGui(ahkIds)
+resetGui(ahkIds)
+
+ControlClickAll(ahkIds, "x1000 y330") ; trang vien
+Sleep 5000
+ControlClickAll(ahkIds, "x425 y489")  ; Click Nuôi Trồng
+Sleep 2000
+ControlClickAll(ahkIds, LT)  ; Chọn Nguyên liệu
+Sleep 2000
+
+plantMaterials(ahkIds)
+
+
+ControlClickAll(ahkIds, "x528 y493") ; Toàn bộ
+Sleep 500
+ControlClickAll(ahkIds, "x564 y307") ; Thu hoạch
+Sleep 500
+ControlClickAll(ahkIds, "x528 y493") ; Toàn bộ
+Sleep 500
+ControlClickAll(ahkIds, "x395 y403") ; Thu hoạch
+Sleep 500
+
+plantMaterials(ahkIds) {
+    plantMaterial("x211 y298", ahkIds) ; 1
+    plantMaterial("x230 y297", ahkIds) ; 1
+    plantMaterial("x233 y311", ahkIds) ; 1
+
+    plantMaterial("x263 y264", ahkIds) ; 2
+    plantMaterial("x287 y261", ahkIds) ; 2
+    plantMaterial("x285 y280", ahkIds) ; 2
+
+    plantMaterial("x315 y236", ahkIds) ; 3
+    plantMaterial("x341 y230", ahkIds) ; 3
+    plantMaterial("x336 y246", ahkIds) ; 3
+
+    plantMaterial("x370 y201", ahkIds) ; 4
+    plantMaterial("x398 y197", ahkIds) ; 4
+    plantMaterial("x394 y217", ahkIds) ; 4
+
+    plantMaterial("x420 y239", ahkIds) ; 8
+    plantMaterial("x452 y235", ahkIds) ; 8
+    plantMaterial("x450 y256", ahkIds) ; 8
+
+    plantMaterial("x366 y270", ahkIds) ; 7
+    plantMaterial("x399 y265", ahkIds) ; 7
+    plantMaterial("x396 y284", ahkIds) ; 7
+
+    plantMaterial("x315 y301", ahkIds) ; 6
+    plantMaterial("x349 y295", ahkIds) ; 6
+    plantMaterial("x343 y317", ahkIds) ; 6
+
+    plantMaterial("x263 y333", ahkIds) ; 5
+    plantMaterial("x297 y326", ahkIds) ; 5
+    plantMaterial("x289 y348", ahkIds) ; 5
 }
 
-autoPlant(ahk_pid) {
-    ControlSend "{Escape}", , ahk_pid
-    Sleep 200
-    ControlSend "{Escape}", , ahk_pid
-    Sleep 200
-    ControlSend "{Escape}", , ahk_pid
-    Sleep 200
-
-    ControlClick "x1000 y330", ahk_pid ; trang vien
-    Sleep 5000
-    ControlClick "x425 y489", ahk_pid ; Nuoi trong
-    Sleep 2000
-    ControlClick "x345 y178", ahk_pid ; Chọn Kim loại
-    Sleep 2000
-
-    plantMaterials(ahk_pid)
-    plantMaterials(ahk_pid)
-    plantMaterials(ahk_pid)
-
-    ControlClick "x528 y493", ahk_pid ; Toàn bộ
-    Sleep 500
-    ControlClick "x398 y278", ahk_pid ; Thu hoạch
-    Sleep 500
-    ControlClick "x398 y278", ahk_pid ; Thu hoạch
-    Sleep 5000
-}
-
-plantMaterials(ahk_pid) {
-    plantMaterial("x235 y299", ahk_pid) ; 1
-    plantMaterial("x281 y262", ahk_pid) ; 2
-    plantMaterial("x334 y231", ahk_pid) ; 3
-    plantMaterial("x386 y197", ahk_pid) ; 4
-
-    plantMaterial("x457 y236", ahk_pid) ; 8
-    plantMaterial("x393 y266", ahk_pid) ; 7
-    plantMaterial("x338 y300", ahk_pid) ; 6
-    plantMaterial("x285 y328", ahk_pid) ; 5
-}
-
-plantMaterial(coordinates, ahk_pid, sleepTime := 400) {
-    ControlClick coordinates, ahk_pid
+plantMaterial(coordinates, ahkIds, sleepTime := 200) {
+    ControlClickAll(ahkIds, coordinates) ; Click ruộng
     Sleep sleepTime/2
-    ControlClick "x524 y371", ahk_pid ; OK when error
+    ControlSendAll(ahkIds, "{Enter}")
     Sleep sleepTime/2
 }

@@ -9,7 +9,7 @@ F1::Pause -1
 names := stringToArray(A_Args.get(1))
 status := "SHOW" ; SHOW/HIDE
 ahkIds := getAhkIds(A_Args.get(1))
-title := "Adobe Flash Player 32"
+title := "Adobe Flash Player 10"
 
 ; MsgBox("Show 1 and 2")
 

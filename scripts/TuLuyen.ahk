@@ -2,7 +2,7 @@
 
 #include Utils.ahk
 
-ahkIds := getAhkIds("Bông,Hạo,Mận")
+ahkIds := getAhkIds("Bông,Hạo,Yui")
 
 loop {
     ; mirrorClick(ahkIds, "x450 y311")
@@ -16,7 +16,6 @@ loop {
     ; Sleep 100
     ; ControlSendAll(ahkIds, "{Enter}")
     ; Sleep 100
-    
     
     mirrorClick(ahkIds, "x448 y264")
     ; Sleep 100

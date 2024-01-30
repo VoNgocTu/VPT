@@ -16,7 +16,7 @@ F11::Pause -1
 
 ~RButton Up:: {
     global pidArray
-    title := "Adobe Flash Player 32"
+    title := "Adobe Flash Player 10"
     pid := WinActive(title)
     if (pid == 0) {
         return
@@ -37,6 +37,9 @@ F11::Pause -1
         result := MsgBox("Xác nhận toạ độ Ngư Dân: " coordinates " ?",, "YesNo")
     }
     if (coordinatesArray.Length == 2) {
+        result := MsgBox("Xác nhận toạ độ Ngư Dân: " coordinates " ?",, "YesNo")
+    }
+    if (coordinatesArray.Length == 3) {
         result := MsgBox("Tất cả toạ độ đã được xác định, bạn có muốn lấy lại toạ độ?",, "YesNo")
         if (result = "No") {
             return

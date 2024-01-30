@@ -1,12 +1,13 @@
 #Requires AutoHotkey v2.0
 #include Utils.ahk
-#SingleInstance Off
-Persistent
+#SingleInstance Force
+; Persistent
 
 
-F1::Pause -1
+~F1::Pause -1
 
 MyMenu := Menu()
+MyMenu.Add "X", closeMenu
 MyMenu.Add "Item 1", MenuHandler
 MyMenu.Add "Item 2", MenuHandler
 MyMenu.Add  ; Add a separator line.
@@ -25,7 +26,15 @@ MyMenu.Add "Item 3", MenuHandler  ; Add another menu item beneath the submenu.
 MenuHandler(Item, *) {
     MsgBox "You selected " Item
 }
+
+closeMenu(*) {
+    
+}
+
+
 ~RButton:: {
+    ; MsgBox("Width:" A_ScreenWidth ", Height: " A_ScreenHeight)
+    global MyMenu
     MyMenu.Show
 }
 

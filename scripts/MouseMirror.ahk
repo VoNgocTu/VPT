@@ -4,32 +4,16 @@
 SetControlDelay -1 
 
 
-; ~F1::
-; ~RButton::{
-;     global title
-;     try {
-;         WinGetTitle("A")
-;         ahkId := WinActive(title)
-; 	}
-; 	catch {
-;         Sleep 300
-;         ahkId := WinActive(title)
-;     }
+~F1:: {
+    Pause -1
+    if (A_IsPaused) {
+        ; tooltipMessage("Pause Mirror.")
+    } else {
+        tooltipMessage("Run Mirror.")
+    }
+}
 
-;     global ahkIds
-;     if (!isContains(ahkIds, ahkId)) {
-;         return
-;     }
-
-;     Pause -1
-;     if (A_IsPaused) {
-;         ; tooltipMessage("Pause Mirror.")
-;     } else {
-;         tooltipMessage("Run Mirror.")
-;     }
-; }
-
-title := "Adobe Flash Player 32"
+title := "Adobe Flash Player 10"
 ; title := "AutoHotkey v2 Help"
 
 groups := StrSplit(A_Args.get(1), "|")
@@ -98,7 +82,7 @@ tooltipMessage(message) {
     ToolTip ".`n.   " message "   .`n.", OutputVarX + 10, OutputVarY - 60 , 1
     SetTimer () => ToolTip(), -1000
 }
-yUI
+
 
 ~!`::{
     global names
@@ -146,6 +130,57 @@ showAccount(index) {
     name := nameArray.get(index)
     show name, 50
 }
+
+
+
+~LButton:: {
+    if (A_IsPaused) {
+        return
+    }
+
+    global title
+    try {
+        WinGetTitle("A")
+        ahkId := WinActive(title)
+	}
+	catch {
+        Sleep 300
+        ahkId := WinActive(title)
+    }
+    
+    global ahkIds
+    if (!isContains(ahkIds, ahkId)) {
+        return
+    }
+
+    OutputVarX := 0
+    OutputVarY := 0
+    OutputVarWin := 0
+    MouseGetPos &OutputVarX, &OutputVarY, &OutputVarWin
+
+    mirrorClick(ahkIds, "x" OutputVarX " y" OutputVarY, ahkId)
+}
+
+XButton1:: 
+~LButton & MButton:: {
+    mirrorSend(ahkIds, "{Escape}")
+}
+
+~!z:: {
+    global names
+    yOffset := 230 ; 2560 x 1440
+    if (A_ScreenHeight == 1080) {
+        yOffset := 117 ; 1920 x 1080
+    }
+    arrange names, -10 , -28 , , , , yOffset
+}
+
+XButton2:: 
+~LButton & RButton:: {
+    global names
+    hide names, 50
+}
+
 
 ~Escape::
 ~Enter::
@@ -217,48 +252,4 @@ getOriginKey(thisKey) {
         key := "{" key "}"
     }
     return key
-}
-
-
-~LButton:: {
-    if (A_IsPaused) {
-        return
-    }
-
-    global title
-    try {
-        WinGetTitle("A")
-        ahkId := WinActive(title)
-	}
-	catch {
-        Sleep 300
-        ahkId := WinActive(title)
-    }
-    
-    global ahkIds
-    if (!isContains(ahkIds, ahkId)) {
-        return
-    }
-
-    OutputVarX := 0
-    OutputVarY := 0
-    OutputVarWin := 0
-    MouseGetPos &OutputVarX, &OutputVarY, &OutputVarWin
-
-    mirrorClick(ahkIds, "x" OutputVarX " y" OutputVarY, ahkId)
-}
-
-XButton1:: 
-~LButton & MButton:: {
-    mirrorSend(ahkIds, "{Escape}")
-}
-
-~!z:: {
-    global names
-    arrange names, -10 , -28 , , , , 230
-}
-
-~LButton & RButton:: {
-    global names
-    hide names, 50
 }

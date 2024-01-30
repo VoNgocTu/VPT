@@ -22,7 +22,7 @@ F2::{
     global exitLoop
     exitLoop := false
 
-    title := "Adobe Flash Player 32"
+    title := "Adobe Flash Player 10"
     ; title := "AutoHotkey v2 Help"
     ; title := "Untitled - Notepad"
     id := WinActive(title)
@@ -51,7 +51,7 @@ F2::{
 
 
 ~RButton Up:: {
-    title := "Adobe Flash Player 32"
+    title := "Adobe Flash Player 10"
     ; title := "AutoHotkey v2 Help"
     ; title := "Untitled - Notepad"
     pid := WinActive(title)

@@ -8,7 +8,7 @@ coordinatesArray := ["x695 y299", "x542 y459"]
 MyGui := Gui()
 
 ~RButton Up:: {
-    title := "Adobe Flash Player 32"
+    title := "Adobe Flash Player 10"
     ; title := "AutoHotkey v2 Help"
     pid := WinActive(title)
     if (pid == 0) {

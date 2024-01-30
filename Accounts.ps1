@@ -9,6 +9,10 @@ $data = "$root\data"
 $tools = "$root\tools"
 $images = "$root\images"
 $scripts = "$root\scripts"
+
+# $flashName = "flashplayer_32"
+$flashName = "flashplayer_10"
+
 $font = New-Object System.Drawing.Font('Times New Roman',10,[System.Drawing.FontStyle]::Bold)
 $buttonBackgroundColor = [System.Drawing.ColorTranslator]::FromHtml("#a5e6d6")
 
@@ -79,12 +83,12 @@ function LoginButton_ContextMenuUpdate($button) {
     $button.ContextMenuStrip.Items.Clear()
     $process = getVPTProcess $button.Tag
     if ($null -ne $process) {
-        $hide = createToolStripMenuItem "Ẩn" $group { Start-Process "$scripts\Hide.ahk" -ArgumentList $this.Tag.name }
-        $FarmVDD = createToolStripMenuItem "Farm VDD" $button.Tag { Start-Process "$scripts\farm\VDD.ahk" -ArgumentList $this.Tag.name }
+        $hide = createToolStripMenuItem "Ẩn" $button.Tag { Start-Process "$scripts\Hide.ahk" -ArgumentList $this.Tag.name }
+        $FarmVDD = createToolStripMenuItem "Farm Vô Danh Động" $button.Tag { Start-Process "$scripts\farm\VDD.ahk" -ArgumentList $this.Tag.name }
         $BugOnline = createToolStripMenuItem "Bug online" $button.Tag { Start-Process "$scripts\Bug-Online.ahk" -ArgumentList $this.Tag.name }
         $PlantMaterial = createToolStripMenuItem "Trồng Nguyên Liệu" $button.Tag { Start-Process "$scripts\Plant-Material.ahk" -ArgumentList $this.Tag.name }
-        # $CopyLink = createToolStripMenuItem "Copy Link" $button.Tag { copyLink $this.Tag.link }
-        $button.ContextMenuStrip.Items.AddRange(@($hide, $FarmVDD, $BugOnline, $PlantMaterial, $PetBattle))
+        
+        $button.ContextMenuStrip.Items.AddRange(@($hide, $FarmVDD, $BugOnline, $PlantMaterial))
     } else {
         $autoClone = createToolStripMenuItem "Auto Clone" $button.Tag { Start-Process "$scripts\MouseMirror.ahk" -ArgumentList $this.Tag.processId }
         $autoClone = createToolStripMenuItem "Test Input" $button.Tag { 
@@ -108,7 +112,7 @@ function groupButton_Click($button) {
                     if ($name -eq $acc.name) {
                         if ($null -eq $(getVPTProcess $acc)) {
                             $startAccount = $true
-                            $acc.processId = $(Start-Process -FilePath "$tools\flashplayer_32.exe" -ArgumentList $(getFlashLink $acc.link) -PassThru).ID
+                            $acc.processId = $(Start-Process -FilePath "$tools\$flashName.exe" -ArgumentList $(getFlashLink $acc.link) -PassThru).ID
                         }
                     }
                 }
@@ -157,7 +161,7 @@ function openAccount ($button) {
         # toggleGameWindow $button.Tag.processId
         Start-Process "$scripts\Show.ahk" -ArgumentList $button.Tag.name
     } else {
-        $button.Tag.processId = $(Start-Process -FilePath "$tools\flashplayer_32.exe" -ArgumentList $link -PassThru).ID
+        $button.Tag.processId = $(Start-Process -FilePath "$tools\$flashName.exe" -ArgumentList $link -PassThru).ID
     }
 
     $tabList | ConvertTo-Json -Depth 10 > .\data\runtime.json
@@ -168,7 +172,7 @@ function getVPTProcess($acc) {
         $acc | Add-Member -MemberType NoteProperty -Name "processId" -Value 9999999
     }
     
-    if ($null -eq (Get-Process -Id $acc.processId | findstr "flashplayer_32")) {
+    if ($null -eq (Get-Process -Id $acc.processId | findstr $flashName)) {
         return $null
     }
 
@@ -222,6 +226,19 @@ foreach($tab in $tabList) {
     
     $xIndex = 0
     $yIndex = 0
+
+    $groupButton = createButton "Change colors" $null $(getButtonX $xIndex) $(getButtonY $yIndex) 160
+    $groupButton.Add_Click({ 
+        if ($tabPage.Controls[0].BackColor.name -eq "ffa5e6d6") {
+            $tabPage.Controls[0].BackColor = [System.Drawing.ColorTranslator]::FromHtml("#ffffff")
+        } else {
+            $tabPage.Controls[0].BackColor = [System.Drawing.ColorTranslator]::FromHtml("#a5e6d6")
+        }
+
+        Write-Host "Test"
+    })
+    $tabPage.controls.AddRange(@($groupButton))
+    $yIndex++
     
     foreach ($acc in $tab.accList) 
     {
@@ -246,10 +263,11 @@ foreach($tab in $tabList) {
             $hide = createToolStripMenuItem "Ẩn" $group { Start-Process "$scripts\Hide.ahk" -ArgumentList $this.Tag.accList }
             $arrange = createToolStripMenuItem "Sắp xếp" $group { Start-Process "$scripts\Arrange.ahk" -ArgumentList $this.Tag.accList }
             $plantMaterial = createToolStripMenuItem "Trồng Nguyên Liệu" $group { Start-Process "$scripts\Plant-Material.ahk" -ArgumentList $this.Tag.accList }
+            $farmVDD = createToolStripMenuItem "Farm Vô Danh Động" $group { Start-Process "$scripts\farm\VDD2.ahk" -ArgumentList $this.Tag.accList }
             $bugOnline = createToolStripMenuItem "Bug Online" $group { Start-Process "$scripts\Bug-Online.ahk" -ArgumentList $this.Tag.accList }
             $close = createToolStripMenuItem "Tắt" $group { Start-Process "$scripts\Close.ahk" -ArgumentList $this.Tag.accList }
 
-            $groupButton.ContextMenuStrip.Items.AddRange(@($mirror, $hide, $arrange, $plantMaterial, $bugOnline, $close))
+            $groupButton.ContextMenuStrip.Items.AddRange(@($mirror, $hide, $arrange, $plantMaterial, $farmVDD, $bugOnline, $close))
             $groupButton.Add_Click({ groupButton_Click $this })
             $tabPage.controls.AddRange(@($groupButton))
 

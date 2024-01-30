@@ -79,16 +79,6 @@ close(names, sleepTime := 1000) {
     }
 }
 
-toggleWindow(id) {
-    ; ahk_id := WinExist("ahk_pid" id)
-    ahk_id := WinActive("ahk_pid " id)
-    if (ahk_id == 0) {
-        WinActivate "ahk_id " id
-    } else {
-        WinMinimize "ahk_id " id
-    }
-}
-
 arrange(names, x := 0, y := 0, w := 1066, h := 724, xOffset := 100, yOffset := 200) {
     index := 0
     for id in getProcessIds(names) {
@@ -132,44 +122,75 @@ getAhkIds(names) {
     return ahkIds
 }
 
-getProcessIds(names, filePath := "..\data\runtime.json") {
+getProcessIds(names, filePath := "..\data\accountsV2.json") {
     result := []
 
     nameArray := stringToArray(names)
     text := FileRead(filePath, "UTF-8")
-    tabArray := jxon_load(&text)
+    accArray := jxon_load(&text)
     for name in nameArray {
-        for tab in tabArray {
-            for acc in tab["accList"] {
-                if (acc["name"] == name) {
-                    result.Push(acc["processId"])
-                }
+        for acc in accArray {
+            if (acc["name"] == name) {
+                result.Push(acc["processId"])
             }
         }
     }
     
     return result
 }
+; getProcessIds(names, filePath := "..\data\runtime.json") {
+;     result := []
 
+;     nameArray := stringToArray(names)
+;     text := FileRead(filePath, "UTF-8")
+;     tabArray := jxon_load(&text)
+;     for name in nameArray {
+;         for tab in tabArray {
+;             for acc in tab["accList"] {
+;                 if (acc["name"] == name) {
+;                     result.Push(acc["processId"])
+;                 }
+;             }
+;         }
+;     }
+    
+;     return result
+; }
 
 getNameFromAhkIds(ahkIds, filePath := "..\data\runtime.json") {
     result := []
 
     pidArray := getProcessIdsFromAhkIds(ahkIds)
     text := FileRead(filePath, "UTF-8")
-    tabArray := jxon_load(&text)
+    accArray := jxon_load(&text)
     for pid in pidArray {
-        for tab in tabArray {
-            for acc in tab["accList"] {
-                if (acc["processId"] == pid) {
-                    result.Push(acc["name"])
-                }
+        for acc in accArray {
+            if (acc["processId"] == pid) {
+                result.Push(acc["name"])
             }
         }
     }
 
     return result
 }
+; getNameFromAhkIds(ahkIds, filePath := "..\data\runtime.json") {
+;     result := []
+
+;     pidArray := getProcessIdsFromAhkIds(ahkIds)
+;     text := FileRead(filePath, "UTF-8")
+;     tabArray := jxon_load(&text)
+;     for pid in pidArray {
+;         for tab in tabArray {
+;             for acc in tab["accList"] {
+;                 if (acc["processId"] == pid) {
+;                     result.Push(acc["name"])
+;                 }
+;             }
+;         }
+;     }
+
+;     return result
+; }
 
 
 getProcessIdsFromAhkIds(ahkIds) {
@@ -224,8 +245,6 @@ RunWaitOne(command) {
     exec := shell.Exec(A_ComSpec " /C " command)
     return exec.StdOut.ReadAll()
 }
-
-
 
 log(level, message, filePath := "") {
     if (filePath == "") {

@@ -5,7 +5,7 @@ SetControlDelay -1
 
 F1::Pause -1
 
-title := "Adobe Flash Player 32"
+title := "Adobe Flash Player 10"
 ; title := "AutoHotkey v2 Help"
 
 ; ahkIds := getAhkIds(A_Args.get(1))
