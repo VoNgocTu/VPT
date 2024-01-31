@@ -257,12 +257,13 @@ foreach($tab in $settings) {
         $mirror = createToolStripMenuItem "Mirror" $group { Start-Process "$scripts\MouseMirror.ahk" -ArgumentList $this.Tag.names }
         $hide = createToolStripMenuItem "Ẩn" $group { Start-Process "$scripts\Hide.ahk" -ArgumentList $this.Tag.names }
         $arrange = createToolStripMenuItem "Sắp xếp" $group { Start-Process "$scripts\Arrange.ahk" -ArgumentList $this.Tag.names }
+        $arrangeLT = createToolStripMenuItem "Sắp xếp LT Style" $group { Start-Process "$scripts\Arrange-LT.ahk" -ArgumentList $this.Tag.names }
         $plantMaterial = createToolStripMenuItem "Trồng Nguyên Liệu" $group { Start-Process "$scripts\Plant-Material.ahk" -ArgumentList $this.Tag.names }
         $farmVDD = createToolStripMenuItem "Farm Vô Danh Động" $group { Start-Process "$scripts\farm\VDD2.ahk" -ArgumentList $this.Tag.names }
         $bugOnline = createToolStripMenuItem "Bug Online" $group { Start-Process "$scripts\Bug-Online.ahk" -ArgumentList $this.Tag.names }
         $close = createToolStripMenuItem "Tắt" $group { Start-Process "$scripts\Close.ahk" -ArgumentList $this.Tag.names }
 
-        $groupButton.ContextMenuStrip.Items.AddRange(@($mirror, $hide, $arrange, $plantMaterial, $farmVDD, $bugOnline, $close))
+        $groupButton.ContextMenuStrip.Items.AddRange(@($mirror, $hide, $arrange, $arrangeLT, $plantMaterial, $farmVDD, $bugOnline, $close))
         $groupButton.Add_Click({ groupButton_Click $this })
         $tabPage.controls.AddRange(@($groupButton))
 
