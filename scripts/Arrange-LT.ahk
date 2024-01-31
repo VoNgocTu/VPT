@@ -10,10 +10,10 @@ names := stringToArray(A_Args.get(1))
 ; Total accounts: 8
 
 index := 0
-originY := 100
+originY := 80
 
 xOffset := 100
-yOffset := 100
+yOffset := 80
 
 x := -10 + xOffset * 3
 y := originY
@@ -29,7 +29,7 @@ for (name in names) {
     }
 
     if (index == 3) {
-        x := A_ScreenWidth - 1066 - xOffset * 3
+        x := A_ScreenWidth - 1066 - xOffset * 3 + 10
         y := originY
     }
     index++
