@@ -5,7 +5,8 @@
 
 ; 1 name = 1 team.
 names := A_Args.get(1)
-pidArray := getProcessIds(names, "..\..\data\runtime.json")
+log("", names)
+pidArray := getProcessIds(names, "..\..\data\accountsV2.json")
 
 A_IconTip := "Auto VDD - " names
 coordinatesArray := ["x695 y299", "x542 y459"]
