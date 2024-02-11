@@ -4,21 +4,12 @@
 SetControlDelay -1 
 
 
-~F1:: {
-    Pause -1
-    if (A_IsPaused) {
-        ; tooltipMessage("Pause Mirror.")
-    } else {
-        tooltipMessage("Run Mirror.")
-    }
-}
-
 title := "Adobe Flash Player 10"
 ; title := "AutoHotkey v2 Help"
 
 groups := StrSplit(A_Args.get(1), "|")
 if (groups.Length < 2) {
-    groups.Push("Pause Mirror.")
+    ; groups.Push("Pause Mirror.")
 }
 
 lastGroupIndex := 0
@@ -27,6 +18,15 @@ lastNameIndex := 0
 ahkIds := getAhkIds(names)
 ; ahkIds := WingetList(title)
 
+
+~F1:: {
+    Pause -1
+    if (A_IsPaused) {
+        ; tooltipMessage("Pause Mirror.")
+    } else {
+        tooltipMessage("Run Mirror - " names)
+    }
+}
 
 ~+1:: {
     Pause 0
@@ -173,6 +173,42 @@ XButton1::
         yOffset := 117 ; 1920 x 1080
     }
     arrange names, -10 , -28 , , , , yOffset
+}
+
+~!x:: {
+    index := 0
+    x := -10
+    y := -28
+    xOffset := 500
+    yOffset := 700
+    ; xOffset := 789 ; 75%
+    ; yOffset := 538 ; 75%
+    ; w := xOffset
+    ; h := yOffset
+    global names
+    nameArray := stringToArray(names)
+    for (name in nameArray) {
+    ; for (id in ids) {
+        move name, x, y
+        ; move id, x, y
+        y := y + yOffset - 7
+        if (index > 0 && Mod(index, 2) == 1) {
+            x := x + xOffset - 15
+            y := -28
+        }
+
+        index++
+        if (index > 3) {
+            index := 0
+            x := -10
+            y := -28
+        }
+    }
+
+}
+move(name, x := 0, y := 0, w := 1066, h := 724) {
+    WinMove x, y, w, h, "ahk_pid " getProcessIds(name).get(1)
+    ; WinMove x, y, w, h, "ahk_id " id
 }
 
 XButton2:: 

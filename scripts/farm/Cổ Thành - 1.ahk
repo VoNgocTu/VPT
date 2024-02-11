@@ -4,8 +4,9 @@
 #include Farm-Actions.ahk
 #include ../Utils.ahk
 
-
-pidArray := getProcessIds("Long,Phụng,Bông,Lân,Quy", "..\..\data\runtime.json")
+names := "Phụng,Long,Yui,Lân,Quy"
+A_IconTip := "Cổ Thành - " names
+pidArray := getProcessIds(names, "..\..\data\accountsV2.json")
 coordinatesArray := ["x210 y465", "x393 y466", "x291 y285"]
 
 farm(pidArray, coordinatesArray)

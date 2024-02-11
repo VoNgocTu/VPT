@@ -1,7 +1,7 @@
 Add-Type -AssemblyName UIAutomationClient
 Add-Type -AssemblyName System.Windows.Forms
+[void][Reflection.Assembly]::LoadWithPartialName('Microsoft.VisualBasic')
 [System.Windows.Forms.Application]::EnableVisualStyles()
-
 
 $root = $PSScriptRoot
 
@@ -28,7 +28,7 @@ $actions.Location = New-Object System.Drawing.Point(30, 20)
 $actions.TopMost             = $true
 
 
-$settings = $(Get-Content "$data\settings.json" -Encoding UTF8 | Out-String | ConvertFrom-Json)
+$settings = $(Get-Content "$data\settingsTest.json" -Encoding UTF8 | Out-String | ConvertFrom-Json)
 $accList = $(Get-Content "$data\accountsV2.json" -Encoding UTF8 | Out-String | ConvertFrom-Json)
 
 # Add the tab pages to the tab control
@@ -78,8 +78,9 @@ function LoginButton_ContextMenuUpdate($button) {
         $FarmVDD = createToolStripMenuItem "Farm Vô Danh Động" $button.Tag { Start-Process "$scripts\farm\VDD.ahk" -ArgumentList $this.Tag.name }
         $BugOnline = createToolStripMenuItem "Bug online" $button.Tag { Start-Process "$scripts\Bug-Online.ahk" -ArgumentList $this.Tag.name }
         $PlantMaterial = createToolStripMenuItem "Trồng Nguyên Liệu" $button.Tag { Start-Process "$scripts\Plant-Material.ahk" -ArgumentList $this.Tag.name }
+        $copyLink = createToolStripMenuItem "Copy Link" $button.Tag { copyLink $(getFlashLink $this.Tag.link) }
         
-        $button.ContextMenuStrip.Items.AddRange(@($hide, $FarmVDD, $BugOnline, $PlantMaterial))
+        $button.ContextMenuStrip.Items.AddRange(@($hide, $FarmVDD, $BugOnline, $PlantMaterial, $copyLink))
     } else {
         $autoClone = createToolStripMenuItem "Auto Clone" $button.Tag { Start-Process "$scripts\MouseMirror.ahk" -ArgumentList $this.Tag.processId }
         $autoClone = createToolStripMenuItem "Test Input" $button.Tag { 
@@ -211,66 +212,109 @@ function getAccount($name) {
     }
 }
 
+function addGroup($tab, $groupName) {
+    $tab.groupList += [PSCustomObject]@{
+        names = $groupName
+    }
 
-foreach($tab in $settings) {
-    $tabPage = New-Object System.Windows.Forms.TabPage
-    $tabPage.Text = $tab.name
-    $tabPage.BackgroundImage = [system.drawing.image]::FromFile("$images\background-3.png")
-    $tabPage.BackgroundImageLayout = 'Stretch'
-    $tabControl.Controls.Add($tabPage)
-    
-    $xIndex = 0
-    $yIndex = 0
-
-    $groupButton = createButton "Change colors" $null $(getButtonX $xIndex) $(getButtonY $yIndex) 160
-    $groupButton.Add_Click({ 
-        if ($tabPage.Controls[0].BackColor.name -eq "ffa5e6d6") {
-            $tabPage.Controls[0].BackColor = [System.Drawing.ColorTranslator]::FromHtml("#ffffff")
-        } else {
-            $tabPage.Controls[0].BackColor = [System.Drawing.ColorTranslator]::FromHtml("#a5e6d6")
-        }
-
-        Write-Host "Test"
-    })
-    $tabPage.controls.AddRange(@($groupButton))
-    $yIndex++
-    
-    foreach ($acc in $tab.accList) 
-    {
-        $account = getAccount $acc.name
-        $LoginButton = createButton $(getName $account) $account $(getButtonX $xIndex) $(getButtonY $yIndex)
-        $LoginButton.Add_MouseDown({ LoginButton_ContextMenuUpdate $this })
-        $LoginButton.Add_MouseUp({ LoginButton_Click $this })
-        $tabPage.controls.AddRange(@($LoginButton))
-
-        $xIndex++
-        if ($xIndex % 2 -eq 0) {
-            $yIndex++
-            $xIndex = 0
+    foreach ($settingsTab in $settings) {
+        if ($settingsTab.name -eq $tab.name) {
+            $settingsTab.groupList = $tab.groupList
         }
     }
 
-    foreach ($group in $tab.groupList) 
-    {
-        $groupButton = createButton $group.names $group $(getButtonX $xIndex) $(getButtonY $yIndex) 160
+    $settings | ConvertTo-Json -Depth 10 > .\data\settingsTest.json
+    $settings = $(Get-Content "$data\settingsTest.json" -Encoding UTF8 | Out-String | ConvertFrom-Json)
+    loadTab $settings
+}
 
-        $mirror = createToolStripMenuItem "Mirror" $group { Start-Process "$scripts\MouseMirror.ahk" -ArgumentList $this.Tag.names }
-        $hide = createToolStripMenuItem "Ẩn" $group { Start-Process "$scripts\Hide.ahk" -ArgumentList $this.Tag.names }
-        $arrange = createToolStripMenuItem "Sắp xếp" $group { Start-Process "$scripts\Arrange.ahk" -ArgumentList $this.Tag.names }
-        $arrangeLT = createToolStripMenuItem "Sắp xếp LT Style" $group { Start-Process "$scripts\Arrange-LT.ahk" -ArgumentList $this.Tag.names }
-        $plantMaterial = createToolStripMenuItem "Trồng Nguyên Liệu" $group { Start-Process "$scripts\Plant-Material.ahk" -ArgumentList $this.Tag.names }
-        $farmVDD = createToolStripMenuItem "Farm Vô Danh Động" $group { Start-Process "$scripts\farm\VDD2.ahk" -ArgumentList $this.Tag.names }
-        $bugOnline = createToolStripMenuItem "Bug Online" $group { Start-Process "$scripts\Bug-Online.ahk" -ArgumentList $this.Tag.names }
-        $close = createToolStripMenuItem "Tắt" $group { Start-Process "$scripts\Close.ahk" -ArgumentList $this.Tag.names }
+function removeGroup($tab, $groupName) {
+    $index = 0
+    $result = @()
+    foreach ($group in $tab.groupList) {
+        if ($group.names -ne $text) {
+            $result += [PSCustomObject]@{
+                names = $group.names
+            }
+        }
+        $index++
+    }
+    # $tab.groupList = $result
 
-        $groupButton.ContextMenuStrip.Items.AddRange(@($mirror, $hide, $arrange, $arrangeLT, $plantMaterial, $farmVDD, $bugOnline, $close))
-        $groupButton.Add_Click({ groupButton_Click $this })
+    foreach ($settingsTab in $settings) {
+        if ($settingsTab.name -eq $tab.name) {
+            $settingsTab.groupList = $result
+        }
+    }
+
+    $settings | ConvertTo-Json -Depth 10 > .\data\settingsTest.json
+    $settings = $(Get-Content "$data\settingsTest.json" -Encoding UTF8 | Out-String | ConvertFrom-Json)
+    loadTab $settings
+}
+
+function loadTab($settings) {
+    $tabControl.Controls.Clear()
+
+    foreach($tab in $settings) {
+        $tabPage = New-Object System.Windows.Forms.TabPage
+        $tabPage.Text = $tab.name
+        $tabPage.BackgroundImage = [system.drawing.image]::FromFile("$images\background-3.png")
+        $tabPage.BackgroundImageLayout = 'Stretch'
+        $tabControl.Controls.AddRange($($tabPage))
+        
+        $xIndex = 0
+        $yIndex = 0
+    
+        $groupButton = createButton "Thêm Group" $tab $(getButtonX $xIndex) $(getButtonY $yIndex) 80
+        $groupButton.Add_Click({ 
+            $title = 'Tạo group'
+            $msg   = 'Nhập tên các nhân vật có trong group. Cách nhau bởi dấu phẩy (,). Ví dụ: Mai,Lan,Cúc,Trúc'
+            
+            $text = [Microsoft.VisualBasic.Interaction]::InputBox($msg, $title)
+            addGroup  $this.Tag $text
+        })
         $tabPage.controls.AddRange(@($groupButton))
-
         $yIndex++
+        
+        foreach ($acc in $tab.accList) 
+        {
+            $account = getAccount $acc.name
+            $LoginButton = createButton $(getName $account) $account $(getButtonX $xIndex) $(getButtonY $yIndex)
+            $LoginButton.Add_MouseDown({ LoginButton_ContextMenuUpdate $this })
+            $LoginButton.Add_MouseUp({ LoginButton_Click $this })
+            $tabPage.controls.AddRange(@($LoginButton))
+    
+            $xIndex++
+            if ($xIndex % 2 -eq 0) {
+                $yIndex++
+                $xIndex = 0
+            }
+        }
+    
+        foreach ($group in $tab.groupList) 
+        {
+            $groupButton = createButton $group.names $group $(getButtonX $xIndex) $(getButtonY $yIndex) 160
+    
+            $mirror = createToolStripMenuItem "Mirror" $group { Start-Process "$scripts\MouseMirror.ahk" -ArgumentList $this.Tag.names }
+            $hide = createToolStripMenuItem "Ẩn" $group { Start-Process "$scripts\Hide.ahk" -ArgumentList $this.Tag.names }
+            $arrange = createToolStripMenuItem "Sắp xếp" $group { Start-Process "$scripts\Arrange2.ahk" -ArgumentList $this.Tag.names }
+            $arrangeLT = createToolStripMenuItem "Sắp xếp LT Style" $group { Start-Process "$scripts\Arrange-LT.ahk" -ArgumentList $this.Tag.names }
+            $plantMaterial = createToolStripMenuItem "Trồng Nguyên Liệu" $group { Start-Process "$scripts\Plant-Material.ahk" -ArgumentList $this.Tag.names }
+            $farmVDD = createToolStripMenuItem "Farm Vô Danh Động" $group { Start-Process "$scripts\farm\VDD2.ahk" -ArgumentList $this.Tag.names }
+            $bugOnline = createToolStripMenuItem "Bug Online" $group { Start-Process "$scripts\Bug-Online.ahk" -ArgumentList $this.Tag.names }
+            $removeGroup = createToolStripMenuItem "Xoá Group" $group { removeGroup $tab $this }
+            $close = createToolStripMenuItem "Tắt" $group { Start-Process "$scripts\Close.ahk" -ArgumentList $this }
+    
+            $groupButton.ContextMenuStrip.Items.AddRange(@($mirror, $hide, $arrange, $arrangeLT, $plantMaterial, $farmVDD, $bugOnline, $removeGroup, $close))
+            $groupButton.Add_Click({ groupButton_Click $this })
+            $tabPage.controls.AddRange(@($groupButton))
+    
+            $yIndex++
+        }
     }
 }
 
+loadTab $settings
 
 
 

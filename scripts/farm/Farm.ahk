@@ -7,7 +7,7 @@ names := A_Args.get(1)
 ; names := "Trúc,Mai,Bắp,Lan,Cúc"
 
 A_IconTip := "Auto Farm - " names
-pidArray := getProcessIds(names, "..\..\data\runtime.json")
+pidArray := getProcessIds(names, "..\..\data\accountsV2.json")
 ; coordinatesArray := ["x425 y254", "x444 y378", "x574 y358", "x600 y267"]
 coordinatesArray := []
 

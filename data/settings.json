@@ -10,13 +10,31 @@
             {"name": "Bắp"}
         ],
         "groupList": [
-            {"names": "Yui,Mận,Bông,Siu"},
+            
+            {"names": "Lazy,Thiên,Hạo"},
+            {"names": "Siu,Hạo,Mận"},
+            {"names": "Yui,Bông,Lazy,Siu"},
+
             {"names": "Mai,Lan,Cúc,Trúc"},
             {"names": "Lazy,Thiên,Địa,Nhân"},
             {"names": "Long,Lân,Quy,Phụng"},
-            {"names": "Mai,Lan,Long,Phụng,Địa"},
-            {"names": "Cúc,Trúc,Quy,Lân,Nhân"},
-            {"names": "Mai,Lan,Cúc,Trúc|Lazy,Thiên,Địa,Nhân|Long,Lân,Quy,Phụng"}
+
+            {"names": "Long,Lân,Quy,Phụng,Lazy,Thiên,Địa,Nhân,Mai,Lan,Cúc,Trúc"}
+        ]
+    },
+    {
+        "name": "Sổ tay",
+        "accList": [
+            {"name": "Địa"},
+            {"name": "Nhân"}
+        ],
+        "groupList": [
+            {"names": "Mai,Lan,Long,Lân"},
+            {"names": "Cúc,Trúc,Quy,Phụng"},
+
+            {"names": "Mai,Long,Lân,Lazy"},
+            {"names": "Lan,Cúc,Quy,Thiên"},
+            {"names": "Trúc,Phụng,Địa,Nhân"}
         ]
     },
     {

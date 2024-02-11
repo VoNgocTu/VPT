@@ -5,7 +5,6 @@
 
 ; 1 name = 1 team.
 names := A_Args.get(1)
-log("", names)
 pidArray := getProcessIds(names, "..\..\data\accountsV2.json")
 
 A_IconTip := "Auto VDD - " names

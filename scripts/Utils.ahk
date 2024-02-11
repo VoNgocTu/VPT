@@ -2,32 +2,6 @@
 #Include libs\JSON.ahk
 
 
-; ids := getProcessIds("Thiên,Địa,Nhân")
-; RunWait "powershell .\ps1\Get-Process-IDs.ps1 -runtimePath ..\data\runtime.json -names " "Thiên,Địa,Nhân"
-; ClipWait
-; MsgBox("Process id list: " A_Clipboard " ?",, "YesNo")
-
-; data := getProcessIds("Thiên,Địa,Nhân")
-; MsgBox("Process id list: " data " ?",, "YesNo")
-
-
-; MsgBox(arrayToString(getProcessIds("Mai,Lan,Cúc,Trúc")))
-; x431 y355
-
-; Run "notepad.exe"
-; WinWait "Untitled - Notepad"
-; Sleep 1000
-; WinShow ; Use the window found by WinWait.
-; Sleep 2000
-; WinHide ; Use the window found by WinWait.
-; Sleep 1000
-; WinShow ; Use the window found by WinWait.
-
-; WinActivate "AutoHotkey v2 Help"
-; Sleep 1000
-; WinMinimize "AutoHotkey v2 Help"
-
-; toggleWindow(29684)
 
 isContains(strArray, stringInput) {
     for str in strArray {
@@ -84,7 +58,7 @@ arrange(names, x := 0, y := 0, w := 1066, h := 724, xOffset := 100, yOffset := 2
     for id in getProcessIds(names) {
         if (index == 4) {
             index := 0
-            x := x + 750
+            x := x + 350
         }
         WinMove x + index * xOffset, y + index * yOffset, w, h, "ahk_pid " id
         index++
