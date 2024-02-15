@@ -9,6 +9,7 @@ $data = "$root\data"
 $tools = "$root\tools"
 $images = "$root\images"
 $scripts = "$root\scripts"
+$settingsFilename = "settings.json"
 
 # $flashName = "flashplayer_32"
 $flashName = "flashplayer_10"
@@ -28,7 +29,7 @@ $actions.Location = New-Object System.Drawing.Point(30, 20)
 $actions.TopMost             = $true
 
 
-$settings = $(Get-Content "$data\settingsTest.json" -Encoding UTF8 | Out-String | ConvertFrom-Json)
+$settings = $(Get-Content "$data\$settingsFilename" -Encoding UTF8 | Out-String | ConvertFrom-Json)
 $accList = $(Get-Content "$data\accountsV2.json" -Encoding UTF8 | Out-String | ConvertFrom-Json)
 
 # Add the tab pages to the tab control
@@ -223,8 +224,8 @@ function addGroup($tab, $groupName) {
         }
     }
 
-    $settings | ConvertTo-Json -Depth 10 > .\data\settingsTest.json
-    $settings = $(Get-Content "$data\settingsTest.json" -Encoding UTF8 | Out-String | ConvertFrom-Json)
+    $settings | ConvertTo-Json -Depth 10 > .\data\$settingsFilename
+    $settings = $(Get-Content "$data\$settingsFilename" -Encoding UTF8 | Out-String | ConvertFrom-Json)
     loadTab $settings
 }
 
@@ -247,8 +248,8 @@ function removeGroup($tab, $groupName) {
         }
     }
 
-    $settings | ConvertTo-Json -Depth 10 > .\data\settingsTest.json
-    $settings = $(Get-Content "$data\settingsTest.json" -Encoding UTF8 | Out-String | ConvertFrom-Json)
+    $settings | ConvertTo-Json -Depth 10 > .\data\$settingsFilename
+    $settings = $(Get-Content "$data\$settingsFilename" -Encoding UTF8 | Out-String | ConvertFrom-Json)
     loadTab $settings
 }
 
@@ -265,16 +266,16 @@ function loadTab($settings) {
         $xIndex = 0
         $yIndex = 0
     
-        $groupButton = createButton "Thêm Group" $tab $(getButtonX $xIndex) $(getButtonY $yIndex) 80
-        $groupButton.Add_Click({ 
-            $title = 'Tạo group'
-            $msg   = 'Nhập tên các nhân vật có trong group. Cách nhau bởi dấu phẩy (,). Ví dụ: Mai,Lan,Cúc,Trúc'
+        # $groupButton = createButton "Thêm Group" $tab $(getButtonX $xIndex) $(getButtonY $yIndex) 80
+        # $groupButton.Add_Click({ 
+        #     $title = 'Tạo group'
+        #     $msg   = 'Nhập tên các nhân vật có trong group. Cách nhau bởi dấu phẩy (,). Ví dụ: Mai,Lan,Cúc,Trúc'
             
-            $text = [Microsoft.VisualBasic.Interaction]::InputBox($msg, $title)
-            addGroup  $this.Tag $text
-        })
-        $tabPage.controls.AddRange(@($groupButton))
-        $yIndex++
+        #     $text = [Microsoft.VisualBasic.Interaction]::InputBox($msg, $title)
+        #     addGroup  $this.Tag $text
+        # })
+        # $tabPage.controls.AddRange(@($groupButton))
+        # $yIndex++
         
         foreach ($acc in $tab.accList) 
         {

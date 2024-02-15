@@ -5,7 +5,7 @@
 
 
 names := A_Args.get(1)
-pidArray := getProcessIds(names, "..\..\data\runtime.json")
+pidArray := getProcessIds(names, "..\..\data\accountsV2.json")
 
 A_IconTip := "Auto VDD - " names
 ; coordinatesArray := ["x353 y140", "x798 y109", "x529 y342"]
