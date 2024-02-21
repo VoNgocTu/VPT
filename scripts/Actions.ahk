@@ -24,82 +24,125 @@ bugOnline(processId) {
     WinClose ahk_pid
 }
 
-petBattle(processId) {
-    ahk_pid := "ahk_pid " processId
 
-    ControlSend "{Escape}", , ahk_pid
-    Sleep 200
-    ControlSend "{Escape}", , ahk_pid
-    Sleep 200
-    ControlSend "{Escape}", , ahk_pid
-    Sleep 200
+dauPet(ahkIds) {
+    resetGui(ahkIds)
+    ControlClickAll(ahkIds, "x1008 y357") ; Đấu pet
+    Sleep 500
 
-    ControlClick "x1008 y360", ahk_pid ; Đấu pet
-    Sleep 2000
-    ControlClick "x460 y126", ahk_pid ; sửa đổi thiết lập 1
-    Sleep 1000
-    ControlClick "x447 y388", ahk_pid ; sửa đổi thiết lập 2
+    x := 750
+    y := 425
+
+    enemies := "0,1,2,3,4,5,6,7,8,9"
+    attackOrder := stringToArray(Sort(enemies, "Random N D,"))
+
+    loop 10 {
+        ControlClickAll(ahkIds, "x" x " y" (y - attackOrder.get(A_Index) * 24))
+        Sleep 500
+    }
+
+    resetGui(ahkIds)
+}
+
+trongTrangVien(ahkIds, tenNguyenLieu) {
+    KL  := "x335 y169"
+    KLH := "x606 y235"
+    G   := "x480 y165"
+    GT  := "x341 y270"
+    N   := "x607 y168"
+    PL  := "x481 y262"
+    V   := "x332 y218"
+    GV  := "x604 y264"
+    LT  := "x476 y228"
+    DT  := "x350 y326"
+
+    toaDo := KL
+    switch tenNguyenLieu
+    {
+        case "Kim Loại": 
+            toaDo := KL
+        case "Kim Loại Hiếm": 
+            toaDo := KLH
+        case "Gỗ": 
+            toaDo := G
+        case "Gỗ Tốt": 
+            toaDo := GT
+        case "Ngọc": 
+            toaDo := N
+        case "Pha Lê": 
+            toaDo := PL
+        case "Vải": 
+            toaDo := V
+        case "Gấm Vóc": 
+            toaDo := GV
+        case "Lông Thú": 
+            toaDo := LT
+        case "Da Thú": 
+            toaDo := DT
+    }
+    
+    rootX := 205
+    rootY := 300
+    
+    names := A_Args.get(1)
+    ahkIds := getAhkIds(names)
+    
+    resetGui(ahkIds)
+    
+    ControlClickAll(ahkIds, "x1000 y330") ; trang vien
+    Sleep 3000
+    ControlClickAll(ahkIds, "x425 y489")  ; Click Nuôi Trồng
     Sleep 1500
-    ControlClick "x523 y363", ahk_pid ; OK
+    ControlClickAll(ahkIds, toaDo)  ; Chọn Nguyên liệu
+    Sleep 1000
+    
+    plantMaterials(rootX, rootY, ahkIds)
+    
+    ControlClickAll(ahkIds, "x528 y493") ; Toàn bộ
     Sleep 500
-    ControlClick "x750 y216", ahk_pid ; Đấu 1
-    Sleep 500
-    ControlClick "x750 y242", ahk_pid ; Đấu 2
-    Sleep 500
-    ControlClick "x750 y267", ahk_pid ; Đấu 3
-    Sleep 500
-    ControlClick "x750 y295", ahk_pid ; Đấu 4
-    Sleep 500
-}
-
-autoPlant(processId) {
-    ahk_pid := "ahk_pid " processId
-
-    ControlSend "{Escape}", , ahk_pid
-    Sleep 200
-    ControlSend "{Escape}", , ahk_pid
-    Sleep 200
-    ControlSend "{Escape}", , ahk_pid
-    Sleep 200
-
-    ControlClick "x1000 y330", ahk_pid ; trang vien
+    ControlClickAll(ahkIds, "x564 y307") ; Thu hoạch
     Sleep 5000
-    ControlClick "x425 y489", ahk_pid ; Nuoi trong
-    Sleep 2000
-    ControlClick "x345 y178", ahk_pid ; Chọn Kim loại
-    Sleep 2000
 
-    plantMaterials(ahk_pid)
-    plantMaterials(ahk_pid)
-    plantMaterials(ahk_pid)
-
-    ControlClick "x528 y493", ahk_pid ; Toàn bộ
-    Sleep 500
-    ControlClick "x398 y278", ahk_pid ; Thu hoạch
-    Sleep 500
-    ControlClick "x398 y278", ahk_pid ; Thu hoạch
-    Sleep 5000
+    resetGui(ahkIds)
 }
 
-plantMaterials(processId) {
-    ahk_pid := "ahk_pid " processId
 
-    plantMaterial("x235 y299", ahk_pid) ; 1
-    plantMaterial("x281 y262", ahk_pid) ; 2
-    plantMaterial("x334 y231", ahk_pid) ; 3
-    plantMaterial("x386 y197", ahk_pid) ; 4
-
-    plantMaterial("x457 y236", ahk_pid) ; 8
-    plantMaterial("x393 y266", ahk_pid) ; 7
-    plantMaterial("x338 y300", ahk_pid) ; 6
-    plantMaterial("x285 y328", ahk_pid) ; 5
+plantMaterials(rootX, rootY, ahkIds) {
+    x := rootX
+    y := rootY
+    
+    loop 4 {
+        plantColumn(x, y, ahkIds)
+        x := x + 55
+        y := y + 33
+    }
 }
 
-plantMaterial(coordinates, ahk_pid, sleepTime := 400) {
-    ControlClick coordinates, ahk_pid
-    Sleep sleepTime/2
-    ControlClick "x524 y371", ahk_pid ; OK when error
-    Sleep sleepTime/2
+plantColumn(rootX, rootY, ahkIds) {
+    x := rootX
+    y := rootY
+
+    loop 4 {
+        plantMaterial(x, y, ahkIds)
+        x := x + 55
+        y := y - 33
+    }
+}
+
+plantMaterial(x, y, ahkIds, sleepTime := 600) {
+    time := sleepTime / 6
+    ControlClickAll(ahkIds, "x" x " y" y) ; Click ruộng BOT
+    Sleep time
+    ControlSendAll(ahkIds, "{Enter}")
+    Sleep time
+    ControlClickAll(ahkIds, "x" (x + 28) " y" (y - 15)) ; Click ruộng TOP
+    Sleep time
+    ControlSendAll(ahkIds, "{Enter}")
+    Sleep time
+    ControlClickAll(ahkIds, "x" (x + 25) " y" y) ; Click ruộng MID
+    Sleep time
+    ControlSendAll(ahkIds, "{Enter}")
+    Sleep time
 }
 
 

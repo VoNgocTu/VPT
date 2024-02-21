@@ -14,7 +14,7 @@ if (groups.Length < 2) {
 
 lastGroupIndex := 0
 names := groups.get(1)
-lastNameIndex := 0
+lastNameIndex := 1
 ahkIds := getAhkIds(names)
 ; ahkIds := WingetList(title)
 
@@ -106,20 +106,50 @@ tooltipMessage(message) {
 ~!6::{
     showAccount(6)
 }
+
 ~MButton:: {
     global names
     global lastNameIndex
     nameArray := StrSplit(names, ",")
 
-    lastNameIndex++
-    if (nameArray.Length < lastNameIndex) {
+    if (nameArray.Length <= lastNameIndex) {
         lastNameIndex := 1
+    } else {
+        lastNameIndex++
     }
 
     name := nameArray.get(lastNameIndex)
     show name, 50
     ; tooltipMessage("Show acc: " name ".")
 }
+
+; ~WheelDown:: {
+;     global names
+;     global lastNameIndex
+;     nameArray := StrSplit(names, ",")
+
+;     if (lastNameIndex < nameArray.Length) {
+;         lastNameIndex++
+;     }
+
+;     name := nameArray.get(lastNameIndex)
+;     show name, 50
+;     ; tooltipMessage("Show acc: " name ".")
+; }
+
+
+; ~WheelUp:: {
+;     global names
+;     global lastNameIndex
+;     nameArray := StrSplit(names, ",")
+
+;     if (lastNameIndex > 1) {
+;         lastNameIndex--
+;     }
+
+;     name := nameArray.get(lastNameIndex)
+;     show name, 50
+; }
 
 showAccount(index) {
     global names

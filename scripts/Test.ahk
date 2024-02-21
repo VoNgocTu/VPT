@@ -35,17 +35,23 @@
 ; }
 
 
+arrayTest := [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+
+
+
 ~RButton:: {
     ; MsgBox("Width:" A_ScreenWidth ", Height: " A_ScreenHeight)
     ; global MyMenu
     ; MyMenu.Show
 
     ; title := "Adobe Flash Player 10"
-    title := "AutoHotkey v2 Help"
+    ; title := "AutoHotkey v2 Help"
 
 
-    winId := WinExist(title)
-    MsgBox(winId)
+    ; winId := WinExist(title)
+    global arrayTest
+    MsgBox(Sort(arrayToString(arrayTest), "Random N D,"))
 }
 
 

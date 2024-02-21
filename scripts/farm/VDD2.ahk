@@ -8,10 +8,10 @@ names := A_Args.get(1)
 pidArray := getProcessIds(names, "..\..\data\accountsV2.json")
 
 A_IconTip := "Auto VDD - " names
-coordinatesArray := ["x695 y299", "x542 y459"]
+coordinatesArray := ["x99 y519", "x993 y551"]
 
 loop {
-    moveAll(pidArray, coordinatesArray, 1, 1300)
+    moveAll(pidArray, coordinatesArray, 1, 1000)
     resetAuto(pidArray, A_Index)
     Sleep 500
     regen(pidArray, A_Index) 
