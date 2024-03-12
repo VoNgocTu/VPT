@@ -1,7 +1,7 @@
 Add-Type -AssemblyName UIAutomationClient
 Add-Type -AssemblyName System.Windows.Forms
+[void][Reflection.Assembly]::LoadWithPartialName('Microsoft.VisualBasic')
 [System.Windows.Forms.Application]::EnableVisualStyles()
-
 
 $root = $PSScriptRoot
 
@@ -9,6 +9,7 @@ $data = "$root\data"
 $tools = "$root\tools"
 $images = "$root\images"
 $scripts = "$root\scripts"
+$settingsFilename = "settings.json"
 
 # $flashName = "flashplayer_32"
 $flashName = "flashplayer_10"
@@ -19,7 +20,7 @@ $buttonBackgroundColor = [System.Drawing.ColorTranslator]::FromHtml("#a5e6d6")
 $Accounts                     = New-Object system.Windows.Forms.Form
 $Accounts.ClientSize          = New-Object System.Drawing.Point(185, 400)
 $Accounts.Location = New-Object System.Drawing.Point(30, 20)
-$Accounts.text                = "Accounts"
+$Accounts.text                = "AccountsV2"
 $Accounts.TopMost             = $false
 
 $actions                     = New-Object system.Windows.Forms.Form
@@ -27,18 +28,9 @@ $actions.ClientSize          = New-Object System.Drawing.Point(140, 350)
 $actions.Location = New-Object System.Drawing.Point(30, 20)
 $actions.TopMost             = $true
 
-$tabList = @()
-if (Test-Path .\data\runtime.json) {
-    $tabList = $(Get-Content "$data\runtime.json" -Encoding UTF8 | Out-String | ConvertFrom-Json)
-}
-else  {
-    $tabList = $(Get-Content "$data\accounts.json" -Encoding UTF8 | Out-String | ConvertFrom-Json)
-}
 
-$groupList = @()
-if (Test-Path .\data\group.json) {
-    $groupList = $(Get-Content "$data\group.json" -Encoding UTF8 | Out-String | ConvertFrom-Json)
-}
+$settings = $(Get-Content "$data\$settingsFilename" -Encoding UTF8 | Out-String | ConvertFrom-Json)
+$accList = $(Get-Content "$data\accountsV2.json" -Encoding UTF8 | Out-String | ConvertFrom-Json)
 
 # Add the tab pages to the tab control
 $tabControl = New-Object System.Windows.Forms.TabControl
@@ -87,8 +79,18 @@ function LoginButton_ContextMenuUpdate($button) {
         $FarmVDD = createToolStripMenuItem "Farm Vô Danh Động" $button.Tag { Start-Process "$scripts\farm\VDD.ahk" -ArgumentList $this.Tag.name }
         $BugOnline = createToolStripMenuItem "Bug online" $button.Tag { Start-Process "$scripts\Bug-Online.ahk" -ArgumentList $this.Tag.name }
         $PlantMaterial = createToolStripMenuItem "Trồng Nguyên Liệu" $button.Tag { Start-Process "$scripts\Plant-Material.ahk" -ArgumentList $this.Tag.name }
+        $farmingSelection = createToolStripMenuItem "Trồng Trọt" $button.Tag { 
+            $result = $farming.ShowDialog() 
+            if ($result -eq [System.Windows.Forms.DialogResult]::OK)
+            {
+                $agriculturalProduct = $agriculturalProductBox.SelectedItem
+                $material = $materialBox.SelectedItem
+                Start-Process "$scripts\TrồngNS2.ahk" -ArgumentList """$($this.Tag.name)"" ""$agriculturalProduct"" ""$material"""
+            }
+        }
+        $copyLink = createToolStripMenuItem "Copy Link" $button.Tag { copyLink $(getFlashLink $this.Tag.link) }
         
-        $button.ContextMenuStrip.Items.AddRange(@($hide, $FarmVDD, $BugOnline, $PlantMaterial))
+        $button.ContextMenuStrip.Items.AddRange(@($hide, $FarmVDD, $BugOnline, $PlantMaterial, $farmingSelection, $copyLink))
     } else {
         $autoClone = createToolStripMenuItem "Auto Clone" $button.Tag { Start-Process "$scripts\MouseMirror.ahk" -ArgumentList $this.Tag.processId }
         $autoClone = createToolStripMenuItem "Test Input" $button.Tag { 
@@ -103,30 +105,20 @@ function LoginButton_ContextMenuUpdate($button) {
     }
 }
 function groupButton_Click($button) {  
-    $startAccount = $false
     if ($_.Button -eq [System.Windows.Forms.MouseButtons]::Left ) {
         
-        foreach($name in $button.Tag.accList.Split("|").Split(",")) {
-            foreach($tab in $tabList) {
-                foreach ($acc in $tab.accList) {
-                    if ($name -eq $acc.name) {
-                        if ($null -eq $(getVPTProcess $acc)) {
-                            $startAccount = $true
-                            $acc.processId = $(Start-Process -FilePath "$tools\$flashName.exe" -ArgumentList $(getFlashLink $acc.link) -PassThru).ID
-                        }
-                    }
-                }
+        foreach($name in $button.Tag.names.Split("|").Split(",")) {
+            $account = getAccount $name
+            if ($null -eq $(getVPTProcess $account)) {
+                $account.processId = $(Start-Process -FilePath "$tools\$flashName.exe" -ArgumentList $(getFlashLink $account.link) -PassThru).ID
             }
         }
         
-        
-        $tabList | ConvertTo-Json -Depth 10 > .\data\runtime.json
-        if ($startAccount) {
-            Start-Sleep -s 10
-        }
-        Start-Process "$scripts\Show.ahk" -ArgumentList $button.Tag.accList
-        Start-Process "$scripts\Arrange.ahk" -ArgumentList $button.Tag.accList
-        Start-Process "$scripts\MouseMirror.ahk" -ArgumentList $button.Tag.accList
+        $accList | ConvertTo-Json -Depth 10 > .\data\accountsV2.json
+       
+        Start-Process "$scripts\Show.ahk" -ArgumentList $button.Tag.names
+        Start-Process "$scripts\Arrange.ahk" -ArgumentList $button.Tag.names
+        Start-Process "$scripts\MouseMirror.ahk" -ArgumentList $button.Tag.names
     }
 }
 
@@ -164,7 +156,7 @@ function openAccount ($button) {
         $button.Tag.processId = $(Start-Process -FilePath "$tools\$flashName.exe" -ArgumentList $link -PassThru).ID
     }
 
-    $tabList | ConvertTo-Json -Depth 10 > .\data\runtime.json
+    $accList | ConvertTo-Json -Depth 10 > .\data\accountsV2.json
 }
 
 function getVPTProcess($acc) {
@@ -192,7 +184,7 @@ function getFlashLink ($link) {
     $server = $matches[1]
     $user = $matches[2]
     $pass = $matches[3]
-    return "https://s3-vuaphapthuat.goplay.vn/s/$server/GameLoaders.swf?user=$user&pass=$pass&isExpand=true&nothing=true" 
+    return "https://s3-vuaphapthuat.goplay.vn/s/$server/GameLoaders.swf?user=$user&pass=$pass&version=0.9.9a33.342&isExpand=true&nothing=true" 
 }
 
 
@@ -217,63 +209,199 @@ function createToolStripMenuItem($name, $tag, $action) {
     return $menuItem
 }
 
-foreach($tab in $tabList) {
-    $tabPage = New-Object System.Windows.Forms.TabPage
-    $tabPage.Text = $tab.owner
-    $tabPage.BackgroundImage = [system.drawing.image]::FromFile("$images\background-3.png")
-    $tabPage.BackgroundImageLayout = 'Stretch'
-    $tabControl.Controls.Add($tabPage)
-    
-    $xIndex = 0
-    $yIndex = 0
 
-    $groupButton = createButton "Change colors" $null $(getButtonX $xIndex) $(getButtonY $yIndex) 160
-    $groupButton.Add_Click({ 
-        if ($tabPage.Controls[0].BackColor.name -eq "ffa5e6d6") {
-            $tabPage.Controls[0].BackColor = [System.Drawing.ColorTranslator]::FromHtml("#ffffff")
-        } else {
-            $tabPage.Controls[0].BackColor = [System.Drawing.ColorTranslator]::FromHtml("#a5e6d6")
+function getAccount($name) {
+    foreach ($acc in $accList) {
+        if ($acc.name -eq $name) {
+            return $acc
         }
+    }
+}
 
-        Write-Host "Test"
-    })
-    $tabPage.controls.AddRange(@($groupButton))
-    $yIndex++
-    
-    foreach ($acc in $tab.accList) 
-    {
-        $LoginButton = createButton $(getName $acc) $acc $(getButtonX $xIndex) $(getButtonY $yIndex)
-        $LoginButton.Add_MouseDown({ LoginButton_ContextMenuUpdate $this })
-        $LoginButton.Add_MouseUp({ LoginButton_Click $this })
-        $tabPage.controls.AddRange(@($LoginButton))
+function addGroup($tab, $groupName) {
+    $tab.groupList += [PSCustomObject]@{
+        names = $groupName
+    }
 
-        $xIndex++
-        if ($xIndex % 2 -eq 0) {
-            $yIndex++
-            $xIndex = 0
+    foreach ($settingsTab in $settings) {
+        if ($settingsTab.name -eq $tab.name) {
+            $settingsTab.groupList = $tab.groupList
         }
     }
 
-    if ($tab.owner -eq "Main") {
-        foreach ($group in $groupList) 
+    $settings | ConvertTo-Json -Depth 10 > .\data\$settingsFilename
+    $settings = $(Get-Content "$data\$settingsFilename" -Encoding UTF8 | Out-String | ConvertFrom-Json)
+    loadTab $settings
+}
+
+function removeGroup($tab, $groupName) {
+    $index = 0
+    $result = @()
+    foreach ($group in $tab.groupList) {
+        if ($group.names -ne $text) {
+            $result += [PSCustomObject]@{
+                names = $group.names
+            }
+        }
+        $index++
+    }
+    # $tab.groupList = $result
+
+    foreach ($settingsTab in $settings) {
+        if ($settingsTab.name -eq $tab.name) {
+            $settingsTab.groupList = $result
+        }
+    }
+
+    $settings | ConvertTo-Json -Depth 10 > .\data\$settingsFilename
+    $settings = $(Get-Content "$data\$settingsFilename" -Encoding UTF8 | Out-String | ConvertFrom-Json)
+    loadTab $settings
+}
+
+function loadTab($settings) {
+    $tabControl.Controls.Clear()
+
+    foreach($tab in $settings) {
+        $tabPage = New-Object System.Windows.Forms.TabPage
+        $tabPage.Text = $tab.name
+        $tabPage.BackgroundImage = [system.drawing.image]::FromFile("$images\background-3.png")
+        $tabPage.BackgroundImageLayout = 'Stretch'
+        $tabControl.Controls.AddRange($($tabPage))
+        
+        $xIndex = 0
+        $yIndex = 0
+    
+        # $groupButton = createButton "Thêm Group" $tab $(getButtonX $xIndex) $(getButtonY $yIndex) 80
+        # $groupButton.Add_Click({ 
+        #     $title = 'Tạo group'
+        #     $msg   = 'Nhập tên các nhân vật có trong group. Cách nhau bởi dấu phẩy (,). Ví dụ: Mai,Lan,Cúc,Trúc'
+            
+        #     $text = [Microsoft.VisualBasic.Interaction]::InputBox($msg, $title)
+        #     addGroup  $this.Tag $text
+        # })
+        # $tabPage.controls.AddRange(@($groupButton))
+        # $yIndex++
+        
+        foreach ($acc in $tab.accList) 
         {
-            $groupButton = createButton $group.accList $group $(getButtonX $xIndex) $(getButtonY $yIndex) 160
-
-            $mirror = createToolStripMenuItem "Mirror" $group { Start-Process "$scripts\MouseMirror.ahk" -ArgumentList $this.Tag.accList }
-            $hide = createToolStripMenuItem "Ẩn" $group { Start-Process "$scripts\Hide.ahk" -ArgumentList $this.Tag.accList }
-            $arrange = createToolStripMenuItem "Sắp xếp" $group { Start-Process "$scripts\Arrange.ahk" -ArgumentList $this.Tag.accList }
-            $plantMaterial = createToolStripMenuItem "Trồng Nguyên Liệu" $group { Start-Process "$scripts\Plant-Material.ahk" -ArgumentList $this.Tag.accList }
-            $farmVDD = createToolStripMenuItem "Farm Vô Danh Động" $group { Start-Process "$scripts\farm\VDD2.ahk" -ArgumentList $this.Tag.accList }
-            $bugOnline = createToolStripMenuItem "Bug Online" $group { Start-Process "$scripts\Bug-Online.ahk" -ArgumentList $this.Tag.accList }
-            $close = createToolStripMenuItem "Tắt" $group { Start-Process "$scripts\Close.ahk" -ArgumentList $this.Tag.accList }
-
-            $groupButton.ContextMenuStrip.Items.AddRange(@($mirror, $hide, $arrange, $plantMaterial, $farmVDD, $bugOnline, $close))
+            $account = getAccount $acc.name
+            $LoginButton = createButton $(getName $account) $account $(getButtonX $xIndex) $(getButtonY $yIndex)
+            $LoginButton.Add_MouseDown({ LoginButton_ContextMenuUpdate $this })
+            $LoginButton.Add_MouseUp({ LoginButton_Click $this })
+            $tabPage.controls.AddRange(@($LoginButton))
+    
+            $xIndex++
+            if ($xIndex % 2 -eq 0) {
+                $yIndex++
+                $xIndex = 0
+            }
+        }
+    
+        foreach ($group in $tab.groupList) 
+        {
+            $groupButton = createButton $group.names $group $(getButtonX $xIndex) $(getButtonY $yIndex) 160
+    
+            $mirror = createToolStripMenuItem "Mirror" $group { Start-Process "$scripts\MouseMirror.ahk" -ArgumentList $this.Tag.names }
+            $hide = createToolStripMenuItem "Ẩn" $group { Start-Process "$scripts\Hide.ahk" -ArgumentList $this.Tag.names }
+            $arrange = createToolStripMenuItem "Sắp xếp" $group { Start-Process "$scripts\Arrange2.ahk" -ArgumentList $this.Tag.names }
+            $arrangeLT = createToolStripMenuItem "Sắp xếp LT Style" $group { Start-Process "$scripts\Arrange-LT.ahk" -ArgumentList $this.Tag.names }
+            $farmingSelection = createToolStripMenuItem "Trồng Trọt" $group { 
+                $result = $farming.ShowDialog() 
+                if ($result -eq [System.Windows.Forms.DialogResult]::OK)
+                {
+                    $agriculturalProduct = $agriculturalProductBox.SelectedItem
+                    $material = $materialBox.SelectedItem
+                    Start-Process "$scripts\TrồngNS2.ahk" -ArgumentList """$($this.Tag.names)"" ""$agriculturalProduct"" ""$material"""
+                }
+            }
+            $farmVDD = createToolStripMenuItem "Farm Vô Danh Động" $group { Start-Process "$scripts\farm\VDD2.ahk" -ArgumentList $this.Tag.names }
+            $bugOnline = createToolStripMenuItem "Bug Online" $group { Start-Process "$scripts\Bug-Online.ahk" -ArgumentList $this.Tag.names }
+            $plantMaterial = createToolStripMenuItem "Trồng Nguyên Liệu" $group { Start-Process "$scripts\Plant-Material.ahk" -ArgumentList $this.Tag.names }
+            $close = createToolStripMenuItem "Tắt" $group { Start-Process "$scripts\Close.ahk" -ArgumentList $this.Tag.names }
+    
+            $groupButton.ContextMenuStrip.Items.AddRange(@($mirror, $hide, $arrange, $arrangeLT, $farmingSelection, $farmVDD, $bugOnline, $plantMaterial, $close))
             $groupButton.Add_Click({ groupButton_Click $this })
             $tabPage.controls.AddRange(@($groupButton))
-
+    
             $yIndex++
         }
     }
 }
+
+loadTab $settings
+
+$farming                     = New-Object system.Windows.Forms.Form
+$farming.ClientSize          = New-Object System.Drawing.Point(225, 290)
+$farming.Location = New-Object System.Drawing.Point(30, 20)
+$farming.text                = "Trồng Trọt"
+$farming.TopMost             = $true
+
+$okButton = New-Object System.Windows.Forms.Button
+$okButton.Location = New-Object System.Drawing.Point(35,260)
+$okButton.Size = New-Object System.Drawing.Size(75,23)
+$okButton.Text = 'OK'
+$okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
+$farming.AcceptButton = $okButton
+$farming.Controls.Add($okButton)
+
+$cancelButton = New-Object System.Windows.Forms.Button
+$cancelButton.Location = New-Object System.Drawing.Point(115,260)
+$cancelButton.Size = New-Object System.Drawing.Size(75,23)
+$cancelButton.Text = 'Cancel'
+$cancelButton.DialogResult = [System.Windows.Forms.DialogResult]::Cancel
+$farming.CancelButton = $cancelButton
+$farming.Controls.Add($cancelButton)
+
+$label = New-Object System.Windows.Forms.Label
+$label.Location = New-Object System.Drawing.Point(10,20)
+$label.Size = New-Object System.Drawing.Size(100,20)
+$label.Text = 'Nông Sản:'
+$farming.Controls.Add($label)
+
+$agriculturalProductBox = New-Object System.Windows.Forms.ListBox
+$agriculturalProductBox.Location = New-Object System.Drawing.Point(10,40)
+$agriculturalProductBox.Size = New-Object System.Drawing.Size(100,20)
+$agriculturalProductBox.Height = 225
+$farming.Controls.Add($agriculturalProductBox)
+
+[void] $agriculturalProductBox.Items.Add('Lúa Mạch')
+[void] $agriculturalProductBox.Items.Add('Lúa Gạo')
+[void] $agriculturalProductBox.Items.Add('Bắp')
+[void] $agriculturalProductBox.Items.Add('Khoai Lang')
+[void] $agriculturalProductBox.Items.Add('Đậu Phộng')
+[void] $agriculturalProductBox.Items.Add('Đậu Nành')
+[void] $agriculturalProductBox.Items.Add('Cải Thảo')
+[void] $agriculturalProductBox.Items.Add('Củ Cải')
+[void] $agriculturalProductBox.Items.Add('Cacao')
+[void] $agriculturalProductBox.Items.Add('Cao Lương')
+[void] $agriculturalProductBox.Items.Add('Mướp')
+[void] $agriculturalProductBox.Items.Add('Bầu')
+[void] $agriculturalProductBox.Items.Add('Bông Cải')
+[void] $agriculturalProductBox.Items.Add('Hoàng Kim Quả')
+
+
+$label = New-Object System.Windows.Forms.Label
+$label.Location = New-Object System.Drawing.Point(115,20)
+$label.Size = New-Object System.Drawing.Size(100,20)
+$label.Text = 'Nguyên Liệu:'
+$farming.Controls.Add($label)
+
+$materialBox = New-Object System.Windows.Forms.ListBox
+$materialBox.Location = New-Object System.Drawing.Point(115,40)
+$materialBox.Size = New-Object System.Drawing.Size(100,20)
+$materialBox.Height = 225
+$farming.Controls.Add($materialBox)
+
+[void] $materialBox.Items.Add('Kim Loại')
+[void] $materialBox.Items.Add('Kim Loại Hiếm')
+[void] $materialBox.Items.Add('Gỗ')
+[void] $materialBox.Items.Add('Gỗ Tốt')
+[void] $materialBox.Items.Add('Ngọc')
+[void] $materialBox.Items.Add('Pha Lê')
+[void] $materialBox.Items.Add('Vải')
+[void] $materialBox.Items.Add('Gấm Vóc')
+[void] $materialBox.Items.Add('Lông Thú')
+[void] $materialBox.Items.Add('Da Thú')
+
 
 [void]$Accounts.ShowDialog()

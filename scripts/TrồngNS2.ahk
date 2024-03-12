@@ -13,26 +13,70 @@ try {
 } catch {
     tenNguyenLieu := "Lông Thú"
 }
-try {
-    viTri := A_Args.get(4)
-} catch {
-    viTri := 2
-}
 ahkIds := getAhkIds(names)
 
-A_IconTip := "Trồng Nông Sản - " tenNongSan " - " names
-coordinatesArray := []
+A_IconTip :=  " - Nhân vật: " names "`n - Trồng Nông Sản: " tenNongSan "`n - Nguyên Liệu: " tenNguyenLieu
 
+move_1 :=           ["x579 y457", "x493 y347", "x590 y277", "x590 y277"]
+move_2 :=           ["x524 y363", "x475 y337", "x605 y260", "x643 y294"]
+plantLandFront :=   ["x579 y457", "x651 y278", "x470 y269", "x798 y174"]
+plantLandCenter :=  ["x622 y416", "x612 y298", "x608 y303", "x886 y259"]
+strawMan :=         ["x492 y464", "x483 y348", "x479 y343", "x755 y304"]
+
+
+resetGui(ahkIds)
+Sleep 200
+
+ControlClickAll(ahkIds, "x267 y626") ; Chú Thích
+Sleep 100
+
+loop 5 {
+    ControlClickAll(ahkIds, "x408 y627") ; Thu Nhỏ Khung Chat
+    Sleep 100
+}
+
+ControlClickAll(ahkIds, "x924 y157") ; Tắt Q
+Sleep 200
+
+
+; ControlClickAll(ahkIds, "x729 y108") ; Tắt Cách chơi
+; Sleep 200
 
 loop {
-    diDenViTri(ahkIds, viTri)
-    thuHoach(ahkIds, viTri)
-    ControlClickAll(ahkIds, "x754 y302") ; Người rơm
+    ControlClickAll(ahkIds, "x525 y486") ; Tắt hướng dẫn, mạng lag đôi khi kik trúng cái này
+    Sleep 200
+    ControlClickAll(ahkIds, "x491 y365") ; Giải trừ buff auto thám hiểm K1
+    Sleep 200
+
+    move(ahkIds)
+
+    for ahkId in ahkIds {
+        coordinateArray := coordinateToArray(plantLandCenter.get(A_Index))
+        x := coordinateArray.get(1)
+        y := coordinateArray.get(2)
+    
+        ControlClick "x" x + 80 " y" y, "ahk_id " ahkId,,,, "NA"
+        Sleep 200
+        ControlClick "x" x - 80 " y" y, "ahk_id " ahkId,,,, "NA"
+        Sleep 200
+        ControlClick "x" x " y" y + 50, "ahk_id " ahkId,,,, "NA"
+        Sleep 200
+        ControlClick "x" x " y" y - 50, "ahk_id " ahkId,,,, "NA"
+    }
+    
+    Sleep 7000
+
+    move(ahkIds)
+
+    click(ahkIds, strawMan)
     Sleep 1000
     ControlClickAll(ahkIds, "x294 y339") ; Trồng cây ngắn ngày
     Sleep 1000
-    chonNongSan(tenNongSan)
-    Sleep 500
+    chonNongSan(ahkIds, tenNongSan)
+    Sleep 1000
+
+    resetGui(ahkIds)
+    Sleep 200
     
     if (A_Index == 1 || Mod(A_Index, 10) == 0) {
         dauPet(ahkIds)
@@ -41,120 +85,76 @@ loop {
 }
 
 
-diDenViTri(ahkIds, viTri) {
+move(ahkIds) {
+    global move_1
+    global move_2
+    global plantLandFront
+
     resetGui(ahkIds)
-    Sleep 500
+    Sleep 200
+
     ControlSendAll(ahkIds, "``")
     Sleep 500
-    
-    switch viTri
-    {
-        case 1: 
-            ControlClickAll(ahkIds, "x469 y165")
-            Sleep 1000
-            ControlClickAll(ahkIds, "x472 y143")
-            Sleep 1500
-        case 2: 
-            ControlClickAll(ahkIds, "x469 y165")
-            Sleep 1000
-            ControlClickAll(ahkIds, "x424 y175")
-            Sleep 1500
-        case 3: 
-            ControlClickAll(ahkIds, "x469 y165")
-            Sleep 1000
-            ControlClickAll(ahkIds, "x639 y288")
-            Sleep 1500
-        case 4: 
-            ControlClickAll(ahkIds, "x611 y268")
-            Sleep 1000
-            ControlClickAll(ahkIds, "x639 y288")
-            Sleep 1500
-    }
+   
+    ; click(ahkIds, move_1)
+    ; Sleep 3000
+    click(ahkIds, move_2)
+    Sleep 6000
 
     resetGui(ahkIds)
-    Sleep 500
-}
+    Sleep 200
 
-thuHoach(ahkIds, viTri) {
-    switch viTri
-    {
-        case 1: 
-            ControlClickAll(ahkIds, "x523 y189")
-            Sleep 200
-            ControlClickAll(ahkIds, "x585 y159")
-            Sleep 200
-            ControlClickAll(ahkIds, "x651 y191")
-        case 2: 
-            ControlClickAll(ahkIds, "x523 y189")
-            Sleep 200
-            ControlClickAll(ahkIds, "x585 y159")
-            Sleep 200
-            ControlClickAll(ahkIds, "x651 y191")
-        case 3: 
-            ControlClickAll(ahkIds, "x523 y189")
-            Sleep 200
-            ControlClickAll(ahkIds, "x585 y159")
-            Sleep 200
-            ControlClickAll(ahkIds, "x651 y191")
-        case 4: 
-            ControlClickAll(ahkIds, "x523 y189")
-            Sleep 200
-            ControlClickAll(ahkIds, "x585 y159")
-            Sleep 200
-            ControlClickAll(ahkIds, "x651 y191")
-        }
-        
-        Sleep 7000
+    click(ahkIds, plantLandFront) ; Chạy tới trước mặt đất trồng cây
+    Sleep 1000
 }
 
 
-chonNongSan(tenNongSan) {
+click(ahkIds, coordinateArray) {
+    for ahkId in ahkIds {
+        ControlClick coordinateArray.get(A_Index), "ahk_id " ahkId,,,, "NA"
+    }
+}
+
+
+chonNongSan(ahkIds, tenNongSan) {
+    toaDoNongSan := "x330 y430"
     switch tenNongSan
     {
-        case "LuaMach": 
-            ControlClickAll(ahkIds, "x327 y343")
-        case "LuaGao": 
-            ControlClickAll(ahkIds, "x321 y360")
-        case "Bap": 
-            ControlClickAll(ahkIds, "x317 y384")
-        case "KhoaiLang": 
-            ControlClickAll(ahkIds, "x316 y414")
-        case "DauPhong": 
-            ControlClickAll(ahkIds, "x328 y434")
-        case "DauNanh": 
-            clickXuong(1)
-            ControlClickAll(ahkIds, "x328 y434")
-        case "CaiThao": 
-            clickXuong(2)
-            ControlClickAll(ahkIds, "x328 y434")
-        case "CuCai": 
-            clickXuong(3)
-            ControlClickAll(ahkIds, "x328 y434")
+        case "Lúa Mạch": 
+            toaDoNongSan := "x330 y330"
+        case "Lúa Gạo": 
+            toaDoNongSan := "x330 y355"
+        case "Bắp": 
+            toaDoNongSan := "x330 y380"
+        case "Khoai Lang": 
+            toaDoNongSan := "x330 y405"
+        case "Đậu Phộng": 
+        case "Đậu Nành": 
+            clickDown(1)
+        case "Cải Thảo": 
+            clickDown(2)
+        case "Củ Cải": 
+            clickDown(3)
         case "Cacao": 
-            clickXuong(4)
-            ControlClickAll(ahkIds, "x328 y434")
-        case "CaoLuong": 
-            clickXuong(5)
-            ControlClickAll(ahkIds, "x328 y434")
-        case "Muop": 
-            clickXuong(6)
-            ControlClickAll(ahkIds, "x328 y434")
-        case "Bau": 
-            clickXuong(7)
-            ControlClickAll(ahkIds, "x328 y434")
-        case "BongCai": 
-            clickXuong(8)
-            ControlClickAll(ahkIds, "x328 y434")
-        case "HoangKimQua":
-            clickXuong(9)
-            ControlClickAll(ahkIds, "x328 y434")
+            clickDown(4)
+        case "Cao Lương": 
+            clickDown(5)
+        case "Mướp": 
+            clickDown(6)
+        case "Bầu": 
+            clickDown(7)
+        case "Bông Cải": 
+            clickDown(8)
+        case "Hoàng Kim Quả":
+            clickDown(9)
     }
 
+    ControlClickAll(ahkIds, toaDoNongSan)
     Sleep 500
 }
 
-clickXuong(solan) {
-    loop solan {
+clickDown(times) {
+    loop times {
         ControlClickAll(ahkIds, "x435 y436")
         Sleep 500
     }

@@ -1,5 +1,6 @@
 #Requires AutoHotkey v2.0
 #include Utils.ahk
+#SingleInstance Off
 
 ~F11::Pause -1
 
@@ -8,13 +9,34 @@ ahkIds := getAhkIds(names)
 
 A_IconTip := "Dau Pet - "  names
 
-dauPet(ahkIds)
+loop 562 {
+; loop 130 {
+    dauPet(ahkIds)
+    ; resetGui(ahkIds)
+    Sleep 10000 
+}
+
 resetGui(ahkIds)
-Sleep 10000 
+
+ControlSendAll(ahkIds, "p")
+Sleep 1000
+ControlClickAll(ahkIds, "x564 y176") ; Nhân vật
+Sleep 1000
+ControlClickAll(ahkIds, "x400 y450") ; Chọn nhân vật đầu tiên
+Sleep 1000
+ControlClickAll(ahkIds, "x500 y450") ; Chọn nhân vật thứ 2
+Sleep 1000
+ControlClickAll(ahkIds, "x400 y550") ; Vào game
+Sleep 1500
+
+for id in ahkIds {
+    WinClose "ahk_id " id
+}
+
 
 dauPet(ahkIds) {
-    resetGui(ahkIds)
-    ControlClickAll(ahkIds, "x1008 y357") ; Đấu pet
+    ; resetGui(ahkIds)
+    ; ControlClickAll(ahkIds, "x1008 y357") ; Đấu pet
     Sleep 500
 
     x := 750

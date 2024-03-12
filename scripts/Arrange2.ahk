@@ -12,10 +12,10 @@ names := stringToArray(A_Args.get(1))
 index := 0
 x := -10
 y := -28
-; xOffset := 1050
-; yOffset := 714
-xOffset := 789 ; 75%
-yOffset := 538 ; 75%
+xOffset := 1050
+yOffset := 714
+; xOffset := 789 ; 75%
+; yOffset := 538 ; 75%
 w := xOffset
 h := yOffset
 for (name in names) {

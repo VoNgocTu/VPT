@@ -14,7 +14,7 @@ if (groups.Length < 2) {
 
 lastGroupIndex := 0
 names := groups.get(1)
-lastNameIndex := 1
+lastNameIndex := 0
 ahkIds := getAhkIds(names)
 ; ahkIds := WingetList(title)
 

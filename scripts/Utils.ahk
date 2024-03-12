@@ -16,12 +16,17 @@ stringToArray(str, delimiter := ",") {
     return StrSplit(str, delimiter)
 }
 
-arrayToString(strArray) {
+arrayToString(strArray, delimiter := ",") {
     result := ""
     for str in strArray {
-        result .= str ","
+        result .= str delimiter
     }
-    return RTrim(result, ",")
+    return RTrim(result, delimiter)
+}
+
+coordinateToArray(coordinate) {
+    strArray := stringToArray(coordinate, " ")
+    return [SubStr(strArray.get(1), 2, 99), SubStr(strArray.get(2), 2, 99)]
 }
 
 getCoordinates() {
@@ -88,11 +93,11 @@ arrange2(names, x := 0, y := 0, w := 1066, h := 724, xOffset := 0, yOffset := -3
 getAhkIds(names) {
     ahkIds := []
     for id in getProcessIds(names) {
-        ahk_id := WinExist("ahk_pid" id)
-        if (ahk_id != 0) {
-            ahkIds.Push(ahk_id)
-        }
-    }
+                    ahk_id := WinExist("ahk_pid" id)
+            if (ahk_id != 0) {
+                ahkIds.Push(ahk_id)
+            }
+            }
     return ahkIds
 }
 
@@ -107,29 +112,11 @@ getProcessIds(names, filePath := "..\data\accountsV2.json") {
             if (acc["name"] == name) {
                 result.Push(acc["processId"])
             }
-        }
+                    }
     }
     
     return result
 }
-; getProcessIds(names, filePath := "..\data\runtime.json") {
-;     result := []
-
-;     nameArray := stringToArray(names)
-;     text := FileRead(filePath, "UTF-8")
-;     tabArray := jxon_load(&text)
-;     for name in nameArray {
-;         for tab in tabArray {
-;             for acc in tab["accList"] {
-;                 if (acc["name"] == name) {
-;                     result.Push(acc["processId"])
-;                 }
-;             }
-;         }
-;     }
-    
-;     return result
-; }
 
 getNameFromAhkIds(ahkIds, filePath := "..\data\runtime.json") {
     result := []
@@ -147,24 +134,6 @@ getNameFromAhkIds(ahkIds, filePath := "..\data\runtime.json") {
 
     return result
 }
-; getNameFromAhkIds(ahkIds, filePath := "..\data\runtime.json") {
-;     result := []
-
-;     pidArray := getProcessIdsFromAhkIds(ahkIds)
-;     text := FileRead(filePath, "UTF-8")
-;     tabArray := jxon_load(&text)
-;     for pid in pidArray {
-;         for tab in tabArray {
-;             for acc in tab["accList"] {
-;                 if (acc["processId"] == pid) {
-;                     result.Push(acc["name"])
-;                 }
-;             }
-;         }
-;     }
-
-;     return result
-; }
 
 
 getProcessIdsFromAhkIds(ahkIds) {

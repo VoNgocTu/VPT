@@ -1,86 +1,189 @@
 [
-    {
-        "name": "Main",
-        "accList": [
-            {"name": "Bông"},
-            {"name": "Yui"},
-            {"name": "Hạo"},
-            {"name": "Siu"},
-            {"name": "Mận"},
-            {"name": "Bắp"}
-        ],
-        "groupList": [
-            
-            {"names": "Lazy,Thiên,Nhân"},
-            {"names": "Siu,Bông,Hạo"},
-            {"names": "Yui,Bông,Hạo,Mận"},
-
-            {"names": "Mai,Lan,Cúc,Trúc"},
-            {"names": "Lazy,Thiên,Địa,Nhân"},
-            {"names": "Long,Lân,Quy,Phụng"},
-
-            {"names": "Long,Lân,Quy,Phụng,Lazy,Thiên,Địa,Nhân,Mai,Lan,Cúc,Trúc"}
-        ]
-    },
-    {
-        "name": "Sổ tay",
-        "accList": [
-            {"name": "Địa"},
-            {"name": "Nhân"}
-        ],
-        "groupList": [
-            {"names": "Mai,Lan,Long,Lân"},
-            {"names": "Cúc,Trúc,Quy,Phụng"},
-
-            {"names": "Mai,Long,Lân,Lazy"},
-            {"names": "Lan,Cúc,Quy,Thiên"},
-            {"names": "Trúc,Phụng,Địa,Nhân"}
-        ]
-    },
-    {
-        "name": "Clones",
-        "accList": [
-            {"name": "Mai"},
-            {"name": "Lan"},
-            {"name": "Cúc"},
-            {"name": "Trúc"},
-            {"name": "Lazy"},
-            {"name": "Thiên"},
-            {"name": "Địa"},
-            {"name": "Nhân"},
-            {"name": "Long"},
-            {"name": "Lân"},
-            {"name": "Quy"},
-            {"name": "Phụng"},
-            {"name": "Taylor"}
-        ],
-        "groupList": [
-        ]
-    },
-    {
-        "name": "Tân",
-        "accList": [
-            {"name": "Đào"},
-            {"name": "Bơ"},
-            {"name": "Bưởi"},
-            {"name": "Dừa"},
-            {"name": "06"},
-            {"name": "07"},
-            {"name": "08"},
-            {"name": "09"},
-            {"name": "10"},
-            {"name": "11"},
-            {"name": "12"},
-            {"name": "13"},
-            {"name": "14"},
-            {"name": "15"},
-            {"name": "16"},
-            {"name": "17"},
-            {"name": "18"},
-            {"name": "19"},
-            {"name": "20"}
-        ],
-        "groupList": [
-        ]
-    }
+  {
+    "name": "Main",
+    "accList": [
+      {
+        "name": "Bông"
+      },
+      {
+        "name": "Yui"
+      },
+      {
+        "name": "Hạo"
+      },
+      {
+        "name": "Siu"
+      },
+      {
+        "name": "Mận"
+      },
+      {
+        "name": "Bắp"
+      }
+    ],
+    "groupList": [
+      {
+        "names": "Bông,Yui"
+      },
+      {
+        "names": "Bông,Yui,Hạo"
+      },
+      {
+        "names": "Bông,Yui,Mận"
+      },
+      {
+        "names": "Bông,Yui,Siu"
+      },
+      {
+        "names": "Bông,Yui,Mận,Siu"
+      },
+      {
+        "names": "Yui,Bông,Hạo,Mận"
+      }
+    ]
+  },
+  {
+    "name": "Sổ tay",
+    "accList": [],
+    "groupList": [
+      {
+        "names": "Mai,Long,Lân,Lazy"
+      },
+      {
+        "names": "Lan,Cúc,Quy,Thiên"
+      },
+      {
+        "names": "Trúc,Phụng,Địa,Nhân"
+      },
+      {
+        "names": "Lazy,Thiên,Nhân"
+      },
+      {
+        "names": "Trúc,Nhân,Phụng"
+      },
+      {
+        "names": "Mai,Lan,Cúc,Trúc"
+      },
+      {
+        "names": "Lazy,Thiên,Địa,Nhân"
+      },
+      {
+        "names": "Long,Lân,Quy,Phụng"
+      },
+      {
+        "names": "Lân,Quy,Phụng,Cúc,Trúc"
+      },
+      {
+        "names": "Long,Lân,Quy,Phụng,Lazy,Thiên,Địa,Nhân,Mai,Lan,Cúc,Trúc"
+      }
+    ]
+  },
+  {
+    "name": "Clones",
+    "accList": [
+      {
+        "name": "Mai"
+      },
+      {
+        "name": "Lan"
+      },
+      {
+        "name": "Cúc"
+      },
+      {
+        "name": "Trúc"
+      },
+      {
+        "name": "Lazy"
+      },
+      {
+        "name": "Thiên"
+      },
+      {
+        "name": "Địa"
+      },
+      {
+        "name": "Nhân"
+      },
+      {
+        "name": "Long"
+      },
+      {
+        "name": "Lân"
+      },
+      {
+        "name": "Quy"
+      },
+      {
+        "name": "Phụng"
+      },
+      {
+        "name": "Taylor"
+      }
+    ],
+    "groupList": []
+  },
+  {
+    "name": "Tân",
+    "accList": [
+      {
+        "name": "Đào"
+      },
+      {
+        "name": "Bơ"
+      },
+      {
+        "name": "Bưởi"
+      },
+      {
+        "name": "Dừa"
+      },
+      {
+        "name": "06"
+      },
+      {
+        "name": "07"
+      },
+      {
+        "name": "08"
+      },
+      {
+        "name": "09"
+      },
+      {
+        "name": "10"
+      },
+      {
+        "name": "11"
+      },
+      {
+        "name": "12"
+      },
+      {
+        "name": "13"
+      },
+      {
+        "name": "14"
+      },
+      {
+        "name": "15"
+      },
+      {
+        "name": "16"
+      },
+      {
+        "name": "17"
+      },
+      {
+        "name": "18"
+      },
+      {
+        "name": "19"
+      },
+      {
+        "name": "20"
+      }
+    ],
+    "groupList": []
+  }
 ]
