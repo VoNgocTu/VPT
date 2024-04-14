@@ -4,7 +4,7 @@
 #include Farm-Actions.ahk
 #include ../Utils.ahk
 
-names := "Phụng,Long,Yui,Lân,Quy"
+names := "Siu,Bông,Hạo"
 A_IconTip := "Cổ Thành - " names
 pidArray := getProcessIds(names, "..\..\data\accountsV2.json")
 coordinatesArray := ["x210 y465", "x393 y466", "x291 y285"]

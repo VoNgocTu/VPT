@@ -1,6 +1,6 @@
 #Requires AutoHotkey v2.0
+#include Config.ahk
 #Include libs\JSON.ahk
-
 
 
 isContains(strArray, stringInput) {

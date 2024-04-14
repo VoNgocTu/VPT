@@ -4,19 +4,33 @@
 SetControlDelay -1 
 
 
-title := "Adobe Flash Player 10"
 ; title := "AutoHotkey v2 Help"
 
-groups := StrSplit(A_Args.get(1), "|")
-if (groups.Length < 2) {
-    ; groups.Push("Pause Mirror.")
-}
+names := A_Args.get(1)
+nameArray := StrSplit(names, ",")
+nameIndex := 999999999
 
-lastGroupIndex := 0
-names := groups.get(1)
-lastNameIndex := 0
 ahkIds := getAhkIds(names)
 ; ahkIds := WingetList(title)
+
+A_IconTip := "Mouse Mirror - " names
+
+~Control & ~WheelUp:: {
+    global ahkIds
+    global nameIndex
+    nameIndex--
+    index := Mod(nameIndex, ahkIds.Length) + 1
+    
+    showAccount index
+}
+
+~Control & ~WheelDown:: {
+    global nameIndex
+    nameIndex++
+    index := Mod(nameIndex, ahkIds.Length) + 1
+    
+    showAccount index
+}
 
 
 ~F1:: {
@@ -26,51 +40,6 @@ ahkIds := getAhkIds(names)
     } else {
         tooltipMessage("Run Mirror - " names)
     }
-}
-
-~+1:: {
-    Pause 0
-    changeGroup(1)
-}
-~+2:: {
-    Pause 0
-    changeGroup(2)
-}
-~+3:: {
-    Pause 0
-    changeGroup(3)
-}
-~+4:: {
-    Pause 0
-    changeGroup(4)
-}
-~RButton & LButton::{
-    Pause 0
-    global groups
-    global lastGroupIndex
-    lastGroupIndex++
-
-    if (groups.Length < lastGroupIndex) {
-        lastGroupIndex := 1
-    }
-
-    changeGroup(lastGroupIndex)
-}
-
-changeGroup(index) {
-    global groups
-    global ahkIds
-    global names
-    global lastGroupIndex
-
-    lastGroupIndex := index
-    if (groups.Length < index) {
-        return
-    }
-
-    names := groups.get(index)
-    ahkIds := getAhkIds(names)
-    tooltipMessage("Thay đổi group: " names ".")
 }
 
 tooltipMessage(message) {
@@ -83,85 +52,27 @@ tooltipMessage(message) {
     SetTimer () => ToolTip(), -1000
 }
 
-
-~!`::{
-    global names
-    show names, 100
-}
-~!1::{
-    showAccount(1)
-}
-~!2::{
-    showAccount(2)
-}
-~!3::{
-    showAccount(3)
-}
-~!4::{
-    showAccount(4)
-}
-~!5::{
-    showAccount(5)
-}
-~!6::{
-    showAccount(6)
-}
-
 ~MButton:: {
-    global names
-    global lastNameIndex
-    nameArray := StrSplit(names, ",")
-
-    if (nameArray.Length <= lastNameIndex) {
-        lastNameIndex := 1
-    } else {
-        lastNameIndex++
-    }
-
-    name := nameArray.get(lastNameIndex)
-    show name, 50
-    ; tooltipMessage("Show acc: " name ".")
+    global nameIndex
+    nameIndex++
+    index := Mod(nameIndex, ahkIds.Length) + 1
+    
+    showAccount index
 }
-
-; ~WheelDown:: {
-;     global names
-;     global lastNameIndex
-;     nameArray := StrSplit(names, ",")
-
-;     if (lastNameIndex < nameArray.Length) {
-;         lastNameIndex++
-;     }
-
-;     name := nameArray.get(lastNameIndex)
-;     show name, 50
-;     ; tooltipMessage("Show acc: " name ".")
-; }
-
-
-; ~WheelUp:: {
-;     global names
-;     global lastNameIndex
-;     nameArray := StrSplit(names, ",")
-
-;     if (lastNameIndex > 1) {
-;         lastNameIndex--
-;     }
-
-;     name := nameArray.get(lastNameIndex)
-;     show name, 50
-; }
 
 showAccount(index) {
-    global names
-    nameArray := StrSplit(names, ",")
-    if (nameArray.Length < index) {
+    global ahkids
+
+    if (index < 0 || ahkids.Length < index) {
         return
     }
-    name := nameArray.get(index)
-    show name, 50
+    
+    WinActivate "ahk_id " ahkids.get(index)
+    Sleep 50
+
+    global nameArray
+    ; tooltipMessage("Show acc: " nameArray.get(index) ".")
 }
-
-
 
 ~LButton:: {
     if (A_IsPaused) {
@@ -191,18 +102,28 @@ showAccount(index) {
     mirrorClick(ahkIds, "x" OutputVarX " y" OutputVarY, ahkId)
 }
 
-XButton1:: 
-~LButton & MButton:: {
-    mirrorSend(ahkIds, "{Escape}")
-}
-
 ~!z:: {
-    global names
-    yOffset := 230 ; 2560 x 1440
-    if (A_ScreenHeight == 1080) {
-        yOffset := 117 ; 1920 x 1080
+    global nameArray
+    nameArray := stringToArray(names)
+    accPerColumn := 4
+    if (nameArray.Length < 4) {
+        accPerColumn := nameArray.Length
     }
-    arrange names, -10 , -28 , , , , yOffset
+    
+    ; Game Window Height: 724
+    ; yOffset := 230 ; 2560 x 1440 => H = 1392 + 28 = 1420
+    remainSpace := 1430 ; 2560 x 1440 => H = 1392 + 28 = 1420
+    if (A_ScreenHeight == 1080) {
+        remainSpace := 1070 ; 1920 x 1080 => H = 1032 + 28 = 1060
+    }
+    
+    yOffset := (remainSpace - 724) / (accPerColumn - 1)
+    if ( yOffset > 700 ) {
+        yOffset := 700
+    }
+
+    xOffset := 100
+    arrange names, -10, -28, , , xOffset, yOffset
 }
 
 ~!x:: {
@@ -215,12 +136,10 @@ XButton1::
     ; yOffset := 538 ; 75%
     ; w := xOffset
     ; h := yOffset
-    global names
-    nameArray := stringToArray(names)
-    for (name in nameArray) {
-    ; for (id in ids) {
-        move name, x, y
-        ; move id, x, y
+    
+    global ahkIds
+    for (ahkid in ahkIds) {
+        moveWindow ahkid, x, y
         y := y + yOffset - 7
         if (index > 0 && Mod(index, 2) == 1) {
             x := x + xOffset - 15
@@ -236,22 +155,48 @@ XButton1::
     }
 
 }
-move(name, x := 0, y := 0, w := 1066, h := 724) {
-    WinMove x, y, w, h, "ahk_pid " getProcessIds(name).get(1)
-    ; WinMove x, y, w, h, "ahk_id " id
+
+~!c:: {
+    global ahkIds
+
+    x := -10
+    y := -28
+
+    maxAccPerRow := 4
+    accPerRow := maxAccPerRow
+    if (ahkIds.Length <= maxAccPerRow) {
+        accPerRow := ahkIds.Length
+    }
+
+    xOffset := Round((A_ScreenWidth - 1066) / (accPerRow - 1)) + 5
+    yOffset := 0
+    
+    for (ahkId in ahkIds) {
+        moveWindow ahkId, x, y
+
+        x := x + xOffset
+
+        if (A_Index / maxAccPerRow == 1) {
+            ; x := -10
+            xOffset := -xOffset
+            x := x + xOffset
+            y := 688
+        }
+    }
 }
 
-XButton2:: 
-~LButton & RButton:: {
-    global names
-    hide names, 50
+
+moveWindow(ahkId, x := 0, y := 0, w := 1066, h := 724) {
+    WinMove x, y, w, h, "ahk_id " ahkId
 }
 
 
+~WheelDown::
+~WheelUp::
 ~Escape::
 ~Enter::
-~Ctrl::
 ~Space::
+~Ctrl::
 ~`::
 ~1::
 ~2::
@@ -318,4 +263,27 @@ getOriginKey(thisKey) {
         key := "{" key "}"
     }
     return key
+}
+
+
+F3:: {
+    ; regen all accounts
+    global title
+    
+
+    for id in WingetList(title) {
+        regen("ahk_id " id)
+    }
+
+    tooltipMessage("Regen for - " arrayToString(WingetList(title)))
+}
+
+regen(ahk_id) {
+    loop 2 {
+        if (A_Index == 1) {
+            ControlClick "x93 y81", ahk_id,,,1, "NA"    ; Regen pet
+        } else {
+            ControlClick "x124 y23", ahk_id,,,1, "NA"   ; Regen char
+        }
+    }
 }

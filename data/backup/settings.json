@@ -26,13 +26,7 @@
         "names": "Bông,Yui"
       },
       {
-        "names": "Bông,Mận"
-      },
-      {
         "names": "Bông,Siu"
-      },
-      {
-        "names": "Bông,Mận,Siu"
       },
       {
         "names": "Mận,Hạo,Siu"
@@ -59,22 +53,34 @@
     "accList": [],
     "groupList": [
       {
-        "names": "Thiên,Địa"
+        "names": "Mai,Long,Lân,Lazy"
+      },
+      {
+        "names": "Lan,Cúc,Quy,Thiên"
+      },
+      {
+        "names": "Trúc,Phụng,Địa,Nhân"
+      },
+      {
+        "names": "Lazy,Thiên,Nhân"
+      },
+      {
+        "names": "Trúc,Nhân,Phụng"
       },
       {
         "names": "Mai,Lan,Cúc,Trúc"
       },
       {
+        "names": "Lazy,Thiên,Địa,Nhân"
+      },
+      {
         "names": "Long,Lân,Quy,Phụng"
       },
       {
-        "names": "Mai,Lan,Long,Lân,Thiên"
+        "names": "Lân,Quy,Phụng,Cúc,Trúc"
       },
       {
-        "names": "Cúc,Trúc,Quy,Phụng,Địa"
-      },
-      {
-        "names": "Mai,Lan,Cúc,Trúc,Long,Lân,Quy,Phụng,Thiên,Địa"
+        "names": "Long,Lân,Quy,Phụng,Lazy,Thiên,Địa,Nhân,Mai,Lan,Cúc,Trúc"
       }
     ]
   },
@@ -119,9 +125,69 @@
       },
       {
         "name": "Taylor"
+      }
+    ],
+    "groupList": []
+  },
+  {
+    "name": "Tân",
+    "accList": [
+      {
+        "name": "Đào"
+      },
+      {
+        "name": "Bơ"
+      },
+      {
+        "name": "Bưởi"
+      },
+      {
+        "name": "Dừa"
+      },
+      {
+        "name": "06"
+      },
+      {
+        "name": "07"
+      },
+      {
+        "name": "08"
       },
       {
         "name": "09"
+      },
+      {
+        "name": "10"
+      },
+      {
+        "name": "11"
+      },
+      {
+        "name": "12"
+      },
+      {
+        "name": "13"
+      },
+      {
+        "name": "14"
+      },
+      {
+        "name": "15"
+      },
+      {
+        "name": "16"
+      },
+      {
+        "name": "17"
+      },
+      {
+        "name": "18"
+      },
+      {
+        "name": "19"
+      },
+      {
+        "name": "20"
       }
     ],
     "groupList": []

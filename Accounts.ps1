@@ -11,14 +11,14 @@ $images = "$root\images"
 $scripts = "$root\scripts"
 $settingsFilename = "settings.json"
 
-# $flashName = "flashplayer_32"
-$flashName = "flashplayer_10"
+$flashName = "flashplayer_32"
+# $flashName = "flashplayer_10"
 
 $font = New-Object System.Drawing.Font('Times New Roman',10,[System.Drawing.FontStyle]::Bold)
 $buttonBackgroundColor = [System.Drawing.ColorTranslator]::FromHtml("#a5e6d6")
 
 $Accounts                     = New-Object system.Windows.Forms.Form
-$Accounts.ClientSize          = New-Object System.Drawing.Point(185, 400)
+$Accounts.ClientSize          = New-Object System.Drawing.Point(185, 600)
 $Accounts.Location = New-Object System.Drawing.Point(30, 20)
 $Accounts.text                = "AccountsV2"
 $Accounts.TopMost             = $false
@@ -73,8 +73,7 @@ function createButton($name, $tag, $x, $y, $w = 80, $h = 30) {
 
 function LoginButton_ContextMenuUpdate($button) {
     $button.ContextMenuStrip.Items.Clear()
-    $process = getVPTProcess $button.Tag
-    if ($null -ne $process) {
+    if (isOpened $button.Tag) {
         $hide = createToolStripMenuItem "Ẩn" $button.Tag { Start-Process "$scripts\Hide.ahk" -ArgumentList $this.Tag.name }
         $FarmVDD = createToolStripMenuItem "Farm Vô Danh Động" $button.Tag { Start-Process "$scripts\farm\VDD.ahk" -ArgumentList $this.Tag.name }
         $BugOnline = createToolStripMenuItem "Bug online" $button.Tag { Start-Process "$scripts\Bug-Online.ahk" -ArgumentList $this.Tag.name }
@@ -85,7 +84,8 @@ function LoginButton_ContextMenuUpdate($button) {
             {
                 $agriculturalProduct = $agriculturalProductBox.SelectedItem
                 $material = $materialBox.SelectedItem
-                Start-Process "$scripts\TrồngNS2.ahk" -ArgumentList """$($this.Tag.name)"" ""$agriculturalProduct"" ""$material"""
+                $channel = $channelBox.SelectedItem
+                Start-Process "$scripts\TrồngNS2.ahk" -ArgumentList """$($this.Tag.name)"" ""$agriculturalProduct"" ""$material"" ""$channel"""
             }
         }
         $copyLink = createToolStripMenuItem "Copy Link" $button.Tag { copyLink $(getFlashLink $this.Tag.link) }
@@ -109,7 +109,7 @@ function groupButton_Click($button) {
         
         foreach($name in $button.Tag.names.Split("|").Split(",")) {
             $account = getAccount $name
-            if ($null -eq $(getVPTProcess $account)) {
+            if (-not $(isOpened $account)) {
                 $account.processId = $(Start-Process -FilePath "$tools\$flashName.exe" -ArgumentList $(getFlashLink $account.link) -PassThru).ID
             }
         }
@@ -148,8 +148,7 @@ function LoginButton_Click($button) {
 function openAccount ($button) {
     $link = getFlashLink $button.Tag.link
 
-    $process = getVPTProcess $button.Tag
-    if ($null -ne $process) {
+    if (isOpened $button.Tag) {
         # toggleGameWindow $button.Tag.processId
         Start-Process "$scripts\Show.ahk" -ArgumentList $button.Tag.name
     } else {
@@ -159,16 +158,12 @@ function openAccount ($button) {
     $accList | ConvertTo-Json -Depth 10 > .\data\accountsV2.json
 }
 
-function getVPTProcess($acc) {
+function isOpened($acc) {
     if (-not (Get-Member -inputobject $acc -name "processId" -Membertype Properties)) {
         $acc | Add-Member -MemberType NoteProperty -Name "processId" -Value 9999999
     }
     
-    if ($null -eq (Get-Process -Id $acc.processId | findstr $flashName)) {
-        return $null
-    }
-
-    return Get-Process -Id $acc.processId
+    return $(TASKLIST /FI "PID eq $($acc.processId)" /FI "IMAGENAME eq $flashName.exe" /FO CSV /NH) -ne "INFO: No tasks are running which match the specified criteria."
 }
 
 function copyLink ($link) {
@@ -311,7 +306,8 @@ function loadTab($settings) {
                 {
                     $agriculturalProduct = $agriculturalProductBox.SelectedItem
                     $material = $materialBox.SelectedItem
-                    Start-Process "$scripts\TrồngNS2.ahk" -ArgumentList """$($this.Tag.names)"" ""$agriculturalProduct"" ""$material"""
+                    $channel = $channelBox.SelectedItem
+                    Start-Process "$scripts\TrồngNS2.ahk" -ArgumentList """$($this.Tag.names)"" ""$agriculturalProduct"" ""$material"" ""$channel"""
                 }
             }
             $farmVDD = createToolStripMenuItem "Farm Vô Danh Động" $group { Start-Process "$scripts\farm\VDD2.ahk" -ArgumentList $this.Tag.names }
@@ -331,7 +327,7 @@ function loadTab($settings) {
 loadTab $settings
 
 $farming                     = New-Object system.Windows.Forms.Form
-$farming.ClientSize          = New-Object System.Drawing.Point(225, 290)
+$farming.ClientSize          = New-Object System.Drawing.Point(265, 290)
 $farming.Location = New-Object System.Drawing.Point(30, 20)
 $farming.text                = "Trồng Trọt"
 $farming.TopMost             = $true
@@ -402,6 +398,28 @@ $farming.Controls.Add($materialBox)
 [void] $materialBox.Items.Add('Gấm Vóc')
 [void] $materialBox.Items.Add('Lông Thú')
 [void] $materialBox.Items.Add('Da Thú')
+
+
+$label = New-Object System.Windows.Forms.Label
+$label.Location = New-Object System.Drawing.Point(220,20)
+$label.Size = New-Object System.Drawing.Size(40,20)
+$label.Text = 'Kênh:'
+$farming.Controls.Add($label)
+
+$channelBox = New-Object System.Windows.Forms.ListBox
+$channelBox.Location = New-Object System.Drawing.Point(220,40)
+$channelBox.Size = New-Object System.Drawing.Size(40,20)
+$channelBox.Height = 225
+$farming.Controls.Add($channelBox)
+
+[void] $channelBox.Items.Add('1')
+[void] $channelBox.Items.Add('2')
+[void] $channelBox.Items.Add('3')
+[void] $channelBox.Items.Add('4')
+[void] $channelBox.Items.Add('5')
+[void] $channelBox.Items.Add('6')
+[void] $channelBox.Items.Add('7')
+[void] $channelBox.Items.Add('8')
 
 
 [void]$Accounts.ShowDialog()

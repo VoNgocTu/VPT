@@ -13,81 +13,106 @@ try {
 } catch {
     tenNguyenLieu := "Lông Thú"
 }
+
+try {
+    channelCoordinate := getChannelCoordinate(A_Args.get(4))
+} catch {
+    channelCoordinate := ""
+}
 ahkIds := getAhkIds(names)
 
 A_IconTip :=  " - Nhân vật: " names "`n - Trồng Nông Sản: " tenNongSan "`n - Nguyên Liệu: " tenNguyenLieu
 
-move_1 :=           ["x579 y457", "x493 y347", "x590 y277", "x590 y277"]
-move_2 :=           ["x524 y363", "x475 y337", "x605 y260", "x643 y294"]
-plantLandFront :=   ["x579 y457", "x651 y278", "x470 y269", "x798 y174"]
-plantLandCenter :=  ["x622 y416", "x612 y298", "x608 y303", "x886 y259"]
-strawMan :=         ["x492 y464", "x483 y348", "x479 y343", "x755 y304"]
+; move_1 :=           ["x579 y457", "x493 y347", "x590 y277", "x590 y277", "x362 y362"]
+; move_2 :=           ["x488 y348", "x496 y348", "x568 y241", "x645 y407", "x364 y358"]
+; plantLandFront :=   ["x942 y415", "x582 y233", "x826 y371", "x615 y267", "x899 y522"]
+; plantLandCenter :=  ["x714 y416", "x540 y287", "x777 y367", "x885 y336", "x737 y522"]
+; strawMan :=         ["x585 y455", "x410 y338", "x645 y407", "x758 y379", "x612 y574"]
 
 
-resetGui(ahkIds)
-Sleep 200
+; 1
+move_1 :=           ["x497 y340"]
+plantLandFront :=   ["x942 y415"]
+plantLandCenter :=  ["x714 y416"]
+strawMan :=         ["x585 y455"]
 
-ControlClickAll(ahkIds, "x267 y626") ; Chú Thích
-Sleep 100
 
-loop 5 {
-    ControlClickAll(ahkIds, "x408 y627") ; Thu Nhỏ Khung Chat
-    Sleep 100
-}
 
-ControlClickAll(ahkIds, "x924 y157") ; Tắt Q
-Sleep 200
 
 
 ; ControlClickAll(ahkIds, "x729 y108") ; Tắt Cách chơi
 ; Sleep 200
 
 loop {
-    ControlClickAll(ahkIds, "x525 y486") ; Tắt hướng dẫn, mạng lag đôi khi kik trúng cái này
-    Sleep 200
-    ControlClickAll(ahkIds, "x491 y365") ; Giải trừ buff auto thám hiểm K1
-    Sleep 200
+
+    resetPosition(ahkIds)
 
     move(ahkIds)
 
-    for ahkId in ahkIds {
-        coordinateArray := coordinateToArray(plantLandCenter.get(A_Index))
-        x := coordinateArray.get(1)
-        y := coordinateArray.get(2)
-    
-        ControlClick "x" x + 80 " y" y, "ahk_id " ahkId,,,, "NA"
-        Sleep 200
-        ControlClick "x" x - 80 " y" y, "ahk_id " ahkId,,,, "NA"
-        Sleep 200
-        ControlClick "x" x " y" y + 50, "ahk_id " ahkId,,,, "NA"
-        Sleep 200
-        ControlClick "x" x " y" y - 50, "ahk_id " ahkId,,,, "NA"
-    }
+    collect(ahkIds, plantLandCenter)
     
     Sleep 7000
 
     move(ahkIds)
 
     click(ahkIds, strawMan)
-    Sleep 1000
-    ControlClickAll(ahkIds, "x294 y339") ; Trồng cây ngắn ngày
-    Sleep 1000
-    chonNongSan(ahkIds, tenNongSan)
-    Sleep 1000
+    Sleep 4000
+
+    ; ControlClickAll(ahkIds, "x294 y339") ; Trồng cây ngắn ngày
+    ; Sleep 1000
+    ; chonNongSan(ahkIds, tenNongSan)
+    ; Sleep 1000
 
     resetGui(ahkIds)
     Sleep 200
     
-    if (A_Index == 1 || Mod(A_Index, 10) == 0) {
-        dauPet(ahkIds)
-        trongTrangVien(ahkIds, tenNguyenLieu)
+    ; if (Mod(A_Index, 10) == 1) {
+    ;     dauPet(ahkIds)
+    ;     trongTrangVien(ahkIds, tenNguyenLieu)
+    ; }
+    ; if (Mod(A_Index, 10) == 1) {
+    ;     recover(ahkIds, channelCoordinate)
+    ; }
+}
+
+
+resetPosition(ahkIds) {
+    resetGui(ahkIds)
+    Sleep 200
+
+    ControlClickAll(ahkIds, "x267 y626") ; Chú Thích
+    Sleep 100
+
+    loop 5 {
+        ControlClickAll(ahkIds, "x408 y627") ; Thu Nhỏ Khung Chat
+        Sleep 100
     }
+
+    ControlClickAll(ahkIds, "x924 y157") ; Tắt Q
+    Sleep 200
+
+    ControlClickAll(ahkIds, "x525 y486") ; Tắt hướng dẫn, mạng lag đôi khi kik trúng cái này
+    Sleep 200
+    ControlClickAll(ahkIds, "x491 y365") ; Giải trừ buff auto thám hiểm K1
+    Sleep 200
+    
+    ControlSendAll(ahkIds, "f")
+    Sleep 500
+    ControlSendAll(ahkIds, "``")
+    Sleep 500
+    ControlClickAll(ahkIds, "x486 y253") ; Bay ra cầu
+    Sleep 5000
+    ControlSendAll(ahkIds, "f")
+    Sleep 500
+    
+    global move_1
+    click(ahkIds, move_1)
+    Sleep 5000
 }
 
 
 move(ahkIds) {
     global move_1
-    global move_2
     global plantLandFront
 
     resetGui(ahkIds)
@@ -98,14 +123,32 @@ move(ahkIds) {
    
     ; click(ahkIds, move_1)
     ; Sleep 3000
-    click(ahkIds, move_2)
-    Sleep 6000
+    click(ahkIds, move_1)
+    Sleep 3000
 
     resetGui(ahkIds)
     Sleep 200
 
     click(ahkIds, plantLandFront) ; Chạy tới trước mặt đất trồng cây
-    Sleep 1000
+    Sleep 3000
+}
+
+
+collect(ahkIds, plantLandCenter) {
+    for ahkId in ahkIds {
+        coordinateArray := coordinateToArray(plantLandCenter.get(A_Index))
+        x := coordinateArray.get(1)
+        y := coordinateArray.get(2)
+    
+        offset := 40
+        ControlClick "x" x + offset " y" y, "ahk_id " ahkId,,,, "NA"
+        Sleep 200
+        ControlClick "x" x - offset " y" y, "ahk_id " ahkId,,,, "NA"
+        Sleep 200
+        ControlClick "x" x " y" y + offset, "ahk_id " ahkId,,,, "NA"
+        Sleep 200
+        ControlClick "x" x " y" y - offset, "ahk_id " ahkId,,,, "NA"
+    }
 }
 
 
@@ -279,4 +322,32 @@ plantMaterial(x, y, ahkIds, sleepTime := 600) {
     Sleep time
     ControlSendAll(ahkIds, "{Enter}")
     Sleep time
+}
+
+recover(ahkIds, channelCoordinate) {
+    if (channelCoordinate != "") {
+        ControlClickAll(ahkIds, "x529 y551")
+        Sleep 60000
+        ControlClickAll(ahkIds, channelCoordinate)
+        Sleep 60000
+        ControlClickAll(ahkIds, "x400 y450") ; Chọn nhân vật đầu tiên
+        Sleep 500
+        ControlClickAll(ahkIds, "x500 y450") ; Chọn nhân vật thứ 2
+        Sleep 500
+        ControlClickAll(ahkIds, "x400 y550") ; Vào game
+        Sleep 60000
+    }
+}
+
+getChannelCoordinate(channelNumber) {
+    switch channelNumber {
+        case "1": return "x522 y240"
+        case "2": return "x522 y275"
+        case "3": return "x522 y310"
+        case "4": return "x522 y345"
+        case "5": return "x522 y380"
+        case "6": return "x522 y415"
+        case "7": return "x522 y450"
+        case "8": return "x522 y485"
+    }
 }

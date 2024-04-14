@@ -9,7 +9,8 @@ ahkIds := getAhkIds(names)
 
 A_IconTip := "Dau Pet - "  names
 
-loop 562 {
+; loop 562 {
+loop 600 {
 ; loop 130 {
     dauPet(ahkIds)
     ; resetGui(ahkIds)
@@ -32,6 +33,9 @@ Sleep 1500
 for id in ahkIds {
     WinClose "ahk_id " id
 }
+
+Sleep 10000
+Shutdown 5
 
 
 dauPet(ahkIds) {

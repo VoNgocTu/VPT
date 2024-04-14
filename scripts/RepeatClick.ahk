@@ -1,14 +1,15 @@
 #Requires AutoHotkey v2.0
-
-title := "Adobe Flash Player 10"
+#include Config.ahk
 
 F10::Pause -1
+coordinates := ""
 
 F11:: {
     OutputVarX := 0
     OutputVarY := 0
     OutputVarWin := 0
     MouseGetPos &OutputVarX, &OutputVarY, &OutputVarWin
+    global coordinates
     coordinates := "x" OutputVarX " y" OutputVarY
 
     global title
@@ -16,8 +17,6 @@ F11:: {
 }
 
 F12:: {
-    
-
     global title
     ahkId := WinActive(title)
     loop {
@@ -25,6 +24,7 @@ F12:: {
             return
         }
         
+        global coordinates
         ControlClick coordinates, "ahk_id " ahkId,,,, "NA"
     }
 }

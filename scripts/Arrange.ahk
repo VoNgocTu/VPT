@@ -6,8 +6,22 @@
 ; arrange A_Args.get(1), -10 , -28 , , , , 230  ; Screen 2560
 
 names := A_Args.get(1)
-yOffset := 230 ; 2560 x 1440
-if (A_ScreenHeight == 1080) {
-    yOffset := 117 ; 1920 x 1080
+nameArray := stringToArray(names)
+accPerColumn := 4
+if (nameArray.Length < 4) {
+    accPerColumn := nameArray.Length
 }
+
+; maxYOffset 724
+; yOffset := 230 ; 2560 x 1440 => H = 1392 + 28 = 1420
+remainSpace := 1430 ; 2560 x 1440 => H = 1392 + 28 = 1420
+if (A_ScreenHeight == 1080) {
+    remainSpace := 1070 ; 1920 x 1080 => H = 1032 + 28 = 1060
+}
+
+yOffset := (remainSpace - 724) / (accPerColumn - 1)
+if ( yOffset > 700 ) {
+    yOffset := 700
+}
+
 arrange names, -10 , -28 , , , , yOffset

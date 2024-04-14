@@ -1,8 +1,9 @@
 #Requires AutoHotkey v2.0
+#include Config.ahk
 
 F12::{
-    title := "Adobe Flash Player 10"
-    ; title := "AutoHotkey v2 Help"
+    global title
+
     pid := WinActive(title)
     if (pid == 0) {
         return

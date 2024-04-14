@@ -2,7 +2,7 @@
 #include Utils.ahk
 
 
-ahkIds := getAhkIds("Mận")
+ahkIds := getAhkIds("")
 
 ControlClickAll(ahkIds, "x19 y216")
 Sleep 500
