@@ -101,7 +101,7 @@ getAhkIds(names) {
     return ahkIds
 }
 
-getProcessIds(names, filePath := "..\data\accountsV2.json") {
+getProcessIds(names, filePath := accountPath) {
     result := []
 
     nameArray := stringToArray(names)

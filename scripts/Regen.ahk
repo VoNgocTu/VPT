@@ -20,7 +20,7 @@
 ;     Sleep 5000
 ; }
 names := A_Args.get(1)
-pidArray := getProcessIds(names, "..\data\accountsV2.json")
+pidArray := getProcessIds(names, accountPath)
 F3:: {
     loop 2 {
         regen(pidArray, A_Index)

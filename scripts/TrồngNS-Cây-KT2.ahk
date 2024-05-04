@@ -7,7 +7,6 @@ SetControlDelay -1
 F11::Pause -1
 
 names := A_Args.get(1)
-tenNongSan := A_Args.get(2)
 try {
     tenNguyenLieu := A_Args.get(3)
 } catch {
@@ -21,7 +20,7 @@ try {
 }
 ahkIds := getAhkIds(names)
 
-A_IconTip :=  " - Nhân vật: " names "`n - Trồng Nông Sản: " tenNongSan "`n - Nguyên Liệu: " tenNguyenLieu
+A_IconTip :=  " - Nhân vật: " names "`n - Trồng Cây Kim Tiền`n - Nguyên Liệu: " tenNguyenLieu
 
 
 ;                   ["    1    ", "    2    ", "    3    ", "    4    ", "    5    ", "    6    ", "    7    ", "    8    ", "    9    ", "   10    "] 
@@ -57,11 +56,20 @@ loop {
 
     click(ahkIds, strawMan)
     Sleep 7000
+    
+    ControlClickAll(ahkIds, "x339 y390") ; Trồng nông sản đặc biệt
+    Sleep 1000
+    ControlClickAll(ahkIds, "x303 y339") ; Cây kim tiền
+    Sleep 1000
 
-    ControlClickAll(ahkIds, "x294 y339") ; Trồng cây ngắn ngày
-    Sleep 1000
-    chonNongSan(ahkIds, tenNongSan)
-    Sleep 1000
+    ; click(ahkIds, strawMan)
+    ; Sleep 1000
+    ; ControlClickAll(ahkIds, "x307 y412") ; Thao tác nông trường
+    ; Sleep 1000
+    ; ControlClickAll(ahkIds, "x303 y339") ; Sử dụng thuốc tăng trưởng
+    ; Sleep 1000
+    ; ControlSendAll(ahkIds, "{Enter}")
+    ; Sleep 1000
 
     resetGui(ahkIds)
     Sleep 200
@@ -70,9 +78,6 @@ loop {
         dauPet(ahkIds)
         trongTrangVien(ahkIds, tenNguyenLieu)
     }
-    ; if (Mod(A_Index, 10) == 1) {
-    ;     recover(ahkIds, channelCoordinate)
-    ; }
 }
 
 

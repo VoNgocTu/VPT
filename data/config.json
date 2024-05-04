@@ -1,0 +1,10 @@
+{
+    "flash": {
+        "title": "Adobe Flash Player 10",
+        "name": "flashplayer_10"
+    },
+    "flashLinkTemplate": "https://s3-vuaphapthuat.goplay.vn/s/{0}/GameLoaders.swf?user={1}&pass={2}&version=0.9.9a33.342&isExpand=true&nothing=true",
+    "settingsFile": "settings.json",
+    "accountsFile": "accountsV2.json"
+}
+  

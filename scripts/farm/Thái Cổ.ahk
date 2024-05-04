@@ -27,7 +27,7 @@ loop {
     Sleep 1000
     ControlClick "x209 y573", "ahk_id " keyId,,,1, "NA" ; Click Bỏ
     Sleep 1000
-    ControlSend "{Enter}", , "ahk_id " keyId
+    ControlClick "x491 y372", "ahk_id " keyId,,,1, "NA" ; Click Bỏ
     Sleep 1000
     resetGui([keyId])
     

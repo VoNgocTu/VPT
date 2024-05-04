@@ -3,16 +3,19 @@ Add-Type -AssemblyName System.Windows.Forms
 [void][Reflection.Assembly]::LoadWithPartialName('Microsoft.VisualBasic')
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
-$root = $PSScriptRoot
 
-$data = "$root\data"
-$tools = "$root\tools"
-$images = "$root\images"
-$scripts = "$root\scripts"
-$settingsFilename = "settings.json"
+$data = "$([Environment]::GetFolderPath("MyDocuments"))\VPT\data"
+New-Item -Type Directory -Path $data -Force
+if (-not $(Test-Path "$data\*")) {
+    # Init data files if not exist
+    Copy-Item -Path .\data\*.json  -Destination $data -Recurse
+}
+$config = $(Get-Content "$data\config.json" -Encoding UTF8 | Out-String | ConvertFrom-Json)
+$flashName = $config.flash.name
+$settingsFilename = $config.settingsFile
 
-$flashName = "flashplayer_32"
-# $flashName = "flashplayer_10"
+$tools = ".\tools"
+$scripts = ".\scripts"
 
 $font = New-Object System.Drawing.Font('Times New Roman',10,[System.Drawing.FontStyle]::Bold)
 $buttonBackgroundColor = [System.Drawing.ColorTranslator]::FromHtml("#a5e6d6")
@@ -29,8 +32,8 @@ $actions.Location = New-Object System.Drawing.Point(30, 20)
 $actions.TopMost             = $true
 
 
-$settings = $(Get-Content "$data\$settingsFilename" -Encoding UTF8 | Out-String | ConvertFrom-Json)
-$accList = $(Get-Content "$data\accountsV2.json" -Encoding UTF8 | Out-String | ConvertFrom-Json)
+$settings = $(Get-Content "$data\$($config.settingsFile)" -Encoding UTF8 | Out-String | ConvertFrom-Json)
+$accList = $(Get-Content "$data\$($config.accountsFile)" -Encoding UTF8 | Out-String | ConvertFrom-Json)
 
 # Add the tab pages to the tab control
 $tabControl = New-Object System.Windows.Forms.TabControl
@@ -114,7 +117,7 @@ function groupButton_Click($button) {
             }
         }
         
-        $accList | ConvertTo-Json -Depth 10 > .\data\accountsV2.json
+        $accList | ConvertTo-Json -Depth 10 > "$data\$($config.accountsFile)"
        
         Start-Process "$scripts\Show.ahk" -ArgumentList $button.Tag.names
         Start-Process "$scripts\Arrange.ahk" -ArgumentList $button.Tag.names
@@ -155,7 +158,7 @@ function openAccount ($button) {
         $button.Tag.processId = $(Start-Process -FilePath "$tools\$flashName.exe" -ArgumentList $link -PassThru).ID
     }
 
-    $accList | ConvertTo-Json -Depth 10 > .\data\accountsV2.json
+    $accList | ConvertTo-Json -Depth 10 > "$data\$($config.accountsFile)"
 }
 
 function isOpened($acc) {
@@ -179,7 +182,7 @@ function getFlashLink ($link) {
     $server = $matches[1]
     $user = $matches[2]
     $pass = $matches[3]
-    return "https://s3-vuaphapthuat.goplay.vn/s/$server/GameLoaders.swf?user=$user&pass=$pass&version=0.9.9a33.342&isExpand=true&nothing=true" 
+    return [String]::Format($config.flashLinkTemplate, $server,$user,$pass) 
 }
 
 
@@ -259,7 +262,7 @@ function loadTab($settings) {
     foreach($tab in $settings) {
         $tabPage = New-Object System.Windows.Forms.TabPage
         $tabPage.Text = $tab.name
-        $tabPage.BackgroundImage = [system.drawing.image]::FromFile("$images\background-3.png")
+        $tabPage.BackgroundImage = [system.drawing.image]::FromFile(".\images\background-3.png")
         $tabPage.BackgroundImageLayout = 'Stretch'
         $tabControl.Controls.AddRange($($tabPage))
         
