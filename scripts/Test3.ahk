@@ -10,31 +10,130 @@
 ; }
 ; channelCoordinate := getChannelCoordinate(A_Args.get(1))
 
-accountIndex := 999999999
+; G_IsPause := false
 
-~Control & ~WheelUp:: {
-    global accountIndex
-    accountIndex++
+; ~F1:: {
+;     global G_IsPause
+;     G_IsPause := !G_IsPause
+; }
+
+; isPaused() {
+;     global G_IsPause
+;     return G_IsPause
+; }
+
+totalGroup := 4
+manageGroups := []
+loop totalGroup {
+    manageGroups.Push(config["manageGroups"][A_Index]["group"])
+}
+allAccountNames := arrayToString(manageGroups)
+allAccountNames := arrayToString(trimArray(stringToArray(allAccountNames)))
+log("INFO", "Manage accounts: " allAccountNames)
+
+
+activeAccountNames := A_Args.get(1)
+accounts := []
+
+for accName in stringToArray(allAccountNames) {
+    account := {name: accName, isActive: InStr(activeAccountNames, accName) != 0 }
+    accounts.Push(account)
+}
+
+
+MyMenu := Menu()
+generateMenu()
+
+
+generateMenu() {
+    global accounts
+    global MyMenu
+    MyMenu.Delete()
+
+    manageGroupsMenu := Menu()
+    for group in manageGroups {
+        manageGroupsMenu.Add group, changeGroupHandler
+    }
+    MyMenu.Add "Groups", manageGroupsMenu
+
+    for acc in accounts {
+        prefix := "x  "
+        if (!acc.isActive) {
+            prefix := "   "
+        }
+        MyMenu.Add prefix . acc.name, toggleAccountHandler
+    }
+}
+
+toggleAccountHandler(name, *) {
+    global accounts
+    originName := StrReplace(StrReplace(name, "   "), "x  ")
+
+    for acc in accounts {
+        if (acc.name == originName) {
+            acc.isActive := !acc.isActive
+        }
+    }
+    generateMenu()
+}
+
+changeGroupHandler(groupName, *) {
+    global accounts
+    groupAccounts := stringToArray(groupName)
+    for acc in accounts {
+        acc.isActive := isContains(groupAccounts, acc.name)
+    }
+    generateMenu()
+}
+
+closeMenu(*) {
     
-    tooltipMessage("Account index: " accountIndex " - Account: " (Mod(accountIndex, 4) + 1))
 }
 
-~Control & ~WheelDown:: {
-    global accountIndex
-    accountIndex--
+F2:: {
+    global MyMenu
+    MyMenu.show()
+}
+
+; F12:: {
+;     ; coordinate := getCoordinates()
+;     ; coordinateArray := coordinateToArray(coordinate)
+;     ; ToolTip ".`n.   " coordinate "   .`n.", coordinateArray.Get(1) + 10, coordinateArray.Get(2) - 60 , 1
+;     ; SetTimer () => ToolTip(), -1000
+
+;     title := "Adobe Flash Player 10"
     
-    tooltipMessage("Account index: " accountIndex " - Account: " (Mod(accountIndex, 4) + 1))
-}
+;     pid := WinActive(title)
+;     if (pid == 0) {
+;         return
+;     }
 
-tooltipMessage(message) {
-    OutputVarX := 0
-    OutputVarY := 0
-    OutputVarWin := 0
-    MouseGetPos &OutputVarX, &OutputVarY, &OutputVarWin
+;     ControlClick "x793 y14", "ahk_id " pid,,,, "D"
+;     Sleep 1000
+;     ControlClick "x23 y190", "ahk_id " pid,,,, "U"
+; }
 
-    ToolTip ".`n.   " message "   .`n.", OutputVarX + 10, OutputVarY - 60 , 1
-    SetTimer () => ToolTip(), -1000
-}
+; Ctrl & Up:: {
+;     loop GetKeyState("Up", "P") {
+;         WinGetPos &X, &Y, &W, &H, "AutoHotkey v2 Help"
+;         WinMove X, Y - 10, W, H, "AutoHotkey v2 Help"
+;     }
+; }
+
+; ~Ctrl & ~Down:: {
+;     WinGetPos &X, &Y, &W, &H, "AutoHotkey v2 Help"
+;     WinMove X, Y + 10, W, H, "AutoHotkey v2 Help"
+; }
+
+; ~Ctrl & ~Left:: {
+;     WinGetPos &X, &Y, &W, &H, "AutoHotkey v2 Help"
+;     WinMove X - 10, Y, W, H, "AutoHotkey v2 Help"
+; }
+
+; ~Ctrl & ~Right:: {
+;     WinGetPos &X, &Y, &W, &H, "AutoHotkey v2 Help"
+;     WinMove X + 10, Y, W, H, "AutoHotkey v2 Help"
+; }
 
 
 ; F12:: {

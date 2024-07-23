@@ -4,7 +4,6 @@
 SetControlDelay -1 
 
 
-; title := "AutoHotkey v2 Help"
 
 names := A_Args.get(1)
 nameArray := StrSplit(names, ",")
@@ -13,7 +12,7 @@ nameIndex := 999999999
 ahkIds := getAhkIds(names)
 ; ahkIds := WingetList(title)
 
-A_IconTip := "Mouse Mirror - " names
+A_IconTip := "Mouse Mirror:`n`n" names
 
 ~Control & ~WheelUp:: {
     global ahkIds
@@ -32,24 +31,14 @@ A_IconTip := "Mouse Mirror - " names
     showAccount index
 }
 
-
 ~F1:: {
-    Pause -1
-    if (A_IsPaused) {
-        ; tooltipMessage("Pause Mirror.")
+    pauseToggle()
+    if (isPaused()) {
+        tooltipMessage("Pause Mirror - "  names)
     } else {
         tooltipMessage("Run Mirror - " names)
     }
-}
-
-tooltipMessage(message) {
-    OutputVarX := 0
-    OutputVarY := 0
-    OutputVarWin := 0
-    MouseGetPos &OutputVarX, &OutputVarY, &OutputVarWin
-
-    ToolTip ".`n.   " message "   .`n.", OutputVarX + 10, OutputVarY - 60 , 1
-    SetTimer () => ToolTip(), -1000
+    ; MsgBox("Is pause: " isPaused())
 }
 
 ~MButton:: {
@@ -75,7 +64,7 @@ showAccount(index) {
 }
 
 ~LButton:: {
-    if (A_IsPaused) {
+    if (isPaused()) {
         return
     }
 
@@ -234,7 +223,7 @@ moveWindow(ahkId, x := 0, y := 0, w := 1066, h := 724) {
 ~y::
 ~z:: {
     ; log("INFO", "Key received - " A_ThisHotkey)
-    if (A_IsPaused) {
+    if (isPaused()) {
         return
     }
 
@@ -266,24 +255,24 @@ getOriginKey(thisKey) {
 }
 
 
-F3:: {
-    ; regen all accounts
+^r:: {
     global title
-    
+    ahk_id_array := WingetList(title)
 
-    for id in WingetList(title) {
-        regen("ahk_id " id)
-    }
-
-    tooltipMessage("Regen for - " arrayToString(WingetList(title)))
+    regenPet(ahk_id_array)
+    Sleep 3000
+    regenChar(ahk_id_array)
 }
 
-regen(ahk_id) {
-    loop 2 {
-        if (A_Index == 1) {
-            ControlClick "x93 y81", ahk_id,,,1, "NA"    ; Regen pet
-        } else {
-            ControlClick "x124 y23", ahk_id,,,1, "NA"   ; Regen char
-        }
+
+regenChar(ahk_id_array) {
+    for ahk_id in ahk_id_array {
+        ControlClick "x124 y23", ahk_id,,,1, "NA"   ; Regen char
+    }
+}
+
+regenPet(ahk_id_array) {
+    for ahk_id in ahk_id_array {
+        ControlClick "x93 y81", ahk_id,,,1, "NA"    ; Regen pet
     }
 }

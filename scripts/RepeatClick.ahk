@@ -1,7 +1,9 @@
 #Requires AutoHotkey v2.0
-#include Config.ahk
+; #include Config.ahk
 
 F10::Pause -1
+
+title := "Adobe Flash Player 10"
 coordinates := ""
 
 F11:: {

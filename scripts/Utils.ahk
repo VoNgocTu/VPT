@@ -3,6 +3,19 @@
 #Include libs\JSON.ahk
 
 
+G_IsPause := false
+
+pauseToggle() {
+    global G_IsPause
+    G_IsPause := !G_IsPause
+}
+
+isPaused() {
+    global G_IsPause
+    return G_IsPause
+}
+
+
 isContains(strArray, stringInput) {
     for str in strArray {
         if (str == stringInput) {
@@ -58,7 +71,7 @@ close(names, sleepTime := 1000) {
     }
 }
 
-arrange(names, x := 0, y := 0, w := 1066, h := 724, xOffset := 100, yOffset := 200) {
+arrange3(names, x := 0, y := 0, w := 1066, h := 724, xOffset := 100, yOffset := 200) {
     index := 0
     for id in getProcessIds(names) {
         if (index == 4) {
@@ -93,56 +106,73 @@ arrange2(names, x := 0, y := 0, w := 1066, h := 724, xOffset := 0, yOffset := -3
 getAhkIds(names) {
     ahkIds := []
     for id in getProcessIds(names) {
-                    ahk_id := WinExist("ahk_pid" id)
-            if (ahk_id != 0) {
-                ahkIds.Push(ahk_id)
-            }
-            }
+        ahk_id := WinExist("ahk_pid" id)
+        if (ahk_id != 0) {
+            ahkIds.Push(ahk_id)
+        }
+    }
     return ahkIds
 }
 
-getProcessIds(names, filePath := accountPath) {
+getProcessIds(names) {
     result := []
-
-    nameArray := stringToArray(names)
-    text := FileRead(filePath, "UTF-8")
-    accArray := jxon_load(&text)
-    for name in nameArray {
-        for acc in accArray {
+    for name in stringToArray(names) {
+        for acc in getAccountArray() {
             if (acc["name"] == name) {
                 result.Push(acc["processId"])
             }
-                    }
+        }
     }
     
     return result
 }
 
-getNameFromAhkIds(ahkIds, filePath := "..\data\runtime.json") {
+getNameFromAhkIds(ahkIds) {
     result := []
+    for pid in convertToProcessIds(ahkIds) {
+        log("Info", arrayToString(convertToProcessIds(ahkIds)))
+        for acc in getAccountArray() {
+            try {
+                processId := acc["processId"]
+            } catch as e {
+                processId := 99999
+            }
 
-    pidArray := getProcessIdsFromAhkIds(ahkIds)
-    text := FileRead(filePath, "UTF-8")
-    accArray := jxon_load(&text)
-    for pid in pidArray {
-        for acc in accArray {
-            if (acc["processId"] == pid) {
+            if (processId == pid) {
                 result.Push(acc["name"])
             }
         }
     }
 
-    return result
+    return arrayToString(result)
 }
 
 
-getProcessIdsFromAhkIds(ahkIds) {
+convertToProcessIds(ahkIds) {
     result := []
     for id in ahkIds {
         result.Push(WinGetPID("ahk_id " id))
     }
 
     return result
+}
+
+
+getAccountArray(filePath := accountPath) {
+    text := FileRead(filePath, "UTF-8")
+    return jxon_load(&text)
+}
+
+getAccounts(names) {
+    accounts := []
+    processIds := getProcessIds(names)
+    for accName in stringToArray(names) {
+        account := { name: accName, 
+                     isActive: false, 
+                     ahkId: WinExist("ahk_pid" processIds[A_Index]) }
+        accounts.Push(account)
+    }
+    return accounts
 }
 
 
@@ -189,10 +219,35 @@ RunWaitOne(command) {
     return exec.StdOut.ReadAll()
 }
 
+trimArray(arr) {
+
+    newArr := []
+
+    for e in arr {
+        if (!isContains(newArr, e)) {
+            newArr.push(e)
+        }
+    }
+
+    return newArr
+}
+
 log(level, message, filePath := "") {
     if (filePath == "") {
-        filePath := "..\logs\AutoHotkey-" FormatTime(, "yyyy-MM-dd") ".log"
+        global logPath
+        filePath := logPath
     }
     ts := FormatTime(, "yyyy-MM-dd HH:mm:ss.") substr(A_TickCount,-3)
     FileAppend ts " - " level " - " message "`n", filePath
+}
+
+
+tooltipMessage(message) {
+    OutputVarX := 0
+    OutputVarY := 0
+    OutputVarWin := 0
+    MouseGetPos &OutputVarX, &OutputVarY, &OutputVarWin
+
+    ToolTip ".`n.   " message "   .`n.", OutputVarX + 10, OutputVarY - 60 , 1
+    SetTimer () => ToolTip(), -1000
 }

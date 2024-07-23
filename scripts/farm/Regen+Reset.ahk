@@ -20,7 +20,7 @@
 ;     Sleep 5000
 ; }
 names := A_Args.get(1)
-pidArray := getProcessIds(names, accountPath)
+pidArray := getProcessIds(names)
 loop {
     resetAuto(pidArray)
     regen(pidArray, A_Index)

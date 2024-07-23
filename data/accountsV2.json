@@ -216,5 +216,10 @@
     "link": "http://s3-vuaphapthuat.goplay.vn/s/s45/GameLoaders.swf?user=ltcliff20@goid&pass=20722a2f95d4f1b026bb5d2a27dfe705&isExpand=true",
     "char": "",
     "name": "20"
+  },
+  {
+    "link": "http://s3-vuaphapthuat.goplay.vn/s/s45/GameLoader.swf?user=gg_timonvlbk@goid&pass=12727726772ad426a00cd9e78e44a7f1&version=0.9.9a33.271&isExpand=true",
+    "char": "NC",
+    "name": "Sun"
   }
 ]

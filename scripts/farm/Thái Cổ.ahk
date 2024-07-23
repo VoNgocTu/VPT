@@ -1,11 +1,11 @@
 #Requires AutoHotkey v2.0
-#SingleInstance Off
+#SingleInstance Force
 #include Farm-Actions.ahk
 #include ../Utils.ahk
 
 
 names := A_Args.get(1)
-pidArray := getProcessIds(names, "..\..\data\accountsV2.json")
+pidArray := getProcessIds(names)
 ahkIds := []
 for id in pidArray {
     ahk_id := WinExist("ahk_pid" id)
@@ -16,19 +16,21 @@ for id in pidArray {
 
 A_IconTip := "Auto Thái Cổ - " names
 
+
 loop {
     keyId := ahkIds.Get(1)
     loop 10 {
         ControlClick "x209 y573", "ahk_id " keyId,,,1, "NA" ; Click Thái Cổ
         Sleep 1000
     }
+    
     resetGui([keyId])
     ControlSend "Q", , "ahk_id " keyId
     Sleep 1000
     ControlClick "x209 y573", "ahk_id " keyId,,,1, "NA" ; Click Bỏ
-    Sleep 1000
-    ControlClick "x491 y372", "ahk_id " keyId,,,1, "NA" ; Click Bỏ
-    Sleep 1000
+    Sleep 500
+    ControlClick "x491 y372", "ahk_id " keyId,,,1, "NA" ; Click Xác Nhận
+    Sleep 500
     resetGui([keyId])
     
     resetAuto(pidArray)

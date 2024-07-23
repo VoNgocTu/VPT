@@ -2,7 +2,9 @@
 #Include libs\JSON.ahk
 
 dataPath := A_MyDocuments "\VPT\data\"
-configPath := dataPath "config.json" 
+logPath := dataPath "..\logs\AutoHotkey-" FormatTime(, "yyyy-MM-dd") ".log"
+
+configPath := dataPath "config.json"
 text := FileRead(configPath, "UTF-8")
 config := jxon_load(&text)
 

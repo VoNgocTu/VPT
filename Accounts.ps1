@@ -78,7 +78,7 @@ function LoginButton_ContextMenuUpdate($button) {
     $button.ContextMenuStrip.Items.Clear()
     if (isOpened $button.Tag) {
         $hide = createToolStripMenuItem "Ẩn" $button.Tag { Start-Process "$scripts\Hide.ahk" -ArgumentList $this.Tag.name }
-        $FarmVDD = createToolStripMenuItem "Farm Vô Danh Động" $button.Tag { Start-Process "$scripts\farm\VDD.ahk" -ArgumentList $this.Tag.name }
+        $FarmVDD = createToolStripMenuItem "Farm Vô Danh Động" $button.Tag { Start-Process "$scripts\farm\VDD2.ahk" -ArgumentList $this.Tag.name }
         $BugOnline = createToolStripMenuItem "Bug online" $button.Tag { Start-Process "$scripts\Bug-Online.ahk" -ArgumentList $this.Tag.name }
         $PlantMaterial = createToolStripMenuItem "Trồng Nguyên Liệu" $button.Tag { Start-Process "$scripts\Plant-Material.ahk" -ArgumentList $this.Tag.name }
         $farmingSelection = createToolStripMenuItem "Trồng Trọt" $button.Tag { 
@@ -120,8 +120,8 @@ function groupButton_Click($button) {
         $accList | ConvertTo-Json -Depth 10 > "$data\$($config.accountsFile)"
        
         Start-Process "$scripts\Show.ahk" -ArgumentList $button.Tag.names
-        Start-Process "$scripts\Arrange.ahk" -ArgumentList $button.Tag.names
-        Start-Process "$scripts\MouseMirror.ahk" -ArgumentList $button.Tag.names
+        Start-Process "$scripts\arrange\Style-1.ahk" -ArgumentList $button.Tag.names
+        Start-Process "$scripts\ManagerV2.ahk" -ArgumentList $button.Tag.names
     }
 }
 
@@ -299,9 +299,9 @@ function loadTab($settings) {
         {
             $groupButton = createButton $group.names $group $(getButtonX $xIndex) $(getButtonY $yIndex) 160
     
-            $mirror = createToolStripMenuItem "Mirror" $group { Start-Process "$scripts\MouseMirror.ahk" -ArgumentList $this.Tag.names }
+            $mirror = createToolStripMenuItem "Mirror" $group { Start-Process "$scripts\ManagerV2.ahk" -ArgumentList $this.Tag.names }
             $hide = createToolStripMenuItem "Ẩn" $group { Start-Process "$scripts\Hide.ahk" -ArgumentList $this.Tag.names }
-            $arrange = createToolStripMenuItem "Sắp xếp" $group { Start-Process "$scripts\Arrange2.ahk" -ArgumentList $this.Tag.names }
+            $arrange = createToolStripMenuItem "Sắp xếp" $group { Start-Process "$scripts\arrange\Style-1.ahk" -ArgumentList $this.Tag.names }
             $arrangeLT = createToolStripMenuItem "Sắp xếp LT Style" $group { Start-Process "$scripts\Arrange-LT.ahk" -ArgumentList $this.Tag.names }
             $farmingSelection = createToolStripMenuItem "Trồng Trọt" $group { 
                 $result = $farming.ShowDialog() 
@@ -315,10 +315,10 @@ function loadTab($settings) {
             }
             $farmVDD = createToolStripMenuItem "Farm Vô Danh Động" $group { Start-Process "$scripts\farm\VDD2.ahk" -ArgumentList $this.Tag.names }
             $bugOnline = createToolStripMenuItem "Bug Online" $group { Start-Process "$scripts\Bug-Online.ahk" -ArgumentList $this.Tag.names }
-            $plantMaterial = createToolStripMenuItem "Trồng Nguyên Liệu" $group { Start-Process "$scripts\Plant-Material.ahk" -ArgumentList $this.Tag.names }
+            
             $close = createToolStripMenuItem "Tắt" $group { Start-Process "$scripts\Close.ahk" -ArgumentList $this.Tag.names }
     
-            $groupButton.ContextMenuStrip.Items.AddRange(@($mirror, $hide, $arrange, $arrangeLT, $farmingSelection, $farmVDD, $bugOnline, $plantMaterial, $close))
+            $groupButton.ContextMenuStrip.Items.AddRange(@($mirror, $hide, $arrange, $arrangeLT, $farmingSelection, $farmVDD, $bugOnline, $close))
             $groupButton.Add_Click({ groupButton_Click $this })
             $tabPage.controls.AddRange(@($groupButton))
     
