@@ -1,14 +1,12 @@
 #Requires AutoHotkey v2.0
 #SingleInstance Force
-#include ../Utils.ahk
+#include ../Base.ahk
 
 
-names := A_Args.get(1)
-ahkIds := getAhkIds(names)
 accPerColumn := 4
 
-if (ahkIds.Length < 4) {
-    accPerColumn := ahkIds.Length
+if (accountArray.Length < 4) {
+    accPerColumn := accountArray.Length
 }
 
 ; Game Window Height: 724
@@ -25,17 +23,17 @@ if ( yOffset > 700 ) {
 }
 
 xOffset := 100
-arrange ahkIds, -10, -28, , , xOffset, yOffset
+arrange accountArray, -10, -28, , , xOffset, yOffset
 
 
-arrange(ahkIds, x := 0, y := 0, w := 1066, h := 724, xOffset := 100, yOffset := 200) {
+arrange(accountArray, x := 0, y := 0, w := 1066, h := 724, xOffset := 100, yOffset := 200) {
     index := 0
-    for id in ahkIds {
+    for acc in accountArray {
         if (index == 4) {
             index := 0
             x := x + 350
         }
-        WinMove x + index * xOffset, y + index * yOffset, w, h, "ahk_id " id
+        WinMove x + index * xOffset, y + index * yOffset, w, h, acc.ahkId
         index++
     }
 }

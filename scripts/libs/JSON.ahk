@@ -200,7 +200,7 @@ Jxon_Dump(obj, indent:="", lvl:=1) {
         obj := StrReplace(obj,"`n","\n")
         obj := StrReplace(obj,"`b","\b")
         obj := StrReplace(obj,"`f","\f")
-        obj := StrReplace(obj,"/","\/")
+        ; obj := StrReplace(obj,"/","\/")
         obj := StrReplace(obj,'"','\"')
         
         return '"' obj '"'

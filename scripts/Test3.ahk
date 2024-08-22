@@ -1,6 +1,107 @@
 #Requires AutoHotkey v2.0
 #SingleInstance Force
-#include Utils.ahk
+#include VptUtils.ahk
+SetControlDelay -1 
+
+utils := VptUtils()
+
+accountArray := []
+names := A_Args.get(1)
+for acc in utils.getAccountArray() {
+    if (InStr(names, acc.name)) {
+        accountArray.Push(acc)
+    }
+}
+
+petBattleCoordinateArray := []
+loop 10 {
+    petBattleCoordinateArray.Push("x750 y" 449 - 24 * A_Index)
+}
+
+loop {
+    resetPosition()
+
+    loop 4 {
+        moveToHerbal_1()
+        Sleep 30000
+        petBattle(A_Index)
+        Sleep 2000
+    }
+    
+    loop 4 {
+        moveToHerbal_2()
+        Sleep 30000
+        petBattle(A_Index)
+        Sleep 2000
+    }
+}
+
+
+
+moveToHerbal_1() {
+    global accountArray
+    loop 3 {
+        utils.click(accountArray, "x" 117 + A_Index * 30 " y558")    
+        Sleep 500
+    }
+}
+
+moveToHerbal_2() {
+    global accountArray
+    loop 3 {
+        utils.click(accountArray, "x" 117 + A_Index * 30 " y573")    
+        Sleep 500
+    }
+}
+
+resetPosition() {
+    for acc in accountArray {
+        acc.resetWindowSize()
+    }
+
+    utils.resetGui(accountArray)
+
+    utils.send(accountArray, "p")
+    Sleep 500
+    loop 2 {
+        utils.click(accountArray, "x280 y238") ; Reset FPS về 20
+        Sleep 200
+    }
+
+    utils.resetGui(accountArray)
+
+    utils.click(accountArray, "x237 y623") ; Chat Mật
+    Sleep 100
+
+    utils.click(accountArray, "x924 y157") ; Tắt Q
+    Sleep 200
+
+    utils.click(accountArray, "x491 y365") ; Giải trừ buff auto thám hiểm K1
+    Sleep 200
+}
+
+
+
+
+petBattle(index) {
+    global accountArray
+    global petBattleCoordinateArray
+
+    utils.click(accountArray, "x1008 y357") ; Mở Đấu pet
+    Sleep 500
+    utils.click(accountArray, petBattleCoordinateArray[index])
+    Sleep 500
+    utils.click(accountArray, "x1008 y357") ; Tắt Đấu pet
+}
+
+
+
+; Đấu pet
+; Trồng trang viên
+
+
+
+
 
 
 ; names := "Bông"
@@ -22,78 +123,28 @@
 ;     return G_IsPause
 ; }
 
-totalGroup := 4
-manageGroups := []
-loop totalGroup {
-    manageGroups.Push(config["manageGroups"][A_Index]["group"])
-}
-allAccountNames := arrayToString(manageGroups)
-allAccountNames := arrayToString(trimArray(stringToArray(allAccountNames)))
-log("INFO", "Manage accounts: " allAccountNames)
+; Close other ahk script
 
+; DetectHiddenWindows True
 
-activeAccountNames := A_Args.get(1)
-accounts := []
+; id := ""
 
-for accName in stringToArray(allAccountNames) {
-    account := {name: accName, isActive: InStr(activeAccountNames, accName) != 0 }
-    accounts.Push(account)
-}
+; F1:: {
+;     global id
+;     Run "Get-Coordinates.ahk", , , &processId
+;     id := WinWait("ahk_pid " processId)
+; }
 
+; F2:: {
+;     try {
+;         WinClose "Get-Coordinates.ahk ahk_class AutoHotkey" 
+;     } catch {
+        
+;     }
+; }
 
-MyMenu := Menu()
-generateMenu()
+; Close other ahk script
 
-
-generateMenu() {
-    global accounts
-    global MyMenu
-    MyMenu.Delete()
-
-    manageGroupsMenu := Menu()
-    for group in manageGroups {
-        manageGroupsMenu.Add group, changeGroupHandler
-    }
-    MyMenu.Add "Groups", manageGroupsMenu
-
-    for acc in accounts {
-        prefix := "x  "
-        if (!acc.isActive) {
-            prefix := "   "
-        }
-        MyMenu.Add prefix . acc.name, toggleAccountHandler
-    }
-}
-
-toggleAccountHandler(name, *) {
-    global accounts
-    originName := StrReplace(StrReplace(name, "   "), "x  ")
-
-    for acc in accounts {
-        if (acc.name == originName) {
-            acc.isActive := !acc.isActive
-        }
-    }
-    generateMenu()
-}
-
-changeGroupHandler(groupName, *) {
-    global accounts
-    groupAccounts := stringToArray(groupName)
-    for acc in accounts {
-        acc.isActive := isContains(groupAccounts, acc.name)
-    }
-    generateMenu()
-}
-
-closeMenu(*) {
-    
-}
-
-F2:: {
-    global MyMenu
-    MyMenu.show()
-}
 
 ; F12:: {
 ;     ; coordinate := getCoordinates()

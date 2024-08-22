@@ -2,7 +2,8 @@
 #SingleInstance Force
 #include ../Utils.ahk
 
-names := A_Args.get(1)
+; names := A_Args.get(1)
+ids := stringToArray(A_Args.get(1))
 
 index := 0
 x := -10
@@ -14,7 +15,7 @@ yOffset := 700
 ; w := xOffset
 ; h := yOffset
 
-for (ahkid in getAhkIds(names)) {
+for (ahkid in ids) {
     moveWindow ahkid, x, y
     y := y + yOffset - 7
     if (index > 0 && Mod(index, 2) == 1) {
@@ -31,5 +32,5 @@ for (ahkid in getAhkIds(names)) {
 }
 
 moveWindow(ahkId, x := 0, y := 0, w := 1066, h := 724) {
-    WinMove x, y, w, h, "ahk_id " ahkId
+    WinMove x, y, w, h, ahkId
 }

@@ -1,8 +1,13 @@
 #Requires AutoHotkey v2.0
+#include classes/account.ahk
 #include Config.ahk
 #Include libs\JSON.ahk
 
 
+accDataPath := "..\data\accountsV2Test.json"
+charset := "UTF-8"
+activePrefix := "OOO - "
+inactivePrefix := "XXX - "
 G_IsPause := false
 
 pauseToggle() {
@@ -13,6 +18,49 @@ pauseToggle() {
 isPaused() {
     global G_IsPause
     return G_IsPause
+}
+
+
+loadAccMapArray() {
+    json := FileRead(accDataPath, charset)
+    return jxon_load(&json)
+}
+
+convertToAccObjectArray(mapArray) {
+    result := []
+    for acc in mapArray {
+        result.Push(Account(acc))
+    }
+    return result
+}
+
+
+updateAccData(objectArray) {
+    global accMapArray
+    accMapArray := convertToAccMapArray(objectArray)
+
+    FileDelete accDataPath
+    FileEncoding charset
+    FileAppend Jxon_Dump(accMapArray, "", 3), accDataPath
+}
+
+
+convertToAccMapArray(objectArray) {
+    result := []
+    for acc in objectArray {
+        result.Push(acc.toMap())
+    }
+    return result
+}
+
+getAcc(text) {    
+    name := SubStr(text, StrLen(activePrefix) + 1)
+    for acc in accObjectArray {
+        if (acc.name == name) {
+            return acc
+        }
+    }
+    MsgBox "Không thể tìm thấy acc theo tên: `"" name "`", Tên có độ dài: " StrLen(name) " ký tự."
 }
 
 
@@ -177,10 +225,10 @@ getAccounts(names) {
 
 
 ; exclude current screen when currentWindowId is set.
-mirrorClick(ahkIds, coordinates, currentWindowId := 0) {
-    for id in ahkIds {
+mirrorClick(ids, coordinates, currentWindowId := 0) {
+    for id in ids {
         if (id != currentWindowId) { ; exclude current screen
-            ControlClick coordinates, "ahk_id " id,,,, "NA"
+            ControlClick coordinates, id,,,, "NA"
         }
     }
 }
@@ -193,10 +241,10 @@ ControlClickAll(ahkIds, coordinates)
 }
 
 ; exclude current screen when currentWindowId is set.
-mirrorSend(ahkIds, key, currentWindowId := 0) {
-    for id in ahkIds {
+mirrorSend(ids, key, currentWindowId := 0) {
+    for id in ids {
         if (id != currentWindowId) { ; exclude current screen
-            ControlSend key, , "ahk_id " id
+            ControlSend key, , id
         }
     }
 }
@@ -208,10 +256,10 @@ ControlSendAll(ahkIds, key)
     }
 }
 
-resetGui(ahkIds) {
-    ControlClickAll(ahkIds, "x1028 y45")
-    ControlSendAll(ahkIds, "{Escape}") 
-}
+; resetGui(ahkIds) {
+;     ControlClickAll(ahkIds, "x1028 y45")
+;     ControlSendAll(ahkIds, "{Escape}") 
+; }
 
 RunWaitOne(command) {
     shell := ComObject("WScript.Shell")

@@ -1,15 +1,7 @@
-#Requires AutoHotkey v2.0
-#Include libs\JSON.ahk
-
-dataPath := A_MyDocuments "\VPT\data\"
-logPath := dataPath "..\logs\AutoHotkey-" FormatTime(, "yyyy-MM-dd") ".log"
-
-configPath := dataPath "config.json"
-text := FileRead(configPath, "UTF-8")
-config := jxon_load(&text)
+#Requires AutoHotkey v2.0 
 
 
-title := config["flash"]["title"]
-accountPath := dataPath config["accountsFile"]
-; result := MsgBox(title)
-; title := "Adobe Flash Player 32"
+title := "Adobe Flash Player 10" 
+rootPath := "E:\VPT\VPT\" 
+scriptPath := "E:\VPT\VPT\scripts" 
+logPath := "E:\VPT\VPT\scripts\logs" 

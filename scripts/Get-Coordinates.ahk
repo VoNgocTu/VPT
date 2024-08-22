@@ -1,18 +1,19 @@
 #Requires AutoHotkey v2.0
+#SingleInstance Off
 
+; title := "Adobe Flash Player 32"
+title := "Adobe Flash Player 10"
+; title := "BlueStacks App Player"
+; title := "AutoHotkey v2 Help"
 
 ~RButton Up:: {
-    ; title := "Adobe Flash Player 32"
-    ; title := "Adobe Flash Player 10"
-    title := "BlueStacks App Player"
-    ; title := "AutoHotkey v2 Help"
     pid := WinActive(title)
     if (pid == 0) {
         return
     }
 
-    ; resetGui([pid])
-    coordinates := getCoordinates()
+    MouseGetPos &x, &y, &id
+    coordinates := "x" x " y" y
     
     result := MsgBox("Copy toạ độ: " coordinates " ?",, "YesNo")
     if (result = "No") {
@@ -20,12 +21,4 @@
     } else {
         A_Clipboard := coordinates
     }
-}
-
-getCoordinates() {
-    OutputVarX := 0
-    OutputVarY := 0
-    OutputVarWin := 0
-    MouseGetPos &OutputVarX, &OutputVarY, &OutputVarWin
-    return "x" OutputVarX " y" OutputVarY
 }
