@@ -10,6 +10,7 @@ GetFullPathName(path) {
     return StrGet(buf)
 }
 
+rootPath := GetFullPathName(A_WorkingDir "\..")
 
 FileDelete configFileName
 config := 
@@ -17,9 +18,9 @@ config :=
     "#Requires AutoHotkey v2.0 `n`n`n"
     
     "title := `"Adobe Flash Player 10`" `n"
-    "rootPath := `"" GetFullPathName(A_WorkingDir "\..\") "`" `n"
+    "rootPath := `"" rootPath "`" `n"
     "scriptPath := `"" A_WorkingDir "`" `n"
-    "logPath := `"" A_WorkingDir "\logs`" `n"
+    "logPath := `"" rootPath "\logs`" `n"
 )
 FileAppend config, configFileName
 

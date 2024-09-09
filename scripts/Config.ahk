@@ -2,6 +2,6 @@
 
 
 title := "Adobe Flash Player 10" 
-rootPath := "E:\VPT\VPT\" 
+rootPath := "E:\VPT\VPT" 
 scriptPath := "E:\VPT\VPT\scripts" 
-logPath := "E:\VPT\VPT\scripts\logs" 
+logPath := "E:\VPT\VPT\logs" 

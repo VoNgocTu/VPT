@@ -21,20 +21,22 @@ class VptUtils {
         }
 
         result := []
-        for name in StrSplit(accountNames, ",") {
-            for acc in this.accountArray {
-                if (name == acc.name) {
-                    result.Push(acc)
-                }
-            }    
+        for acc in this.accountArray {
+            if (StrLen(accountNames) == 0 || InStr(accountNames, acc.name)) {
+                result.Push(acc)
+            }
         }
 
-        ; for acc in this.accountArray {
-        ;     if (StrLen(accountNames) == 0 || InStr(accountNames, acc.name)) {
-        ;         result.Push(acc)
-        ;     }
-        ; }
+        this.log("Accounts: " this.getNames(this.accountArray))
         return result
+    }
+
+    getNames(accountArray, delimiter := ",") {
+        result := ""
+        for acc in accountArray {
+            result .= acc.name delimiter
+        }
+        return "`"" RTrim(result, delimiter) "`""
     }
 
     loadAccountArray() {
@@ -60,12 +62,16 @@ class VptUtils {
     }
 
     getAccount(name) {    
-        for acc in accountArray {
+        for acc in this.accountArray {
             if (acc.name == name) {
+                this.log("Tìm được account: " acc.toString())
                 return acc
             }
         }
-        MsgBox "Không thể tìm thấy acc theo tên: `"" name "`", Tên có độ dài: " StrLen(name) " ký tự."
+
+        error := "Không thể tìm thấy acc theo tên: `"" name "`", Tên có độ dài: " StrLen(name) " ký tự."
+        this.log(error)
+        MsgBox error
     }
     
     click(accountArray, coordinate) {
@@ -89,9 +95,10 @@ class VptUtils {
     log(message, level := "INFO", filePath := "") {
         if (filePath == "") {
             global logPath
-            filePath := logPath
+            filePath := logPath "/vpt-account-" FormatTime(, "yyyy-MM-dd") ".log"
         }
         ts := FormatTime(, "yyyy-MM-dd HH:mm:ss.") substr(A_TickCount,-3)
+        FileEncoding this.charset
         FileAppend ts " - " level " - " message "`n", filePath
     }
 

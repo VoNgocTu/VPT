@@ -1,11 +1,10 @@
 #Requires AutoHotkey v2.0
+#include Config.ahk
 #SingleInstance Force
-#include Utils.ahk
 
 
 
 ahk_id_array := WingetList(title)
-tooltipMessage("Regen for - " getNameFromAhkIds(ahk_id_array))
 regenPet(ahk_id_array)
 Sleep 3000
 regenChar(ahk_id_array)

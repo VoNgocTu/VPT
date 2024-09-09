@@ -4,8 +4,9 @@
 
 
 title := "Adobe Flash Player 10"
-flashPath := rootPath "tools\flashplayer_10.exe"
+flashPath := rootPath "\tools\flashplayer_10.exe"
 manageAccs := "Bông,Yui,Hạo,Mận,Siu,Sun,Lazy,Nhân"
+
 accIndex := 999999999
 utils := VptUtils()
 
@@ -33,7 +34,7 @@ isPaused() {
 }
 
 
-accountArray := utils.loadAccountArray()
+accountArray := utils.getAccountArray(manageAccs)
 
 mirrorAccountArray := []
 manageAccountArray := []
@@ -47,13 +48,10 @@ MyGui.SetFont("s11 norm")
 MyGui.Add("GroupBox", "w30 h400 Section" , "M")
 count := 0
 for acc in accountArray {
-    if (InStr(manageAccs, acc.name)) {
-        count++
-        accCheck := MyGui.Add("Checkbox", "Xs+10 Ys+" count * 40 " w30 h30 v" acc.name, )
-        accCheck.Text := "="
-        accCheck.Name := acc.name
-        accCheck.OnEvent("Click", accCheckbox_Click)
-    }
+    accCheck := MyGui.Add("Checkbox", "Xs+10 Ys+" A_Index * 40 " w30 h30 v" acc.name, )
+    accCheck.Text := "="
+    accCheck.Name := acc.name
+    accCheck.OnEvent("Click", accCheckbox_Click)
 }
 
 
@@ -187,7 +185,7 @@ selectedMaterial := "Kim Loại"
 plantGui.SetFont("s11 norm")
 
 plantGui.Add("GroupBox", "w130 h450 Section" , "Cây trồng")
-treeArray := ["Lúa Mạch", "Lúa Gạo", "Bắp", "Khoai Lang", "Đậu Phộng", "Đậu Nành", "Cải Thảo", "Củ Cải", "Cacao", "Cao Lương", "Mướp", "Bầu", "Bông Cải", "Hoàng Kim Quả"]
+treeArray := ["Cây Kim Tiền", "Lúa Mạch", "Lúa Gạo", "Bắp", "Khoai Lang", "Đậu Phộng", "Đậu Nành", "Cải Thảo", "Củ Cải", "Cacao", "Cao Lương", "Mướp", "Bầu", "Bông Cải", "Hoàng Kim Quả"]
 for tree in treeArray {
     radio := plantGui.Add("Radio", "Xs+10 Ys+" A_Index * 30 " vRadioTree" A_Index, tree)
     radio.OnEvent("Click", radioTree_Click)

@@ -5,13 +5,8 @@ SetControlDelay -1
 
 utils := VptUtils()
 
-accountArray := []
 names := A_Args.get(1)
-for acc in utils.getAccountArray() {
-    if (InStr(names, acc.name)) {
-        accountArray.Push(acc)
-    }
-}
+accountArray := utils.getAccountArray(names)
 
 cycle := 0
 

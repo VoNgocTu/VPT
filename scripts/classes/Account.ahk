@@ -178,6 +178,6 @@ class Account {
     
 
     toString() {
-        return "name: " this.name ", char: " this.char ", isActive: " this.isActive ", ahkId: " this.ahkId
+        return "name: " this.name ", char: " this.char ", " this.ahkId ", " this.processId
     }
 }

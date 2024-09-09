@@ -4,7 +4,6 @@
 SetControlDelay -1 
 
 utils := VptUtils()
-; ids := A_Args.get(1)
 treeName := A_Args.get(2)
 try {
     material := A_Args.get(3)
@@ -12,7 +11,16 @@ try {
     material := "Lông Thú"
 }
 
-A_IconTip :=  " - Nhân vật: " names "`n - Trồng Nông Sản: " treeName "`n - Nguyên Liệu: " material
+isUseGrowthMedicine := false
+
+iconTip := " - Nhân vật: " names "`n - Trồng Nông Sản: " treeName "`n - Nguyên Liệu: " material
+A_IconTip := iconTip
+
+utils.log("Bắt đầu trồng trọt cho " iconTip)
+
+for acc in accountArray {
+    utils.log("Account: " A_Index acc.toString())
+}
 
 ;                   ["    1    ", "    2    ", "    3    ", "    4    ", "    5    ", "    6    ", "    7    ", "    8    ", "    9    ", "   10    "] 
 move_1 :=           ["x492 y351", "x453 y317", "x592 y278", "x538 y250", "x457 y194", "x398 y182", "x423 y126", "x298 y217", "x307 y276", "x375 y338"]
@@ -36,10 +44,29 @@ loop {
     clickArray(strawMan)
     Sleep 7000
 
-    clickAll("x294 y339") ; Trồng cây ngắn ngày
-    Sleep 1000
-    selectTree(treeName)
-    Sleep 1000
+    if (treeName == "Cây Kim Tiền") {
+        clickAll("x339 y390") ; Trồng nông sản đặc biệt
+        Sleep 1000
+        clickAll("x303 y339") ; Cây kim tiền
+        Sleep 1000
+    
+        if (isUseGrowthMedicine) {
+            clickArray(strawMan)
+            Sleep 1000
+            clickAll("x307 y412") ; Thao tác nông trường
+            Sleep 1000
+            clickAll("x303 y339") ; Sử dụng thuốc tăng trưởng
+            Sleep 1000
+            sendAll("{Enter}")
+            Sleep 1000
+        }
+    } else {
+        clickAll("x294 y339") ; Trồng cây ngắn ngày
+        Sleep 1000
+        selectTree(treeName)
+        Sleep 1000
+    }
+
 
     resetScreen()
     Sleep 200
@@ -193,152 +220,3 @@ clickDown(times) {
         Sleep 500
     }
 }
-
-
-dauPet(ahkIds) {
-    resetScreen()
-    clickAll("x1008 y357") ; Đấu pet
-    Sleep 500
-
-    x := 750
-    y := 425
-
-    enemies := "0,1,2,3,4,5,6,7,8,9"
-    attackOrder := StrSplit(Sort(enemies, "Random N D,"), ",")
-
-    loop 10 {
-        clickAll("x" x " y" (y - attackOrder.get(A_Index) * 24))
-        Sleep 500
-    }
-
-    resetScreen()
-}
-
-; trongTrangVien(tenNguyenLieu) {
-;     KL  := "x335 y169"
-;     KLH := "x606 y235"
-;     G   := "x480 y165"
-;     GT  := "x341 y270"
-;     N   := "x607 y168"
-;     PL  := "x481 y262"
-;     V   := "x332 y218"
-;     GV  := "x604 y264"
-;     LT  := "x476 y228"
-;     DT  := "x350 y326"
-
-;     toaDo := KL
-;     switch tenNguyenLieu
-;     {
-;         case "Kim Loại": 
-;             toaDo := KL
-;         case "Kim Loại Hiếm": 
-;             toaDo := KLH
-;         case "Gỗ": 
-;             toaDo := G
-;         case "Gỗ Tốt": 
-;             toaDo := GT
-;         case "Ngọc": 
-;             toaDo := N
-;         case "Pha Lê": 
-;             toaDo := PL
-;         case "Vải": 
-;             toaDo := V
-;         case "Gấm Vóc": 
-;             toaDo := GV
-;         case "Lông Thú": 
-;             toaDo := LT
-;         case "Da Thú": 
-;             toaDo := DT
-;     }
-    
-;     rootX := 205
-;     rootY := 300
-    
-;     names := A_Args.get(1)
-;     ahkIds := getAhkIds(names)
-    
-;     resetScreen()
-    
-;     clickAll("x1000 y330") ; trang vien
-;     Sleep 3000
-;     clickAll("x425 y489")  ; Click Nuôi Trồng
-;     Sleep 1500
-;     clickAll(toaDo)  ; Chọn Nguyên liệu
-;     Sleep 1000
-    
-;     plantMaterials(rootX, rootY, ahkIds)
-    
-;     clickAll("x528 y493") ; Toàn bộ
-;     Sleep 500
-;     clickAll("x564 y307") ; Thu hoạch
-;     Sleep 5000
-
-;     resetScreen()
-; }
-
-
-; plantMaterials(rootX, rootY, ahkIds) {
-;     x := rootX
-;     y := rootY
-    
-;     loop 4 {
-;         plantColumn(x, y, ahkIds)
-;         x := x + 55
-;         y := y + 33
-;     }
-; }
-
-; plantColumn(rootX, rootY, ahkIds) {
-;     x := rootX
-;     y := rootY
-
-;     loop 4 {
-;         plantMaterial(x, y, ahkIds)
-;         x := x + 55
-;         y := y - 33
-;     }
-; }
-
-; plantMaterial(x, y, sleepTime := 600) {
-;     time := sleepTime / 6
-;     clickAll("x" x " y" y) ; Click ruộng BOT
-;     Sleep time
-;     sendAll("{Enter}")
-;     Sleep time
-;     clickAll("x" (x + 28) " y" (y - 15)) ; Click ruộng TOP
-;     Sleep time
-;     sendAll("{Enter}")
-;     Sleep time
-;     clickAll("x" (x + 25) " y" y) ; Click ruộng MID
-;     Sleep time
-;     sendAll("{Enter}")
-;     Sleep time
-; }
-
-; recover(channelCoordinate) {
-;     if (channelCoordinate != "") {
-;         clickAll("x529 y551")
-;         Sleep 60000
-;         clickAll(channelCoordinate)
-;         Sleep 60000
-;         clickAll("x400 y450") ; Chọn nhân vật đầu tiên
-;         Sleep 500
-;         clickAll("x500 y450") ; Chọn nhân vật thứ 2
-;         Sleep 500
-;         clickAll("x400 y550") ; Vào game
-;         Sleep 60000
-;     }
-; }
-
-; getChannelCoordinate(channelNumber) {
-;     switch channelNumber {
-;         case "1": return "x522 y240"
-;         case "2": return "x522 y275"
-;         case "3": return "x522 y310"
-;         case "4": return "x522 y345"
-;         case "5": return "x522 y380"
-;         case "6": return "x522 y415"
-;         case "7": return "x522 y450"
-;         case "8": return "x522 y485"
-;     }
-; }

@@ -11,7 +11,7 @@ utils.resetGui(accountArray)
 utils.send(accountArray, "p")
 Sleep 1000
 utils.click(accountArray, "x564 y176") ; Nhân vật
-Sleep 1000
+Sleep 12000
 utils.click(accountArray, "x400 y450") ; Chọn nhân vật đầu tiên
 Sleep 1000
 utils.click(accountArray, "x500 y450") ; Chọn nhân vật thứ 2
