@@ -3,6 +3,10 @@
 #include VptUtils.ahk
 
 
+title := "Adobe Flash Player 10"
+flashPath := rootPath "\tools\flashplayer_10.exe"
+manageAccs := "Bông,Yui,Hạo,Mận,Siu,Sun,Lazy,Nhân"
+
 accIndex := 999999999
 utils := VptUtils()
 
@@ -31,7 +35,9 @@ isPaused() {
 
 
 accountArray := utils.getAccountArray(manageAccs)
+
 mirrorAccountArray := []
+manageAccountArray := []
 
 ; ============================ GUI ============================
 
@@ -39,26 +45,13 @@ MyGui := Gui()
 MyGui.SetFont("s11 norm")
 
 
-MyGui.Add("GroupBox", "w205 h400 Section" , "Accounts")
+MyGui.Add("GroupBox", "w30 h400 Section" , "M")
+count := 0
 for acc in accountArray {
-    column := Round(A_Index / 2)
-    if (Mod(A_Index, 2) == 1) {
-        accCheck := MyGui.Add("Checkbox", "Xs+10 Ys+" column * 40 " w30 h30 v" acc.name)
-        accButton := MyGui.Add("Button", "Xs+40 Ys+" column * 40 " w60 h30", acc.name)
-    } else {
-        accCheck := MyGui.Add("Checkbox", "Xs+110 Ys+" column * 40 " w30 h30 v" acc.name)
-        accButton := MyGui.Add("Button", "Xs+140 Ys+" column * 40 " w60 h30", acc.name)
-    }
-
-    accCheck.Text := ""
+    accCheck := MyGui.Add("Checkbox", "Xs+10 Ys+" A_Index * 40 " w30 h30 v" acc.name, )
+    accCheck.Text := "="
     accCheck.Name := acc.name
     accCheck.OnEvent("Click", accCheckbox_Click)
-    
-    accButton.OnEvent("ContextMenu", accButton_ContextMenu)
-    acc.button := accButton
-    accButton.OnEvent("Click", accButton_Click)
-
-    acc.updateStatus()
 }
 
 
@@ -86,6 +79,20 @@ accCheckbox_Click(GuiCtrlObj, Info) {
     }
 }
 
+MyGui.Add("GroupBox", "Xs+27 Ys w70 h400 Section" , "Accounts")
+count := 0
+for acc in accountArray {
+    if (InStr(manageAccs, acc.name)) {
+        manageAccountArray.Push(acc)
+        count++
+        accButton := MyGui.Add("Button", "Xs+5 Ys+" count * 40 " w60 h30", acc.name)
+        accButton.OnEvent("ContextMenu", accButton_ContextMenu)
+        acc.button := accButton
+
+        acc.updateStatus()
+        accButton.OnEvent("Click", accButton_Click)
+    }
+}
 
 accButton_Click(GuiCtrlObj, Info) {
     acc := utils.getAccount(GuiCtrlObj.Text)
@@ -113,7 +120,7 @@ accButton_ContextMenu(GuiCtrlObj, Item, IsRightClick, X, Y) {
     contextMenu.Show()
 }
 
-MyGui.Add("GroupBox", "Xs+210 Ys w110 h400 Section" , "Tính năng")
+MyGui.Add("GroupBox", "Xs+72 Ys w110 h400 Section" , "Tính năng")
 refreshButton           := MyGui.Add("Button", "Xs+5 Ys+40  w100 h30", "Refresh") 
 mirrorButton            := MyGui.Add("Button", "Xs+5 Ys+80  w100 h30", "Mirror - ON")
 plantButton             := MyGui.Add("Button", "Xs+5 Ys+120 w100 h30", "Trồng Trọt")
@@ -123,7 +130,7 @@ bugOnlineButton         := MyGui.Add("Button", "Xs+5 Ys+320 w100 h30", "Bug Onli
 
 refreshButton.onEvent("Click", refreshButton_Click)
 refreshButton_Click(GuiCtrlObj, Info) {
-    for acc in accountArray {
+    for acc in manageAccountArray {
         acc.updateStatus()
     }
 }
@@ -336,18 +343,15 @@ getOriginKey(thisKey) {
 ; ========================== ARRANGE ==========================
 
 ~!z:: {
-    if (mirrorAccountArray.Length > 0) 
-        Run ".\arrange\Style-1.ahk " getNames(mirrorAccountArray)
+    Run ".\arrange\Style-1.ahk " getNames(mirrorAccountArray)
 }
 
 ~!x:: {
-    if (mirrorAccountArray.Length > 0) 
-        Run ".\arrange\Style-2.ahk " getNames(mirrorAccountArray)
+    Run ".\arrange\Style-2.ahk " getNames(mirrorAccountArray)
 }
 
 ~!c:: {
-    if (mirrorAccountArray.Length > 0) 
-        Run ".\arrange\Style-3.ahk " getNames(mirrorAccountArray)
+    Run ".\arrange\Style-3.ahk " getNames(mirrorAccountArray)
 }
 
 getNames(accountArray, delimiter := ",") {
@@ -361,6 +365,9 @@ getNames(accountArray, delimiter := ",") {
 ~MButton:: {
     global accIndex
     accIndex++
+    if (mirrorAccountArray.Length == 0) {
+        return
+    }
     index := Mod(accIndex, mirrorAccountArray.Length) + 1   
     WinActivate mirrorAccountArray[index].ahkId
 }

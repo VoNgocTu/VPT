@@ -1,7 +1,9 @@
-#Requires AutoHotkey v2.0 
+﻿#Requires AutoHotkey v2.0 
 
 
-title := "Adobe Flash Player 10" 
+manageAccs := "Bông,Long,Yui,Lân,Hạo,Quy,Mận,Phụng,Siu,Trúc" 
 rootPath := "E:\VPT\VPT" 
-scriptPath := "E:\VPT\VPT\scripts" 
-logPath := "E:\VPT\VPT\logs" 
+title := "Adobe Flash Player 10" 
+flashPath := rootPath "\tools\flashplayer_10.exe" 
+logPath := rootPath "\logs" 
+scriptPath := rootPath "\scripts" 

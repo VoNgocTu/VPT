@@ -11,16 +11,38 @@ GetFullPathName(path) {
 }
 
 rootPath := GetFullPathName(A_WorkingDir "\..")
+manageAccs := [
+    "Bông" , "Long"  ,
+    "Yui"  , "Lân"   ,
+    "Hạo"  , "Quy"   ,
+    "Mận"  , "Phụng" ,
+    "Siu"  , "Trúc"  ,
+]
+
+manageAccsStr := ""
+for acc in manageAccs {
+    if (A_Index > 1) 
+        manageAccsStr := manageAccsStr ","
+    manageAccsStr := manageAccsStr acc
+}
+
+
 
 FileDelete configFileName
+
+; Continuation section
 config := 
 (
     "#Requires AutoHotkey v2.0 `n`n`n"
     
-    "title := `"Adobe Flash Player 10`" `n"
+    "manageAccs := `"" manageAccsStr "`" `n"
     "rootPath := `"" rootPath "`" `n"
-    "scriptPath := `"" A_WorkingDir "`" `n"
-    "logPath := `"" rootPath "\logs`" `n"
+    "title := `"Adobe Flash Player 10`" `n"
+    "flashPath := rootPath `"\tools\flashplayer_10.exe`" `n"
+    "logPath := rootPath `"\logs`" `n"
+    "scriptPath := rootPath `"\scripts`" `n"
 )
+
+FileEncoding "UTF-8"
 FileAppend config, configFileName
 

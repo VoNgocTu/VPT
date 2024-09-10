@@ -17,10 +17,13 @@ if (A_ScreenHeight == 1080) {
     remainSpace := 1070 ; 1920 x 1080 => H = 1032 + 28 = 1060
 }
 
-yOffset := (remainSpace - 724) / (accPerColumn - 1)
-if ( yOffset > 700 ) {
+yOffset := 700
+if (accPerColumn > 1) 
+    yOffset := (remainSpace - 724) / (accPerColumn - 1)
+
+if (yOffset > 700) 
     yOffset := 700
-}
+
 
 xOffset := 100
 arrange accountArray, -10, -28, , , xOffset, yOffset

@@ -21,10 +21,8 @@ class VptUtils {
         }
 
         result := []
-        for acc in this.accountArray {
-            if (StrLen(accountNames) == 0 || InStr(accountNames, acc.name)) {
-                result.Push(acc)
-            }
+        for name in StrSplit(accountNames, ",") {
+            result.Push(this.getAccount(name))
         }
 
         this.log("Accounts: " this.getNames(this.accountArray))
@@ -50,10 +48,10 @@ class VptUtils {
         return result
     }
 
-    writeAccountArray(accountArray) {
+    writeAccountArray(newAccountArray) {
         mapArray := []
-        for acc in accountArray {
-            mapArray.Push(acc.toMap())
+        for acc in this.accountArray {
+            mapArray.Push(this.getCorrespondingAccount(newAccountArray, acc).toMap())
         }
 
         FileDelete this.accDataPath
@@ -61,7 +59,17 @@ class VptUtils {
         FileAppend Jxon_Dump(mapArray, "", 3), this.accDataPath
     }
 
-    getAccount(name) {    
+    getCorrespondingAccount(accountArray, account) {
+        for acc in accountArray {
+            if (acc.name == account.name) {
+                return acc
+            }
+        }
+        return account
+    }
+
+    getAccount(inputName) {
+        name := Trim(inputName) 
         for acc in this.accountArray {
             if (acc.name == name) {
                 this.log("Tìm được account: " acc.toString())

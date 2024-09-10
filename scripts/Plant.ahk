@@ -19,7 +19,7 @@ A_IconTip := iconTip
 utils.log("Bắt đầu trồng trọt cho " iconTip)
 
 for acc in accountArray {
-    utils.log("Account: " A_Index acc.toString())
+    utils.log("Account: " A_Index " " acc.toString())
 }
 
 ;                   ["    1    ", "    2    ", "    3    ", "    4    ", "    5    ", "    6    ", "    7    ", "    8    ", "    9    ", "   10    "] 
