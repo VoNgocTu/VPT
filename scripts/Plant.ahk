@@ -31,7 +31,7 @@ strawMan :=         ["x579 y461", "x595 y354", "x759 y349", "x594 y355", "x572 y
 
 loop {
 
-    resetPosition()
+    resetPosition(A_Index)
 
     move()
 
@@ -76,18 +76,20 @@ loop {
 }
 
 
-resetPosition() {
+resetPosition(cycle) {
     for acc in accountArray {
         acc.resetWindowSize()
     }
 
     resetScreen()
 
-    sendAll("p")
-    Sleep 500
-    loop 2 {
-        clickAll("x280 y238") ; Reset FPS về 20
-        Sleep 200
+    if (Mod(cycle, 10) == 1) {
+        sendAll("p")
+        Sleep 500
+        loop 2 {
+            clickAll("x280 y238") ; Reset FPS về 20
+            Sleep 200
+        }
     }
 
     resetScreen()

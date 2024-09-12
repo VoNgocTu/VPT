@@ -17,7 +17,7 @@ loop 10 {
 
 petBattle(cycle) {
     utils.click(accountArray, "x1008 y357") ; Mở Đấu pet
-    Sleep 500
+    Sleep 2000
     index := Mod(cycle, 10) + 1
     utils.click(accountArray, petBattleCoordinateArray[index])
     Sleep 500

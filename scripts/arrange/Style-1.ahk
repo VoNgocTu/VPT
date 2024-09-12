@@ -10,12 +10,7 @@ if (accountArray.Length < 4) {
 }
 
 ; Game Window Height: 724
-; yOffset := 230 ; 2560 x 1440 => H = 1392 + 28 = 1420
-
-remainSpace := 1430 ; 2560 x 1440 => H = 1392 + 28 = 1420
-if (A_ScreenHeight == 1080) {
-    remainSpace := 1070 ; 1920 x 1080 => H = 1032 + 28 = 1060
-}
+remainSpace := A_ScreenHeight - 28
 
 yOffset := 700
 if (accPerColumn > 1) 

@@ -81,6 +81,25 @@ class VptUtils {
         this.log(error)
         MsgBox error
     }
+
+    correctAccountsData() {
+        if (this.accountArray.Length == 0)
+            this.accountArray := this.loadAccountArray()
+    
+        ahkIdArray := WingetList(title)
+        ahkIds := ""
+        for id in ahkIdArray
+            ahkIds := ahkIds ",ahk_id " id
+
+        for acc in this.accountArray {
+            if (!InStr(ahkIds, acc.ahkId)) {
+                acc.ahkId := "ahk_id 0"
+                acc.processId := "process_id 0"
+            }
+        }
+
+        this.writeAccountArray(this.accountArray)
+    }
     
     click(accountArray, coordinate) {
         for acc in accountArray {

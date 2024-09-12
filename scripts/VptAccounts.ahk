@@ -29,7 +29,7 @@ isPaused() {
     return G_IsPause
 }
 
-
+utils.correctAccountsData()
 accountArray := utils.getAccountArray(manageAccs)
 mirrorAccountArray := []
 
@@ -143,13 +143,14 @@ plantMaterialButton_Click(GuiCtrlObj, Info) {
 
 petBattelButton.onEvent("Click", petBattelButton_Click)
 petBattelButton_Click(GuiCtrlObj, Info) {
+    if (mirrorAccountArray.Length)
+        Run ".\Pet-Battle.ahk " getNames(mirrorAccountArray)
 }
 
 bugOnlineButton.onEvent("Click", bugOnlineButton_Click)
 bugOnlineButton_Click(*) {
-    if (mirrorAccountArray.Length) {
+    if (mirrorAccountArray.Length)
         Run ".\Bug-Online.ahk " getNames(mirrorAccountArray)
-    }
 }
 
 
