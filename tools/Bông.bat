@@ -1,0 +1,2 @@
+:: Origin link: mc://https://s3-vuaphapthuat.goplay.vn/s/s44/index.php&vntu512@goid&51edf09c232c0795a2ab873d5c77cc20
+"flashplayer_32.exe" "https://s3-vuaphapthuat.goplay.vn/s/s44/GameLoaders.swf?user=vntu512@goid&pass=51edf09c232c0795a2ab873d5c77cc20&version=0.9.9a33.342&isExpand=true&nothing=true"

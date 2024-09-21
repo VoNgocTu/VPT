@@ -2,9 +2,10 @@
 #SingleInstance Off
 
 ; title := "Adobe Flash Player 32"
-title := "Adobe Flash Player 10"
+; title := "Adobe Flash Player 10"
 ; title := "BlueStacks App Player"
 ; title := "AutoHotkey v2 Help"
+title := "Sv 206 Ngọa Long Việt Nam - Coowon Browser"
 
 ~RButton Up:: {
     pid := WinActive(title)
