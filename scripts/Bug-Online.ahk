@@ -14,10 +14,19 @@ utils.click(accountArray, "x564 y176") ; Nhân vật
 Sleep 1000
 utils.click(accountArray, "x400 y450") ; Chọn nhân vật đầu tiên
 Sleep 1000
-; utils.click(accountArray, "x500 y450") ; Chọn nhân vật thứ 2
-; Sleep 1000
 utils.click(accountArray, "x400 y550") ; Vào game
-Sleep 1500
+Sleep 30000
+
+utils.resetGui(accountArray)
+Sleep 1000
+utils.send(accountArray, "p")
+Sleep 1000
+utils.click(accountArray, "x564 y176") ; Nhân vật
+Sleep 1000
+utils.click(accountArray, "x500 y450") ; Chọn nhân vật thứ 2
+Sleep 1000
+utils.click(accountArray, "x400 y550") ; Vào game
+Sleep 1000
 
 for acc in accountArray {
     WinClose acc.ahkId
