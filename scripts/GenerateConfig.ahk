@@ -12,11 +12,12 @@ GetFullPathName(path) {
 
 rootPath := GetFullPathName(A_WorkingDir "\..")
 manageAccs := [
-    "Bông" , "Long"  ,
-    "Yui"  , "Lân"   ,
-    "Hạo"  , "Quy"   ,
-    "Mận"  , "Phụng" ,
-    "Siu"  , "Trúc"  ,
+    "Bông" , "Blade"   ,
+    "Yui"  , "Icypen"  ,
+    "Hạo"  , "Koha"    ,
+    "Mận"  , "Lowji"   ,
+    "Siu"  , "Mýt"     ,
+    "Lazy" , "Sun"     ,
 ]
 
 manageAccsStr := ""

@@ -36,11 +36,10 @@ mirrorAccountArray := []
 ; ============================ GUI ============================
 
 MyGui := Gui()
-MyGui.OnEvent("Close", (*) => ExitApp())
 MyGui.SetFont("s11 norm")
 
 
-MyGui.Add("GroupBox", "w205 h300 Section" , "Accounts")
+MyGui.Add("GroupBox", "w205 h400 Section" , "Accounts")
 for acc in accountArray {
     column := Round(A_Index / 2)
     if (Mod(A_Index, 2) == 1) {
@@ -114,17 +113,19 @@ accButton_ContextMenu(GuiCtrlObj, Item, IsRightClick, X, Y) {
     contextMenu.Show()
 }
 
-MyGui.Add("GroupBox", "Xs+210 Ys w110 h300 Section" , "Tính năng")
+MyGui.Add("GroupBox", "Xs+210 Ys w110 h400 Section" , "Tính năng")
 refreshButton           := MyGui.Add("Button", "Xs+5 Ys+40  w100 h30", "Refresh") 
 mirrorButton            := MyGui.Add("Button", "Xs+5 Ys+80  w100 h30", "Mirror - ON")
 plantButton             := MyGui.Add("Button", "Xs+5 Ys+120 w100 h30", "Trồng Trọt")
 plantMaterialButton     := MyGui.Add("Button", "Xs+5 Ys+160 w100 h30", "Trang Viên")
 petBattelButton         := MyGui.Add("Button", "Xs+5 Ys+200 w100 h30", "Đấu Pet")
-bugOnlineButton         := MyGui.Add("Button", "Xs+5 Ys+240 w100 h30", "Bug Online")
+bugOnlineButton         := MyGui.Add("Button", "Xs+5 Ys+320 w100 h30", "Bug Online")
 
 refreshButton.onEvent("Click", refreshButton_Click)
 refreshButton_Click(GuiCtrlObj, Info) {
-    Reload()
+    for acc in accountArray {
+        acc.updateStatus()
+    }
 }
 
 mirrorButton.SetFont("norm bold")

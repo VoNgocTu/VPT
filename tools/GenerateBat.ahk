@@ -26,7 +26,7 @@ btnGenerate_click(*) {
 
     loginUrl := getLoginUrl(link, server)
     batContent := ":: Origin link: " link "`n"
-    batContent := batContent "`"flashplayer_32.exe`" " "`"" loginUrl "`""
+    batContent := batContent "Start `"`" /D %cd% `"flashplayer_32.exe`" " "`"" loginUrl "`""
     batFileName := name ".bat"
     
     try {
