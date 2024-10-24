@@ -110,6 +110,7 @@ accButton_ContextMenu(GuiCtrlObj, Item, IsRightClick, X, Y) {
     contextMenu.Add("Ẩn", hideAcc.Bind(,,,acc))
     contextMenu.Add("Ẩn/Hiện Title", toggleTitleBar.Bind(,,,acc))
     contextMenu.Add("Nhận Thư", receiveMail.Bind(,,,acc))
+    contextMenu.Add("Copy Link", copyLoginUrl.Bind(,,,acc))
     contextMenu.Add("Tắt", closeAcc.Bind(,,,acc))
     contextMenu.Show()
 }
@@ -167,6 +168,10 @@ receiveMail(ItemName, ItemPos, MyMenu, acc) {
 
 closeAcc(ItemName, ItemPos, MyMenu, acc) {
     acc.close()
+}
+
+copyLoginUrl(ItemName, ItemPos, MyMenu, acc) {
+    A_Clipboard := acc.getLoginUrl()
 }
 
 MyGui.Show()
