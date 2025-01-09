@@ -428,6 +428,9 @@ getNames(accountArray, delimiter := ",") {
 }
 
 ~MButton:: {
+    if mirrorAccountArray.Length == 0
+        return
+    
     global accIndex
     accIndex++
     index := Mod(accIndex, mirrorAccountArray.Length) + 1   
