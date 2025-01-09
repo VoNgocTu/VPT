@@ -121,7 +121,10 @@ mirrorButton            := MyGui.Add("Button", "Xs+5 Ys+80  w100 h30", "Mirror -
 plantButton             := MyGui.Add("Button", "Xs+5 Ys+120 w100 h30", "Trồng Trọt")
 plantMaterialButton     := MyGui.Add("Button", "Xs+5 Ys+160 w100 h30", "Trang Viên")
 petBattelButton         := MyGui.Add("Button", "Xs+5 Ys+200 w100 h30", "Đấu Pet")
-bugOnlineButton         := MyGui.Add("Button", "Xs+5 Ys+240 w100 h30", "Bug Online")
+farmVDDPartyButton      := MyGui.Add("Button", "Xs+5 Ys+240 w100 h30", "Farm VDD Nhóm")
+farmVDDSingleButton     := MyGui.Add("Button", "Xs+5 Ys+280 w100 h30", "Farm VDD Đơn")
+; bugOnlineButton         := MyGui.Add("Button", "Xs+5 Ys+320 w100 h30", "Bug Online")
+; editLinkButton          := MyGui.Add("Button", "Xs+5 Ys+360 w100 h30", "Edit Link")
 
 refreshButton.onEvent("Click", refreshButton_Click)
 refreshButton_Click(GuiCtrlObj, Info) {
@@ -147,11 +150,72 @@ petBattelButton_Click(GuiCtrlObj, Info) {
         Run ".\Pet-Battle.ahk " getNames(mirrorAccountArray)
 }
 
-bugOnlineButton.onEvent("Click", bugOnlineButton_Click)
-bugOnlineButton_Click(*) {
+farmVDDPartyButton.onEvent("Click", farmVDDPartyButton_Click)
+farmVDDPartyButton_Click(GuiCtrlObj, Info) {
     if (mirrorAccountArray.Length)
-        Run ".\Bug-Online.ahk " getNames(mirrorAccountArray)
+        Run ".\FarmVDDParty.ahk " getNames(mirrorAccountArray)
 }
+
+farmVDDSingleButton.onEvent("Click", farmVDDSingleButton_Click)
+farmVDDSingleButton_Click(GuiCtrlObj, Info) {
+    if (mirrorAccountArray.Length)
+        Run ".\FarmVDD.ahk " getNames(mirrorAccountArray)
+}
+
+; bugOnlineButton.onEvent("Click", bugOnlineButton_Click)
+; bugOnlineButton_Click(*) {
+;     if (mirrorAccountArray.Length)
+;         Run ".\Bug-Online.ahk " getNames(mirrorAccountArray)
+; }
+
+; editLinkButton.onEvent("Click", editLinkButton_Click)
+; listAccountForEdit := []
+; editLinkButton_Click(*) {
+;     ListAccountGui := Gui()
+;     ListAccount := ListAccountGui.Add("ListView", "r20 w800", ["Tên", "Class", "Link"])
+;     listAccountForEdit := utils.loadAccountArray()
+;     for acc in listAccountForEdit
+;         ListAccount.Add(, acc.name, acc.char, acc.originLink)
+
+;     ListAccount.ModifyCol  ; Auto-size each column to fit its contents.
+;     ListAccount.ModifyCol(2, "Integer")  ; For sorting purposes, indicate that column 2 is an integer.
+;     ListAccount.OnEvent("DoubleClick", ListAccount_DoubleClick)
+;     ListAccountGui.Show()    
+; }
+
+; ListAccount_DoubleClick(ListAccount, RowNumber)
+; {
+;     name := ListAccount.GetText(RowNumber)
+;     selectedAccount := ""
+;     for acc in listAccountForEdit {
+;         if (acc.name == name) {
+;             selectedAccount := acc
+;         }
+;     }
+
+;     EditAccountGui := Gui()
+;     EditAccountGui.SetFont("s11 norm")
+
+;     EditAccountGui.Add("Text",, "Tên*:")
+;     EditAccountGui.Add("Text",, "Char:")
+;     EditAccountGui.Add("Text",, "Link*:")
+;     EditAccountGui.Add("Edit", "vName ym w500", selectedAccount.name)
+;     EditAccountGui.Add("Edit", "vChar w500", selectedAccount.char)
+;     EditAccountGui.Add("Edit", "vLink w500", selectedAccount.originLink)
+;     EditAccountGui.Add("Button", "default", "Save").OnEvent("Click", btnSave_click.Bind(,,,selectedAccount))
+;     EditAccountGui.Show()
+
+;     btnSave_click(ItemName, ItemPos, MyMenu, acc) {
+;         Saved := EditAccountGui.Submit()  ; Save the contents of named controls into an object.
+;         selectedAccount.name := Saved.Name
+;         selectedAccount.char := Saved.Char
+;         selectedAccount.originLink := Saved.Link
+;         utils.writeAccountArray(listAccountForEdit)
+;     }
+; }
+
+
+
 
 
 hideAcc(ItemName, ItemPos, MyMenu, acc) {

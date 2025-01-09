@@ -3,7 +3,8 @@
 #include Config.ahk
 #Include libs\JSON.ahk
 
-
+if not DirExist(rootPath '\logs')
+	DirCreate rootPath '\logs'
 
 class VptUtils {
     accDataPath := ""

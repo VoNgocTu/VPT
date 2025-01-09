@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th {
+            background-color: #04AA6D;
+            color: white;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 15px;
+            border-right: 1px solid #ddd;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: coral;
+            color: white;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account management</title>
+</head>
+<body>
+    <h1>Account management</h1>
+    <form action="javascript:readFile(jsonFile)">
+        <label for="jsonFile">Select JSON file:</label>
+        <input type="file" id="jsonFile" name="jsonFile" >
+        <input type="button" id="addNewButton" value="Add New Account" onclick="addNewRow()">
+        <input type="button" id="downloadButton" value="Download" onclick="download()">
+        <input type="button" id="copyDataButton" value="Copy to clipboard" onclick="copyData()">
+    </form>
+    <br><br>
+    <table id="account" style="width:100%"></table>
+</body>
+
+<script>
+    var filename = "undefine.json";
+    var dataTable;
+    document.getElementById('jsonFile').onchange = function() {
+        readFile(this);
+    };
+
+    function readFile(input) {
+        var f = input.files[0];
+        filename = f.name;
+        var r = new FileReader();
+        r.onload = function(e) { 
+            var contents = e.target.result;
+            dataTable = new DataTable('account', JSON.parse(contents));
+            dataTable.options = {
+                ignoreColumns: ["link", "ahkId", "processId"]
+            }
+            dataTable.render();
+        }
+        r.readAsText(f);
+    }
+
+    function DataTable(id, data) {
+        this.id = id;
+        this.data = data;
+        this.options = {
+            ignoreColumns: []
+        };
+
+        this.render = function() {
+            if (!this.data || this.data.length <= 0) {
+                return;
+            }
+            table = document.getElementById(this.id);
+            table.innerHTML = ""
+            table.insertAdjacentHTML("beforeend", '<tr id="' + this.id + 'tableHeader"></tr>');
+
+            let headers = this.getHeaders(this.data[0]);
+            for (let header of headers) {
+                document.getElementById(this.id + "tableHeader").insertAdjacentHTML("beforeend", "<th>" + header + "</th>");
+            }
+
+            for (let [i, row] of this.data.entries()) {
+                let htmlContent = "<tr row-id=\"" + i + "\">"
+                for (let header of headers) {
+                    if (header != 'Actions') {
+                        htmlContent = htmlContent + "<td column-id=\"" + header + "\" ondblclick=\"editCell(this)\">" + escapeHtml(row[header]) + "</td>"
+                    } else {
+                        htmlContent = htmlContent + '<td column-id="' + header + '"><input type="button" value="Delete" onclick="deleteRow(this)"></td>'
+                    }
+                }
+                htmlContent = htmlContent + "</tr>"
+                document.getElementById('account').childNodes[0].insertAdjacentHTML("beforeend", htmlContent);
+            }
+        }
+
+        this.getHeaders = function(row) {
+            let headers = Object.getOwnPropertyNames(row).filter(column => !this.options.ignoreColumns.includes(column))
+            headers.push('Actions')
+            return headers;
+        }
+
+        this.updateData = function(row) {
+            rowReferentData = this.data[row.getAttribute('row-id')];
+            rowReferentData['name'] = row.querySelector('[column-id="name"]').textContent;
+            rowReferentData['char'] = row.querySelector('[column-id="char"]').textContent;
+            rowReferentData['originLink'] = row.querySelector('[column-id="originLink"]').textContent;
+        }
+    }
+
+    function escapeHtml(html) {
+        var text = document.createTextNode(html);
+        var p = document.createElement('p');
+        p.appendChild(text);
+        return p.innerHTML;
+    }
+
+    function editCell(element) {
+        let text = element.textContent;
+        element.innerHTML = '';
+        element.insertAdjacentHTML('beforeend', '<input onblur="updateCell(this.parentElement)" style="height: 20px; width: 100%" value=' + text + '>');
+        newElement = element.lastChild;
+        newElement.focus();
+
+        newElement.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                updateCell(event.srcElement.parentElement)
+            }
+        });
+    }
+
+    function updateCell(element) {
+        text = element.childNodes[0].value;
+        element.innerHTML = '';
+        element.insertAdjacentHTML('beforeend', escapeHtml(text));
+        dataTable.updateData(element.parentElement);
+    }
+
+    function download() {
+        dataTable.data = dataTable.data.filter(row => Object.values(row).filter(cell => cell.length > 0).length > 0);
+        var a = document.createElement("a");
+        var file = new Blob([JSON.stringify(dataTable.data)], {type: "application/json"});
+        a.href = URL.createObjectURL(file);
+        a.download = filename;
+        a.click();
+        dataTable.render();
+    }
+
+    function copyData() {
+        dataTable.data = dataTable.data.filter(row => Object.values(row).filter(cell => cell.length > 0).length > 0);
+        navigator.clipboard.writeText(JSON.stringify(dataTable.data));
+        dataTable.render();
+    }
+
+    function deleteRow(btn) {
+        let name = btn.parentElement.parentElement.querySelector('[column-id="name"]').textContent;
+        dataTable.data = dataTable.data.filter(row => row.name != name);
+        dataTable.render();
+    }
+
+    function addNewRow() {
+        dataTable.data.push({name: "", char: "", originLink: ""});
+        dataTable.render();
+    }
+    
+</script>
+</html>
