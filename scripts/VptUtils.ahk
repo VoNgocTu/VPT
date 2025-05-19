@@ -39,8 +39,12 @@ class VptUtils {
     }
 
     loadAccountArray() {
-        json := FileRead(this.accDataPath, this.charset)
-        mapArray := Jxon_Load(&json)
+        try {
+            json := FileRead(this.accDataPath, this.charset)
+            mapArray := Jxon_Load(&json)
+        } catch Error as e {
+            MsgBox e.Message " " this.accDataPath "`nCó thể thử chạy lại file GenerateConfig.ahk"
+        }
 
         result := []
         for acc in mapArray {

@@ -29,8 +29,12 @@ isPaused() {
     return G_IsPause
 }
 
-utils.correctAccountsData()
-accountArray := utils.getAccountArray(manageAccs)
+try {
+    utils.correctAccountsData()
+    accountArray := utils.getAccountArray(manageAccs)
+} catch Error as e {
+    ExitApp()
+}
 mirrorAccountArray := []
 
 ; ============================ GUI ============================
@@ -111,6 +115,7 @@ accButton_ContextMenu(GuiCtrlObj, Item, IsRightClick, X, Y) {
     contextMenu.Add("Ẩn/Hiện Title", toggleTitleBar.Bind(,,,acc))
     contextMenu.Add("Nhận Thư", receiveMail.Bind(,,,acc))
     contextMenu.Add("Copy Link", copyLoginUrl.Bind(,,,acc))
+    contextMenu.Add("Xu Quẻ", xuQue.Bind(,,,acc))
     contextMenu.Add("Tắt", closeAcc.Bind(,,,acc))
     contextMenu.Show()
 }
@@ -121,8 +126,8 @@ mirrorButton            := MyGui.Add("Button", "Xs+5 Ys+80  w100 h30", "Mirror -
 plantButton             := MyGui.Add("Button", "Xs+5 Ys+120 w100 h30", "Trồng Trọt")
 plantMaterialButton     := MyGui.Add("Button", "Xs+5 Ys+160 w100 h30", "Trang Viên")
 petBattelButton         := MyGui.Add("Button", "Xs+5 Ys+200 w100 h30", "Đấu Pet")
-farmVDDPartyButton      := MyGui.Add("Button", "Xs+5 Ys+240 w100 h30", "Farm VDD Nhóm")
-farmVDDSingleButton     := MyGui.Add("Button", "Xs+5 Ys+280 w100 h30", "Farm VDD Đơn")
+; farmVDDPartyButton      := MyGui.Add("Button", "Xs+5 Ys+240 w100 h30", "Farm VDD Nhóm")
+; farmVDDSingleButton     := MyGui.Add("Button", "Xs+5 Ys+280 w100 h30", "Farm VDD Đơn")
 ; bugOnlineButton         := MyGui.Add("Button", "Xs+5 Ys+320 w100 h30", "Bug Online")
 ; editLinkButton          := MyGui.Add("Button", "Xs+5 Ys+360 w100 h30", "Edit Link")
 
@@ -150,17 +155,17 @@ petBattelButton_Click(GuiCtrlObj, Info) {
         Run ".\Pet-Battle.ahk " getNames(mirrorAccountArray)
 }
 
-farmVDDPartyButton.onEvent("Click", farmVDDPartyButton_Click)
-farmVDDPartyButton_Click(GuiCtrlObj, Info) {
-    if (mirrorAccountArray.Length)
-        Run ".\FarmVDDParty.ahk " getNames(mirrorAccountArray)
-}
+; farmVDDPartyButton.onEvent("Click", farmVDDPartyButton_Click)
+; farmVDDPartyButton_Click(GuiCtrlObj, Info) {
+;     if (mirrorAccountArray.Length)
+;         Run ".\FarmVDDParty.ahk " getNames(mirrorAccountArray)
+; }
 
-farmVDDSingleButton.onEvent("Click", farmVDDSingleButton_Click)
-farmVDDSingleButton_Click(GuiCtrlObj, Info) {
-    if (mirrorAccountArray.Length)
-        Run ".\FarmVDD.ahk " getNames(mirrorAccountArray)
-}
+; farmVDDSingleButton.onEvent("Click", farmVDDSingleButton_Click)
+; farmVDDSingleButton_Click(GuiCtrlObj, Info) {
+;     if (mirrorAccountArray.Length)
+;         Run ".\FarmVDD.ahk " getNames(mirrorAccountArray)
+; }
 
 ; bugOnlineButton.onEvent("Click", bugOnlineButton_Click)
 ; bugOnlineButton_Click(*) {
@@ -236,6 +241,10 @@ closeAcc(ItemName, ItemPos, MyMenu, acc) {
 
 copyLoginUrl(ItemName, ItemPos, MyMenu, acc) {
     A_Clipboard := acc.getLoginUrl()
+}
+
+xuQue(ItemName, ItemPos, MyMenu, acc) {
+    Run ".\XuQue.ahk " acc.name
 }
 
 MyGui.Show()
@@ -322,6 +331,10 @@ isAllowedToMirror(id) {
     WinGetPos &x, &y, &w, &h, id
 
     global mirrorAccountArray
+    if (!isSet(mirrorAccountArray)) {
+        return false
+    }
+
     for acc in mirrorAccountArray {
         if ("ahk_id " id == acc.ahkId) {
             return acc.isActive
